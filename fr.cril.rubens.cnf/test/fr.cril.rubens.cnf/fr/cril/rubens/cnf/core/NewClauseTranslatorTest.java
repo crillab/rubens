@@ -45,7 +45,7 @@ public class NewClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testApplyOnEmptyInstance() {
+	public void testApplyFreeVar() {
 		final CnfInstance instance = new CnfInstance(1, new ArrayList<>(),
 				Stream.of(Stream.of(1).collect(Collectors.toSet()), Stream.of(-1).collect(Collectors.toSet())).collect(Collectors.toSet()));
 		final CnfInstance newInstance = this.translator.translate(instance);
@@ -57,6 +57,11 @@ public class NewClauseTranslatorTest {
 		assertTrue(posLitClause || negLitClause);
 		assertTrue((!posLitClause) || posLitModels);
 		assertTrue((!negLitClause) || negLitModels);
+	}
+	
+	@Test
+	public void testEmptyInstance() {
+		assertFalse(this.translator.canBeAppliedTo(new CnfInstance()));
 	}
 
 }

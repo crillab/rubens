@@ -24,7 +24,7 @@ public class NewClauseTranslator implements InstanceTranslator<CnfInstance> {
 	
 	@Override
 	public boolean canBeAppliedTo(final CnfInstance instance) {
-		return !instance.models().isEmpty();
+		return !instance.models().isEmpty() && instance.clauses().stream().filter(c -> c.size()==1).map(c -> c.get(0)).distinct().count() < (instance.nVars()<<1);
 	}
 
 	@Override
