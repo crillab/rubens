@@ -24,10 +24,18 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 public @interface TestGeneratorFactoryParams {
 	
-	/** the name associated with the {@link TestGeneratorFactory} instance */
+	/**
+	 * Returns the name associated with the {@link TestGeneratorFactory} instance.
+	 * 
+	 * @return the name associated with the instance
+	 */
 	String name() default "";
 	
-	/** a flag indicating the {@link TestGeneratorFactory} instance can be used */
+	/**
+	 * Returns a flag indicating the {@link TestGeneratorFactory} instance can be used.
+	 * 
+	 * @return a flag indicating the {@link TestGeneratorFactory} instance can be used
+	 */
 	boolean enabled() default true;
 
 }

@@ -69,6 +69,7 @@ public class TestGenerator<T extends Instance> {
 	 * This method would use an exponential space for an unbounded depth.
 	 * 
 	 * @param depth the tree depth
+	 * @param consumer the consumer
 	 * @throws IllegalArgumentException if the provided depth is less than one
 	 */
 	public void computeToDepth(final int depth, final Consumer<T> consumer) {
