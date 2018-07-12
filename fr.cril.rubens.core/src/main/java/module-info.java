@@ -9,7 +9,7 @@ module fr.cril.rubens.core {
 	exports fr.cril.rubens.specs;
 	exports fr.cril.rubens.utils;
 
-	requires reflections;
+	requires io.github.lukehutch.fastclasspathscanner;
 	requires org.slf4j;
 	
 }

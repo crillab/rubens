@@ -3,16 +3,17 @@ package fr.cril.rubens.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.specs.TestGeneratorFactoryParams;
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 /**
  * A class used to retrieve all the available {@link TestGeneratorFactory} instances.
@@ -74,12 +75,15 @@ public class TranslatorGeneratorReflector {
 	 * 
 	 * Factories added by {@link TranslatorGeneratorReflector#addFactory(String, Class)} are removed.
 	 */
-	@SuppressWarnings("rawtypes")
 	public void resetFactories() {
 		this.factories.clear();
-		final Reflections reflections = new Reflections("fr.cril.rubens");
-		Set<Class<? extends TestGeneratorFactory>> factoryClasses = reflections.getSubTypesOf(TestGeneratorFactory.class);
-		for(final Class<? extends TestGeneratorFactory> factoryClass : factoryClasses) {
+		final FastClasspathScanner scanner = new FastClasspathScanner("fr.cril.rubens");
+		final Set<Class<?>> factoryClasses = new HashSet<>();
+		scanner.matchClassesImplementing(TestGeneratorFactory.class, factoryClasses::add);
+		scanner.scan();
+		for(final Class<?> factoryClass0 : factoryClasses) {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			final Class<? extends TestGeneratorFactory> factoryClass = (Class<? extends TestGeneratorFactory>) factoryClass0;
 			TestGeneratorFactoryParams annotation = factoryClass.getAnnotation(TestGeneratorFactoryParams.class);
 			if(annotation == null) {
 				final IllegalStateException exception = new IllegalStateException(factoryClass.getCanonicalName()+" has no "
