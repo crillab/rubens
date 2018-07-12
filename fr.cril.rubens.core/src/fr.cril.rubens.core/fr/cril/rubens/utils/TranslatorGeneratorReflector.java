@@ -63,7 +63,7 @@ public class TranslatorGeneratorReflector {
 		if(this.factories.containsKey(factoryName)) {
 			final IllegalStateException exception = new IllegalStateException(this.factories.get(factoryName).getCanonicalName()+" and "
 					+ factoryClass.getCanonicalName()+" share the same name (given by the annotation "+TestGeneratorFactoryParams.class.getCanonicalName());
-			LOGGER.error(exception.getMessage(), exception);
+			LOGGER.error(exception.getMessage());
 			throw exception;
 		}
 		this.factories.put(factoryName, factoryClass);
@@ -84,7 +84,7 @@ public class TranslatorGeneratorReflector {
 			if(annotation == null) {
 				final IllegalStateException exception = new IllegalStateException(factoryClass.getCanonicalName()+" has no "
 						+ TestGeneratorFactoryParams.class.getCanonicalName()+" annotation");
-				LOGGER.error(exception.getMessage(), exception);
+				LOGGER.error(exception.getMessage());
 				throw exception;
 			}
 			if(!annotation.enabled()) {
@@ -118,16 +118,16 @@ public class TranslatorGeneratorReflector {
 	public TestGeneratorFactory<Instance> getFactory(final String name) {
 		final Class<? extends TestGeneratorFactory<?>> factory = (Class<? extends TestGeneratorFactory<?>>) this.factories.get(name);
 		if(factory == null) {
-			final IllegalArgumentException exception = new IllegalArgumentException("no such factory");
-			LOGGER.error(exception.getMessage(), exception);
+			final IllegalArgumentException exception = new IllegalArgumentException("\""+name+"\": no such factory");
+			LOGGER.error(exception.getMessage());
 			throw exception;
 		}
 		try {
 			return (TestGeneratorFactory<Instance>) factory.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			final IllegalArgumentException exception = new IllegalArgumentException("cannot instantiate factory", e);
-			LOGGER.error(exception.getMessage(), exception);
+			final IllegalArgumentException exception = new IllegalArgumentException("cannot instantiate factory: \"+name+\"", e);
+			LOGGER.error(exception.getMessage());
 			throw exception;
 		}
 	}
