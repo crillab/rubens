@@ -12,8 +12,6 @@
 	<description>Core types for the RUBENS framework</description>
 
 	<build>
-		<!-- <sourceDirectory>src/fr.cril.rubens.core</sourceDirectory> -->
-		<!-- <testSourceDirectory>test/fr.cril.rubens.core</testSourceDirectory> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

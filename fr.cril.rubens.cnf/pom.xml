@@ -12,8 +12,6 @@
 	<description>CNF module for the RUBENS framework, handling several decision, enumeration and counting problems</description>
 
 	<build>
-		<!-- <sourceDirectory>src/fr.cril.rubens.cnf</sourceDirectory> -->
-		<!-- <testSourceDirectory>test/fr.cril.rubens.cnf</testSourceDirectory> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
