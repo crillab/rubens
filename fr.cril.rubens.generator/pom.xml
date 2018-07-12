@@ -12,8 +12,8 @@
 	<description>RUBENS instance generator - writes instances to file system</description>
 
 	<build>
-		<sourceDirectory>src/fr.cril.rubens.generator</sourceDirectory>
-		<testSourceDirectory>test/fr.cril.rubens.generator</testSourceDirectory>
+		<!-- <sourceDirectory>src/fr.cril.rubens.generator</sourceDirectory> -->
+		<!-- <testSourceDirectory>test/fr.cril.rubens.generator</testSourceDirectory> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
