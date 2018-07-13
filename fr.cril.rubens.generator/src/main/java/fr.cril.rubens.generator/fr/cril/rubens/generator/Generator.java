@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.Instance;
@@ -16,6 +20,8 @@ import fr.cril.rubens.specs.Instance;
 public class Generator {
 	
 	public static final int STATUS_IO_EXCEPTION_DURING_GENERATION = 3;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
 	private int instanceCount = 0;
 	
@@ -61,11 +67,19 @@ public class Generator {
 	 * Launches the generation process.
 	 */
 	public void generate() {
+		final long startTime = System.currentTimeMillis();
 		if(this.statusCode != 0) {
+			if(statusCode == STATUS_IO_EXCEPTION_DURING_GENERATION) {
+				LOGGER.error("an error occurred during the last generation process using this generator instance; ignoring this one");
+			} else {
+				LOGGER.error("an error occurred while parsing this generator parameters; ignoring the generation process");
+			}
 			return;
 		}
 		final TestGenerator<Instance> generator = new TestGenerator<>(this.generatorOptions.getFactory());
 		generator.computeToDepth(this.generatorOptions.getMaxDepth(), this::outputInstance);
+		final Supplier<String> strTimeSupplier = () -> String.format("%.3f", (System.currentTimeMillis() - startTime)/1000f);
+		LOGGER.info("generated {} instances in {}s", this.instanceCount, strTimeSupplier.get());
 	}
 
 	private void outputInstance(final Instance instance) {
