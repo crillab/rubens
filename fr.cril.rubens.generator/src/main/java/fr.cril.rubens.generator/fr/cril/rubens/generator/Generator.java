@@ -109,8 +109,13 @@ public class Generator {
 	private void cleanOldFiles(final File outputDirectory, final Collection<String> extensions) {
 		if(!this.cleanedOldFiles) {
 			this.cleanedOldFiles = true;
-			for(final Path path : Arrays.stream(outputDirectory.listFiles(File::isFile)).map(File::toURI).map(Paths::get).collect(Collectors.toList())) {
-				if(extensions.stream().anyMatch(path.toAbsolutePath()::endsWith)) {
+			final File[] folderFiles = outputDirectory.listFiles(File::isFile);
+			if(folderFiles == null) {
+				LOGGER.warn("cannot access directory {} for cleaning", outputDirectory);
+				return;
+			}
+			for(final Path path : Arrays.stream(folderFiles).map(File::toURI).map(Paths::get).collect(Collectors.toList())) {
+				if(extensions.stream().anyMatch(path.toString()::endsWith)) {
 					try {
 						Files.delete(path);
 					} catch (IOException e) {

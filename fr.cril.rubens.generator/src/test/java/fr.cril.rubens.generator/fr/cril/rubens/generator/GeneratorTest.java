@@ -47,11 +47,28 @@ public class GeneratorTest {
 	}
 	
 	@Test
+	public void testCleaning() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		final GeneratorOptionsReader optionsReader1 = GeneratorOptionsReader.getInstance();
+		optionsReader1.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
+		final Generator generator1 = new Generator(optionsReader1);
+		generator1.generate();
+		final GeneratorOptionsReader optionsReader2 = GeneratorOptionsReader.getInstance();
+		optionsReader2.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "1"});
+		final Generator generator2 = new Generator(optionsReader2);
+		generator2.generate();
+		assertEquals(new CnfInstance().getFileExtensions().size(), Files.list(file).count());
+	}
+	
+	@Test
 	public void testIOException() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
 		final Generator generator = new Generator(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
 		Files.setPosixFilePermissions(file, Collections.emptySet());
+		generator.generate();
+		assertEquals(Generator.STATUS_IO_EXCEPTION_DURING_GENERATION, generator.getStatusCode());
 		generator.generate();
 		assertEquals(Generator.STATUS_IO_EXCEPTION_DURING_GENERATION, generator.getStatusCode());
 	}
