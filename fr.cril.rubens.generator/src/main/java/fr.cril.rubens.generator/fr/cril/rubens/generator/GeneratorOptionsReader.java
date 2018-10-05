@@ -139,7 +139,7 @@ public class GeneratorOptionsReader {
 		final PrintWriter writer = new PrintWriter(outputStream);
 		final HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(writer, HELP_FORMATTER_MAX_WIDTH, "-m method -o outputDirectory [other options]",
-				"RUBENS - CRIL & Univ. Artois", this.options, 4, 4, "");
+				"RUBENS - CRIL - Univ. Artois & CNRS", this.options, 4, 4, "");
 		writer.flush();
 		final String msg = new String(outputStream.toByteArray());
 		LOGGER.info(msg);
