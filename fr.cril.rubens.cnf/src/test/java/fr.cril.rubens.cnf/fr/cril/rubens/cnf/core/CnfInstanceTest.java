@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class CnfInstanceTest {
 	
@@ -80,11 +79,6 @@ public class CnfInstanceTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testWrongOutputExt() throws IOException {
 		this.instance.write("toto", null);
-	}
-	
-	@Test
-	public void testEquals() {
-		EqualsVerifier.forClass(CnfInstance.class).verify();
 	}
 	
 	@Test
