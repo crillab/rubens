@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.semantics.co;
+package fr.cril.rubens.arg.testgen;
 
 import java.util.Collections;
 import java.util.stream.Stream;

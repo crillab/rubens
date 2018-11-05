@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.semantics.co;
+package fr.cril.rubens.arg.testgen;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,12 +10,12 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
- * A {@link TestGeneratorFactory} instance used to build abstract argumentation problems for the Complete semantics.
+ * A {@link TestGeneratorFactory} instance used to build abstract argumentation problems for the Preferred semantics.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(name="ARG-CO")
-public class CompleteSemTestGeneratorFactory implements TestGeneratorFactory<ArgumentationFramework> {
+@TestGeneratorFactoryParams(name="ARG-PR")
+public class PreferredSemTestGeneratorFactory implements TestGeneratorFactory<ArgumentationFramework> {
 
 	@Override
 	public ArgumentationFramework initInstance() {
@@ -24,7 +24,7 @@ public class CompleteSemTestGeneratorFactory implements TestGeneratorFactory<Arg
 
 	@Override
 	public List<InstanceTranslator<ArgumentationFramework>> translators() {
-		return Stream.of(new NewArgTranslator(), new NewAttackTranslator()).collect(Collectors.toList());
+		return Stream.of(new NewArgTranslator(), new NewAttackTranslator(EExtensionSetComputer.PREFERRED_SEM)).collect(Collectors.toList());
 	}
 
 }

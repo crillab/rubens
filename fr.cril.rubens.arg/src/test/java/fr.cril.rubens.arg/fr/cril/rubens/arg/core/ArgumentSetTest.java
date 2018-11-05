@@ -83,5 +83,40 @@ public class ArgumentSetTest {
 	public void testToString() {
 		assertEquals(Collections.singleton(this.a1).toString(), this.set1.toString());
 	}
+	
+	@Test
+	public void testSupersetOfEmpty() {
+		assertTrue(this.set1.isSupersetOf(ArgumentSet.getInstance(Collections.emptySet())));
+	}
+	
+	@Test
+	public void testSupersetOfNonEmpty() {
+		assertTrue(Stream.of(this.a1, this.a2).collect(ArgumentSet.collector()).isSupersetOf(ArgumentSet.getInstance(Collections.emptySet())));
+	}
+	
+	@Test
+	public void testNotSupersetOfSubset() {
+		assertFalse(this.set1.isSupersetOf(Stream.of(this.a1, this.a2).collect(ArgumentSet.collector())));
+	}
+	
+	@Test
+	public void testEmptyIsNotSuperset() {
+		assertFalse(ArgumentSet.getInstance(Collections.emptySet()).isSupersetOf(this.set1));
+	}
+	
+	@Test
+	public void testIsNotSupersetOfIdentity() {
+		assertFalse(this.set1.isSupersetOf(this.set1));
+	}
+	
+	@Test
+	public void testIsNotSupersetSameArity() {
+		assertFalse(this.set1.isSupersetOf(this.set2));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSupersetOfNull() {
+		this.set1.isSupersetOf(null);
+	}
 
 }

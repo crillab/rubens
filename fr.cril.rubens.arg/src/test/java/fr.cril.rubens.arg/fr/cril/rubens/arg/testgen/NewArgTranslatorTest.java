@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.semantics.co;
+package fr.cril.rubens.arg.testgen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +17,7 @@ import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.Attack;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
+import fr.cril.rubens.arg.testgen.NewArgTranslator;
 import fr.cril.rubens.arg.utils.Forget;
 
 public class NewArgTranslatorTest {

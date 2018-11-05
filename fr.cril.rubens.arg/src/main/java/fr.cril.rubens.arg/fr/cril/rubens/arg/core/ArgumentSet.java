@@ -76,6 +76,24 @@ public class ArgumentSet {
 	public boolean contains(final Argument arg) {
 		return this.args.contains(arg);
 	}
+	
+	/**
+	 * Tells if this argument set is a superset of another one.
+	 * 
+	 * This is the case if this set's size is strictly greater than the other one's size
+	 * and the other set's arguments are all contained by this set.
+	 * 
+	 * An {@link IllegalArgumentException} exception is raised if the other set is null.
+	 * 
+	 * @param other the other set
+	 * @return <code>true</code> iff this set is a superset of the other
+	 */
+	public boolean isSupersetOf(final ArgumentSet other) {
+		if(other == null) {
+			throw new IllegalArgumentException();
+		}
+		return this.size() > other.size() && other.stream().allMatch(this::contains);
+	}
 
 	/**
 	 * Returns the number of arguments contained in this set.

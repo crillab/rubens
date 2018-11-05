@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.semantics.co;
+package fr.cril.rubens.arg.testgen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,6 +16,8 @@ import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.Attack;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
+import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
+import fr.cril.rubens.arg.testgen.NewAttackTranslator;
 import fr.cril.rubens.arg.utils.Forget;
 
 public class NewAttackTranslatorTest {
@@ -38,7 +40,7 @@ public class NewAttackTranslatorTest {
 		final ArgumentSet argSet1 = ArgumentSet.getInstance(Collections.singleton(this.arg1));
 		this.afArg1 = new ArgumentationFramework(argSet1, AttackSet.getInstance(Collections.emptySet()), Stream.of(argSet1).collect(ExtensionSet.collector()));
 		this.afArg1Att11 = new ArgumentationFramework(argSet1, AttackSet.getInstance(Collections.singleton(this.att11)), Stream.of(ArgumentSet.getInstance(Collections.emptySet())).collect(ExtensionSet.collector()));
-		this.translator = new NewAttackTranslator();
+		this.translator = new NewAttackTranslator(EExtensionSetComputer.COMPLETE_SEM);
 	}
 	
 	@Test
@@ -103,6 +105,11 @@ public class NewAttackTranslatorTest {
 			currentAf = this.translator.translate(currentAf);
 		}
 		assertFalse(this.translator.canBeAppliedTo(currentAf));
+	}
+	
+	@Test
+	public void testGetExtensionComputer() {
+		assertEquals(EExtensionSetComputer.COMPLETE_SEM, this.translator.getExtensionSetComputer());
 	}
 
 }
