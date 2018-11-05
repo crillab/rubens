@@ -58,5 +58,5 @@ public class AttackTest {
 		assertTrue(this.a1.hashCode() == Attack.getInstance(Argument.getInstance("a"), Argument.getInstance("b")).hashCode());
 		assertFalse(this.a2.hashCode() == Attack.getInstance(Argument.getInstance("a"), Argument.getInstance("b")).hashCode());
 	}
-
+	
 }

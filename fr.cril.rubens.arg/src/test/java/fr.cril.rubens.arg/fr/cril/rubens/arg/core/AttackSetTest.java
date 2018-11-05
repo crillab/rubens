@@ -85,5 +85,17 @@ public class AttackSetTest {
 	public void testToString() {
 		assertEquals(Collections.singleton(this.att1).toString(), this.set1.toString());
 	}
+	
+	@Test
+	public void testRangeOfEmptyAF() {
+		final ArgumentSet emptyArgSet = ArgumentSet.getInstance(Collections.emptySet());
+		assertEquals(emptyArgSet, AttackSet.getInstance(Collections.emptySet()).rangeOf(emptyArgSet));
+	}
+	
+	@Test
+	public void testRange() {
+		final ArgumentSet args = Stream.of(Argument.getInstance("a1"), Argument.getInstance("a2")).collect(ArgumentSet.collector());
+		assertEquals(args, this.set1.rangeOf(args));
+	}
 
 }

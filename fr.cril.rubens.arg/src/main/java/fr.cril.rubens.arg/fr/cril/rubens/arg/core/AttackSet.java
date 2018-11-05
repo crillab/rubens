@@ -76,6 +76,19 @@ public class AttackSet {
 		return this.atts.stream();
 	}
 	
+	/**
+	 * Returns the range of an extension.
+	 * 
+	 * The range is defined as the set of arguments composed by the ones of the extension plus the ones attacked by the extension.
+	 * 
+	 * @param ext the extension
+	 * @return the range of the extension
+	 */
+	public ArgumentSet rangeOf(final ArgumentSet ext) {
+		final Set<Argument> attacked = this.atts.stream().filter(att -> ext.contains(att.getAttacker())).map(Attack::getAttacked).collect(Collectors.toSet());
+		return Stream.concat(ext.stream(), attacked.stream()).collect(ArgumentSet.collector());
+	}
+	
 	@Override
 	public int hashCode() {
 		return this.id;

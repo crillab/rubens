@@ -25,7 +25,10 @@ public enum EExtensionSetComputer {
 	COMPLETE_SEM(EExtensionSetComputer::computeCompleteExtensions),
 	
 	/** algorithm for preferred semantics */
-	PREFERRED_SEM(EExtensionSetComputer::computePreferredExtensions);
+	PREFERRED_SEM(EExtensionSetComputer::computePreferredExtensions),
+	
+	/** algorithm for stable semantics */
+	STABLE_SEM(EExtensionSetComputer::computeStableExtensions);
 	
 	private final BiFunction<ArgumentSet, AttackSet, ExtensionSet> computer;
 	
@@ -52,6 +55,11 @@ public enum EExtensionSetComputer {
 	private static ExtensionSet computePreferredExtensions(final ArgumentSet arguments, final AttackSet attacks) {
 		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
 		return maxExtensionsForInclusion(completeExts);
+	}
+	
+	private static ExtensionSet computeStableExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
+		return completeExts.stream().filter(ext -> attacks.rangeOf(ext).size() == arguments.size()).collect(ExtensionSet.collector());
 	}
 	
 	private static ExtensionSet maxExtensionsForInclusion(final ExtensionSet initExts) {
