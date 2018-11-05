@@ -1,5 +1,6 @@
 package fr.cril.rubens.arg.testgen;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,9 @@ public enum EExtensionSetComputer {
 	
 	/** algorithm for complete semantics */
 	COMPLETE_SEM(EExtensionSetComputer::computeCompleteExtensions),
+	
+	/** algorithm for grounded semantics */
+	GROUNDED_SEM(EExtensionSetComputer::computeGroundedExtensions),
 	
 	/** algorithm for preferred semantics */
 	PREFERRED_SEM(EExtensionSetComputer::computePreferredExtensions),
@@ -103,6 +107,30 @@ public enum EExtensionSetComputer {
 		final List<Argument> attackers = attacks.stream().filter(att -> ext.contains(att.getAttacked())).map(Attack::getAttacker).collect(Collectors.toList());
 		final Set<Argument> defendsAgainst = attacks.stream().filter(att -> ext.contains(att.getAttacker())).map(Attack::getAttacked).collect(Collectors.toSet());
 		return attackers.stream().noneMatch(a -> !defendsAgainst.contains(a));
+	}
+	
+	private static ExtensionSet computeGroundedExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		final Set<Argument> candidates = arguments.stream().collect(Collectors.toSet());
+		final Set<Argument> inExt = new HashSet<>();
+		final Set<Argument> defeated = new HashSet<>();
+		int oldSize;
+		do {
+			oldSize = inExt.size();
+			final List<Argument> noMoreCandidates = new ArrayList<>();
+			for(final Argument cand : candidates) {
+				final Set<Argument> attackers = attacks.stream().filter(att -> att.getAttacked().equals(cand)).filter(att -> !defeated.contains(att.getAttacker()))
+						.map(Attack::getAttacker).collect(Collectors.toSet());
+				if(attackers.isEmpty()) {
+					inExt.add(cand);
+					noMoreCandidates.add(cand);
+				} else if(attackers.stream().anyMatch(inExt::contains)) {
+					defeated.add(cand);
+					noMoreCandidates.add(cand);
+				}
+			}
+			candidates.removeAll(noMoreCandidates);
+		} while(inExt.size() > oldSize);
+		return ExtensionSet.getInstance(Collections.singleton(inExt.stream().collect(ArgumentSet.collector())));
 	}
 
 }
