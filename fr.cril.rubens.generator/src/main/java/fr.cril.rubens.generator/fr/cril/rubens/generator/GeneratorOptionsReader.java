@@ -158,7 +158,7 @@ public class GeneratorOptionsReader {
 	 * The available methods are loaded through reflection.
 	 */
 	public void printMethodNamesAndExit() {
-		final String methods = TranslatorGeneratorReflector.getInstance().factoryNames().stream().reduce((a,b) -> a+", "+b).orElse("<none>");
+		final String methods = TranslatorGeneratorReflector.getInstance().factoryNames().stream().sorted().reduce((a,b) -> a+", "+b).orElse("<none>");
 		LOGGER.info("available methods: {}", methods);
 		setMustExit(STATUS_OPTION_EXIT_OK);
 	}
