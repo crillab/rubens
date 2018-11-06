@@ -33,6 +33,9 @@ public enum EExtensionSetComputer {
 	/** algorithm for preferred semantics */
 	PREFERRED_SEM(EExtensionSetComputer::computePreferredExtensions),
 	
+	/** algorithm for ideal semantics */
+	IDEAL_SEM(EExtensionSetComputer::computeIdealExtensions),
+	
 	/** algorithm for stable semantics */
 	STABLE_SEM(EExtensionSetComputer::computeStableExtensions),
 	
@@ -67,6 +70,15 @@ public enum EExtensionSetComputer {
 	private static ExtensionSet computePreferredExtensions(final ArgumentSet arguments, final AttackSet attacks) {
 		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
 		return maxExtensionsForInclusion(completeExts);
+	}
+	
+	private static ExtensionSet computeIdealExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		final ExtensionSet coExts = computeCompleteExtensions(arguments, attacks);
+		final ExtensionSet prExts = maxExtensionsForInclusion(coExts);
+		final List<ArgumentSet> prExtsList = prExts.stream().collect(Collectors.toList());
+		final Set<Argument> prCommonArgs = prExtsList.get(0).stream().filter(arg -> prExts.stream().skip(1).allMatch(set -> set.contains(arg))).collect(Collectors.toSet());
+		final ArgumentSet idealExt = coExts.stream().filter(ext -> ext.stream().allMatch(prCommonArgs::contains)).reduce((e1,e2) -> e1.size() > e2.size() ? e1 : e2).orElseThrow();
+		return ExtensionSet.getInstance(Collections.singleton(idealExt));
 	}
 	
 	private static ExtensionSet maxExtensionsForInclusion(final ExtensionSet initExts) {

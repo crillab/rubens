@@ -154,5 +154,23 @@ public class EExtensionSetComputerTest {
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.singleton(arg1))));
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.singleton(arg2))));
 	}
+	
+	@Test
+	public void testEmptyInstanceID() {
+		final ExtensionSet exts = EExtensionSetComputer.IDEAL_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
+		assertEquals(1, exts.size());
+		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
+	}
+	
+	@Test
+	public void testID() {
+		final Argument arg1 = Argument.getInstance("a1");
+		final Argument arg2 = Argument.getInstance("a2");
+		final Attack att12 = Attack.getInstance(arg1, arg2);
+		final Attack att21 = Attack.getInstance(arg2, arg1);
+		final ExtensionSet exts = EExtensionSetComputer.IDEAL_SEM.compute(Stream.of(arg1, arg2).collect(ArgumentSet.collector()), Stream.of(att12, att21).collect(AttackSet.collector()));
+		assertEquals(1, exts.size());
+		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
+	}
 
 }
