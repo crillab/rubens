@@ -2,8 +2,10 @@ package fr.cril.rubens.arg.testgen;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -32,7 +34,10 @@ public enum EExtensionSetComputer {
 	PREFERRED_SEM(EExtensionSetComputer::computePreferredExtensions),
 	
 	/** algorithm for stable semantics */
-	STABLE_SEM(EExtensionSetComputer::computeStableExtensions);
+	STABLE_SEM(EExtensionSetComputer::computeStableExtensions),
+	
+	/** algorithm for semistable semantics */
+	SEMISTABLE_SEM(EExtensionSetComputer::computeSemistableExtensions);
 	
 	private final BiFunction<ArgumentSet, AttackSet, ExtensionSet> computer;
 	
@@ -61,19 +66,32 @@ public enum EExtensionSetComputer {
 		return maxExtensionsForInclusion(completeExts);
 	}
 	
+	private static ExtensionSet maxExtensionsForInclusion(final ExtensionSet initExts) {
+		final Set<ArgumentSet> argSets = initExts.stream().collect(Collectors.toSet());
+		final Set<ArgumentSet> candidates = maxArgSetsForInclusion(argSets);
+		return candidates.stream().collect(ExtensionSet.collector());
+	}
+
+	private static Set<ArgumentSet> maxArgSetsForInclusion(final Set<ArgumentSet> argSets) {
+		final Set<ArgumentSet> candidates = argSets.stream().collect(Collectors.toSet());
+		argSets.stream().forEach(ext -> {
+			if(candidates.stream().anyMatch(c -> c.isSupersetOf(ext))) {
+				candidates.remove(ext);
+			}
+		});
+		return candidates;
+	}
+	
 	private static ExtensionSet computeStableExtensions(final ArgumentSet arguments, final AttackSet attacks) {
 		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
 		return completeExts.stream().filter(ext -> attacks.rangeOf(ext).size() == arguments.size()).collect(ExtensionSet.collector());
 	}
 	
-	private static ExtensionSet maxExtensionsForInclusion(final ExtensionSet initExts) {
-		final Set<ArgumentSet> candidates = initExts.stream().collect(Collectors.toSet());
-		initExts.stream().forEach(ext -> {
-			if(candidates.stream().anyMatch(c -> c.isSupersetOf(ext))) {
-				candidates.remove(ext);
-			}
-		});
-		return candidates.stream().collect(ExtensionSet.collector());
+	private static ExtensionSet computeSemistableExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
+		final Map<ArgumentSet, List<ArgumentSet>> rangeToExts = new HashMap<>();
+		completeExts.stream().forEach(ext -> rangeToExts.computeIfAbsent(attacks.rangeOf(ext), k -> new ArrayList<>()).add(ext));
+		return maxArgSetsForInclusion(rangeToExts.keySet()).stream().map(rangeToExts::get).flatMap(List::stream).collect(ExtensionSet.collector());
 	}
 
 	private static Set<Set<Argument>> computeCompleteExtensions(final List<Argument> arguments, final AttackSet attacks, final Set<Argument> partialExt, final int nextArgIndex) {
