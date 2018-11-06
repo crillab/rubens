@@ -37,7 +37,10 @@ public enum EExtensionSetComputer {
 	STABLE_SEM(EExtensionSetComputer::computeStableExtensions),
 	
 	/** algorithm for semistable semantics */
-	SEMISTABLE_SEM(EExtensionSetComputer::computeSemistableExtensions);
+	SEMISTABLE_SEM(EExtensionSetComputer::computeSemistableExtensions),
+	
+	/** algorithm for stage semantics */
+	STAGE_SEM(EExtensionSetComputer::computeStageExtensions);
 	
 	private final BiFunction<ArgumentSet, AttackSet, ExtensionSet> computer;
 	
@@ -57,7 +60,7 @@ public enum EExtensionSetComputer {
 	}
 
 	private static ExtensionSet computeCompleteExtensions(final ArgumentSet arguments, final AttackSet attacks) {
-		final Set<Set<Argument>> extensions = computeCompleteExtensions(arguments.stream().collect(Collectors.toList()), attacks, new HashSet<>(), 0);
+		final Set<Set<Argument>> extensions = computeConflictFreeExtensions(arguments, attacks).stream().filter(ext -> isComplete(arguments, ext, attacks)).collect(Collectors.toSet());
 		return extensions.stream().map(ArgumentSet::getInstance).collect(ExtensionSet.collector());
 	}
 	
@@ -89,19 +92,32 @@ public enum EExtensionSetComputer {
 	
 	private static ExtensionSet computeSemistableExtensions(final ArgumentSet arguments, final AttackSet attacks) {
 		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
-		final Map<ArgumentSet, List<ArgumentSet>> rangeToExts = new HashMap<>();
-		completeExts.stream().forEach(ext -> rangeToExts.computeIfAbsent(attacks.rangeOf(ext), k -> new ArrayList<>()).add(ext));
-		return maxArgSetsForInclusion(rangeToExts.keySet()).stream().map(rangeToExts::get).flatMap(List::stream).collect(ExtensionSet.collector());
+		return keepMaxRange(completeExts, attacks);
 	}
 
-	private static Set<Set<Argument>> computeCompleteExtensions(final List<Argument> arguments, final AttackSet attacks, final Set<Argument> partialExt, final int nextArgIndex) {
+	private static ExtensionSet keepMaxRange(final ExtensionSet extensions, final AttackSet attacks) {
+		final Map<ArgumentSet, List<ArgumentSet>> rangeToExts = new HashMap<>();
+		extensions.stream().forEach(ext -> rangeToExts.computeIfAbsent(attacks.rangeOf(ext), k -> new ArrayList<>()).add(ext));
+		return maxArgSetsForInclusion(rangeToExts.keySet()).stream().map(rangeToExts::get).flatMap(List::stream).collect(ExtensionSet.collector());
+	}
+	
+	private static ExtensionSet computeStageExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		final ExtensionSet cfExts = computeConflictFreeExtensions(arguments, attacks).stream().map(ArgumentSet::getInstance).collect(ExtensionSet.collector());
+		return keepMaxRange(cfExts, attacks);
+	}
+
+	private static Set<Set<Argument>> computeConflictFreeExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		return computeConflictFreeExtensions(arguments.stream().collect(Collectors.toList()), attacks, new HashSet<>(), 0);
+	}
+	
+	private static Set<Set<Argument>> computeConflictFreeExtensions(final List<Argument> arguments, final AttackSet attacks, final Set<Argument> partialExt, final int nextArgIndex) {
 		if(nextArgIndex == arguments.size()) {
-			return isComplete(arguments, partialExt, attacks) ? Stream.of(new HashSet<>(partialExt)).collect(Collectors.toSet()) : new HashSet<>();
+			return Stream.of(new HashSet<>(partialExt)).collect(Collectors.toSet());
 		}
-		final Set<Set<Argument>> result = computeCompleteExtensions(arguments, attacks, partialExt, nextArgIndex+1);
+		final Set<Set<Argument>> result = computeConflictFreeExtensions(arguments, attacks, partialExt, nextArgIndex+1);
 		final Argument arg = arguments.get(nextArgIndex);
 		if(isStillConflictFree(partialExt, attacks, arg)) {
-			result.addAll(computeCompleteExtensions(arguments, attacks, Stream.concat(partialExt.stream(), Stream.of(arg)).collect(Collectors.toSet()), nextArgIndex+1));
+			result.addAll(computeConflictFreeExtensions(arguments, attacks, Stream.concat(partialExt.stream(), Stream.of(arg)).collect(Collectors.toSet()), nextArgIndex+1));
 		}
 		return result;
 	}
@@ -121,7 +137,7 @@ public enum EExtensionSetComputer {
 		return att.getAttacked().equals(newArg) && partialExt.contains(att.getAttacker());
 	}
 
-	private static boolean isComplete(final List<Argument> arguments, final Set<Argument> ext, final AttackSet attacks) {
+	private static boolean isComplete(final ArgumentSet arguments, final Set<Argument> ext, final AttackSet attacks) {
 		final List<Argument> extAttackers = attacks.stream().filter(att -> ext.contains(att.getAttacked())).map(Attack::getAttacker).collect(Collectors.toList());
 		final Set<Argument> defeatedByExt = attacks.stream().filter(att -> ext.contains(att.getAttacker())).map(Attack::getAttacked).collect(Collectors.toSet());
 		if(extAttackers.stream().anyMatch(a -> !defeatedByExt.contains(a))) {
