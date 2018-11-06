@@ -78,7 +78,7 @@ public enum EExtensionSetComputer {
 
 	private static Set<Set<Argument>> computeCompleteExtensions(final List<Argument> arguments, final AttackSet attacks, final Set<Argument> partialExt, final int nextArgIndex) {
 		if(nextArgIndex == arguments.size()) {
-			return defendsItself(partialExt, attacks) ? Stream.of(new HashSet<>(partialExt)).collect(Collectors.toSet()) : Collections.emptySet();
+			return isComplete(arguments, partialExt, attacks) ? Stream.of(new HashSet<>(partialExt)).collect(Collectors.toSet()) : new HashSet<>();
 		}
 		final Set<Set<Argument>> result = computeCompleteExtensions(arguments, attacks, partialExt, nextArgIndex+1);
 		final Argument arg = arguments.get(nextArgIndex);
@@ -103,10 +103,13 @@ public enum EExtensionSetComputer {
 		return att.getAttacked().equals(newArg) && partialExt.contains(att.getAttacker());
 	}
 
-	private static boolean defendsItself(final Set<Argument> ext, final AttackSet attacks) {
-		final List<Argument> attackers = attacks.stream().filter(att -> ext.contains(att.getAttacked())).map(Attack::getAttacker).collect(Collectors.toList());
-		final Set<Argument> defendsAgainst = attacks.stream().filter(att -> ext.contains(att.getAttacker())).map(Attack::getAttacked).collect(Collectors.toSet());
-		return attackers.stream().noneMatch(a -> !defendsAgainst.contains(a));
+	private static boolean isComplete(final List<Argument> arguments, final Set<Argument> ext, final AttackSet attacks) {
+		final List<Argument> extAttackers = attacks.stream().filter(att -> ext.contains(att.getAttacked())).map(Attack::getAttacker).collect(Collectors.toList());
+		final Set<Argument> defeatedByExt = attacks.stream().filter(att -> ext.contains(att.getAttacker())).map(Attack::getAttacked).collect(Collectors.toSet());
+		if(extAttackers.stream().anyMatch(a -> !defeatedByExt.contains(a))) {
+			return false;
+		}
+		 return arguments.stream().filter(arg -> !ext.contains(arg)).noneMatch(arg -> attacks.stream().filter(att -> att.getAttacked().equals(arg)).map(Attack::getAttacker).allMatch(defeatedByExt::contains));
 	}
 	
 	private static ExtensionSet computeGroundedExtensions(final ArgumentSet arguments, final AttackSet attacks) {

@@ -44,6 +44,20 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
+	public void testDualCO() {
+		final Argument arg1 = Argument.getInstance("a1");
+		final Argument arg2 = Argument.getInstance("a2");
+		final Argument arg3 = Argument.getInstance("a3");
+		final Argument arg4 = Argument.getInstance("a4");
+		final Attack att12 = Attack.getInstance(arg1, arg2);
+		final Attack att13 = Attack.getInstance(arg1, arg3);
+		final Attack att24 = Attack.getInstance(arg2, arg4);
+		final Attack att34 = Attack.getInstance(arg3, arg4);
+		final ExtensionSet exts = EExtensionSetComputer.COMPLETE_SEM.compute(Stream.of(arg1, arg2, arg3, arg4).collect(ArgumentSet.collector()), Stream.of(att12, att13, att24, att34).collect(AttackSet.collector()));
+		assertEquals(ExtensionSet.getInstance(Collections.singleton(Stream.of(arg1, arg4).collect(ArgumentSet.collector()))), exts);
+	}
+	
+	@Test
 	public void testEmptyInstancePR() {
 		final ExtensionSet exts = EExtensionSetComputer.PREFERRED_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(1, exts.size());
