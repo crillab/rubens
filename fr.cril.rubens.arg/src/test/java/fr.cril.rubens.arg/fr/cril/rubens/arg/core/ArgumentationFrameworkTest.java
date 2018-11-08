@@ -196,5 +196,27 @@ public class ArgumentationFrameworkTest {
 	public void testToString() {
 		assertEquals("[[], [], []]", new ArgumentationFramework().toString());
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullArgUnderDecision() {
+		new ArgumentationFramework().setArgUnderDecision(null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testUnknownArgUnderDecision() {
+		new ArgumentationFramework().setArgUnderDecision(Argument.getInstance("a"));
+	}
+	
+	@Test
+	public void testArgUnderDecision() {
+		final Argument argA = Argument.getInstance("a");
+		final Argument argB = Argument.getInstance("b");
+		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());
+		final Set<Attack> atts = Stream.of(Attack.getInstance(argA, argB)).collect(Collectors.toSet());
+		final Set<Set<Argument>> exts = Stream.of(Stream.of(argA).collect(Collectors.toSet())).collect(Collectors.toSet());
+		final ArgumentationFramework af = new ArgumentationFramework(ArgumentSet.getInstance(args), AttackSet.getInstance(atts), exts.stream().map(ArgumentSet::getInstance).collect(ExtensionSet.collector()));
+		af.setArgUnderDecision(argA);
+		assertEquals(argA, af.getArgUnderDecision());
+	}
 
 }
