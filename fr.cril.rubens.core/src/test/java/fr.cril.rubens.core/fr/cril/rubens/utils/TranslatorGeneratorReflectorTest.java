@@ -27,41 +27,41 @@ public class TranslatorGeneratorReflectorTest {
 	@Test
 	public void testNoFactory() {
 		final TranslatorGeneratorReflector reflector = TranslatorGeneratorReflector.getInstance();
-		assertTrue(reflector.factoryNames().isEmpty());
+		assertTrue(reflector.classesNames().isEmpty());
 	}
 	
 	@Test
 	public void testOneFactory() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
-		instance.addFactory("testFactory", StringConcatGeneratorFactory.class);
-		final Collection<String> names = instance.factoryNames();
+		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
+		final Collection<String> names = instance.classesNames();
 		assertEquals(1, names.size());
 		assertEquals("testFactory", names.iterator().next());
-		assertEquals(StringConcatGeneratorFactory.class, instance.getFactory("testFactory").getClass());
+		assertEquals(StringConcatGeneratorFactory.class, instance.getClassInstance("testFactory").getClass());
 	}
 	
 	@Test(expected=IllegalStateException.class)
 	public void testSameName() {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
-		instance.addFactory("testFactory", StringConcatGeneratorFactory.class);
-		instance.addFactory("testFactory", StringConcatGeneratorFactory.class);
+		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
+		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnexistingFactory( ) {
-		TranslatorGeneratorReflector.getInstance().getFactory("toto");
+		TranslatorGeneratorReflector.getInstance().getClassInstance("toto");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnbuildableFactory() {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
-		instance.addFactory("testFactory", UnbuildableFactory.class);
-		instance.getFactory("testFactory");
+		instance.addClass("testFactory", UnbuildableFactory.class);
+		instance.getClassInstance("testFactory");
 	}
 	
 	@After
 	public void tearDown() {
-		TranslatorGeneratorReflector.getInstance().resetFactories();
+		TranslatorGeneratorReflector.getInstance().resetClasses();
 	}
 	
 	@TestGeneratorFactoryParams(enabled=false)
