@@ -170,6 +170,7 @@ public class GeneratorOptionsReader {
 	 * 
 	 * @param name the name of the selected generation method
 	 */
+	@SuppressWarnings("unchecked")
 	public void setMethod(final String name) {
 		try {
 			this.factory = TranslatorGeneratorReflector.getInstance().getClassInstance(name);
