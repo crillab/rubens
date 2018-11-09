@@ -38,8 +38,9 @@
 	<modules>
 		<module>fr.cril.rubens.core</module>
 		<module>fr.cril.rubens.cnf</module>
-		<module>fr.cril.rubens.generator</module>
 		<module>fr.cril.rubens.arg</module>
+		<module>fr.cril.rubens.generator</module>
+		<module>fr.cril.rubens.checker</module>
 	</modules>
 
 	<dependencyManagement>
