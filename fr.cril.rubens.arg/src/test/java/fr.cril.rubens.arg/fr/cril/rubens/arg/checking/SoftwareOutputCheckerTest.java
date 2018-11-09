@@ -64,6 +64,11 @@ public class SoftwareOutputCheckerTest {
 	}
 	
 	@Test
+	public void testNoOnNonEmptySE() {
+		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a"}), "NO"));
+	}
+	
+	@Test
 	public void testSingleArgSE() {
 		assertSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a"}), "[a]"));
 	}
@@ -116,6 +121,8 @@ public class SoftwareOutputCheckerTest {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "foo"));
+		af.setArgUnderDecision(Argument.getInstance("c"));
+		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "foo"));
 	}
 	
 	@Test
@@ -151,6 +158,8 @@ public class SoftwareOutputCheckerTest {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertNotSuccess(SoftwareOutputChecker.DS.check(af, "foo"));
+		af.setArgUnderDecision(Argument.getInstance("b"));
+		assertNotSuccess(SoftwareOutputChecker.DS.check(af, "foo"));
 	}
 	
 	@Test
@@ -163,6 +172,61 @@ public class SoftwareOutputCheckerTest {
 	public void testEE1ext3args() {
 		final ArgumentationFramework af = toAF(new String[]{"a0", "a1", "a2"});
 		assertSuccess(SoftwareOutputChecker.EE.check(af, "[[a1,a2,a0]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEELessThan2Chars() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "f"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEENoOpeningBracket() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEENoClosingBracket() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[["));
+	}
+	
+	@Test
+	public void testSyntaxErrorEENoComma() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[a][b]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEEUnexpectedOpeningBracket() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[[a]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEEUnexpectedClosingBracket() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[][a]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorEENoFinalClosingBracket() {
+		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[a]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorSELessThan2Chars() {
+		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "f"));
+	}
+	
+	@Test
+	public void testSyntaxErrorSENoOpeningBracket() {
+		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "]]"));
+	}
+	
+	@Test
+	public void testSyntaxErrorSENoClosingBracket() {
+		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "[["));
+	}
+	
+	@Test
+	public void testSyntaxErrorSENotALetterOrDigit() {
+		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "[#]"));
 	}
 	
 	private void assertSuccess(final CheckResult result) {

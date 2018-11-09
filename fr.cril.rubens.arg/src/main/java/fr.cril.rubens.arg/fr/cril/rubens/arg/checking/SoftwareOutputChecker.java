@@ -114,7 +114,7 @@ public enum SoftwareOutputChecker {
 	private static List<String> readStrExtensionList(final String extensionList) throws SyntaxErrorException {
 		final char[] chars = extensionList.toCharArray();
 		final SyntaxErrorException e = new SyntaxErrorException("\""+extensionList+"\" is not a valid extension set");
-		throwOn(e, chars[0] != '[' || chars[chars.length-1] != ']');
+		throwOn(e, chars.length < 2 || chars[0] != '[' || chars[chars.length-1] != ']');
 		final List<String> exts = new ArrayList<>();
 		int startIndex = -1;
 		boolean commaExpected = false;

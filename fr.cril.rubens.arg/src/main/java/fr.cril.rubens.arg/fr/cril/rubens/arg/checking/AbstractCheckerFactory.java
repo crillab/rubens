@@ -9,9 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.core.CheckResult;
@@ -26,6 +30,9 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  */
 @CheckerFactoryParams(enabled=false)
 public abstract class AbstractCheckerFactory implements CheckerFactory<ArgumentationFramework> {
+	
+	/** the logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCheckerFactory.class);
 	
 	/** the supplier of test generators */
 	private Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier;
@@ -62,6 +69,26 @@ public abstract class AbstractCheckerFactory implements CheckerFactory<Argumenta
 	
 	@Override
 	public String execSoftware(final String exec, final ArgumentationFramework instance) {
+		final String result = doExecSoftware(exec, instance, false);
+		if(result.equals("")) {
+			return doExecSoftware(exec, instance, true);
+		}
+		return result;
+	}
+	
+	/**
+	 * Executes the software on an instance and returned its output.
+	 * 
+	 * It sometimes happen the standard output stream contains no data although it should.
+	 * This method provides a flag allowing to wait one second before waiting for the subprocess end;
+	 * this sleeping time seems to fix the problem.
+	 * 
+	 * @param exec the software location
+	 * @param instance the instance
+	 * @param wait the waiting flag
+	 * @return the solver output
+	 */
+	private String doExecSoftware(final String exec, final ArgumentationFramework instance, final boolean wait) {
 		Path apxPath = null;
 		try {
 			apxPath = Files.createTempFile("rubens-arg-", ".tmp");
@@ -74,18 +101,12 @@ public abstract class AbstractCheckerFactory implements CheckerFactory<Argumenta
 			pBuilder.directory(Paths.get(exec).getParent().toFile());
 			final Process p = pBuilder.start();
 			final StringBuilder builder = new StringBuilder();
-			final InputStream is = p.getInputStream();
-			new Thread(() -> {
-				try(final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-					String line;
-					while((line = reader.readLine()) != null) {
-						builder.append(line);
-						builder.append('\n');
-					}
-				} catch (IOException e) {
-					return;
-				}
-			}).start();
+			launchStreamThread(p.getInputStream(), l -> builder.append(l).append('\n'));
+			launchStreamThread(p.getErrorStream(), l -> LOGGER.warn("software wrote to stderr: {}", l));
+			p.getOutputStream().close();
+			if(wait) {
+				Thread.sleep(1000);
+			}
 			p.waitFor();
 			Files.delete(apxPath);
 			return builder.toString();
@@ -103,6 +124,29 @@ public abstract class AbstractCheckerFactory implements CheckerFactory<Argumenta
 				// nothing to do here
 			}
 		}
+	}
+	
+	/**
+	 * Launches a stream used to handle {@link ProcessBuilder} input streams.
+	 * 
+	 * The stream is read line per line; each line is then process by the provided {@link Consumer}.
+	 * 
+	 * @param is the input stream
+	 * @param lineHandler the line consumer
+	 */
+	private void launchStreamThread(final InputStream is, final Consumer<String> lineHandler) {
+		new Thread(() -> {
+			try(final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+				String line;
+				while((line = reader.readLine()) != null) {
+					lineHandler.accept(line);
+				}
+				is.close();
+			} catch (IOException e) {
+				LOGGER.warn("got an I/O exception while reading software output with reason: {}", e.getMessage());
+				return;
+			}
+		}).start();
 	}
 
 }
