@@ -72,9 +72,9 @@ public enum SoftwareOutputChecker {
 	private static CheckResult checkDS(final ArgumentationFramework expected, final String result) {
 		final Argument arg = expected.getArgUnderDecision();
 		if(result.equals("YES")) {
-			return expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\"; expected \"NO\"");
+			return expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\" for argument "+arg.getName()+"; expected \"NO\"");
 		} else if(result.equals("NO")) {
-			return expected.getExtensions().stream().anyMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\"; expected \"YES\"");
+			return expected.getExtensions().stream().anyMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\" for argument "+arg.getName()+"; expected \"YES\"");
 		} else {
 			return newError(expected, "got \""+result+"\"; expected \""+(expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
 		}
@@ -83,9 +83,9 @@ public enum SoftwareOutputChecker {
 	private static CheckResult checkDC(final ArgumentationFramework expected, final String result) {
 		final Argument arg = expected.getArgUnderDecision();
 		if(result.equals("YES")) {
-			return expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\"; expected \"NO\"");
+			return expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\" for argument "+arg.getName()+"; expected \"NO\"");
 		} else if(result.equals("NO")) {
-			return expected.getExtensions().stream().allMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\"; expected \"YES\"");
+			return expected.getExtensions().stream().allMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\" for argument "+arg.getName()+"; expected \"YES\"");
 		} else {
 			return newError(expected, "got \""+result+"\"; expected \""+(expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
 		}
