@@ -174,22 +174,6 @@ public class CheckerOptionsReader {
 		setMustExit(STATUS_OPTION_EXIT_OK);
 	}
 	
-//	/**
-//	 * Selects the generation methods, setting the one which name is provided.
-//	 * 
-//	 * If the name does not correspond to an available method, the application exits with a status of {@link CheckerOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
-//	 * 
-//	 * @param name the name of the selected generation method
-//	 */
-//	@SuppressWarnings("unchecked")
-//	public void setMethod(final String name) {
-//		try {
-//			this.factories.put(name, CheckerFactoryReflector.getInstance().getClassInstance(name));
-//		} catch(IllegalArgumentException e) {
-//			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-//		}
-//	}
-	
 	/**
 	 * Selects the generation methods, setting the one which name is provided.
 	 * 
