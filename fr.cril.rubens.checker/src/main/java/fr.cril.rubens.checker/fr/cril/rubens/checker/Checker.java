@@ -40,8 +40,6 @@ public class Checker {
 	
 	private final CheckerOptionsReader checkerOptions;
 
-	private int instanceCount;
-	
 	private boolean cleanedOldFiles = false;
 	
 	/**
@@ -105,7 +103,7 @@ public class Checker {
 		final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
 		if(!checkResult.isSuccessful()) {
 			this.errorCount++;
-			LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.instanceCount, instance, checkResult.getExplanation());
+			LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.errorCount, instance, checkResult.getExplanation());
 			if(this.checkerOptions.getOutputDirectory() != null) {
 				outputInstance(factoryName, instance);
 			}
@@ -122,9 +120,8 @@ public class Checker {
 		cleanOldFiles(outputDirectory, extensions);
 		try {
 			for(final String ext : extensions) {
-				instance.write(ext, new FileOutputStream(new File(outputDirectory, factoryName+"-"+instanceCount+ext)));
+				instance.write(ext, new FileOutputStream(new File(outputDirectory, factoryName+"-"+this.errorCount+ext)));
 			}
-			this.instanceCount++;
 		} catch (IOException e) {
 			this.statusCode = 1;
 		}
