@@ -4,14 +4,14 @@ import fr.cril.rubens.arg.checking.AbstractCheckerFactory;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.testgen.CompleteSemTestGeneratorFactory;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A {@link CheckerFactory} for the DC-CO problem.
  *  
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@CheckerFactoryParams(name="DC-CO")
+@ReflectorParam(name="DC-CO")
 public class DCCOChecker extends AbstractCheckerFactory {
 	
 	/**

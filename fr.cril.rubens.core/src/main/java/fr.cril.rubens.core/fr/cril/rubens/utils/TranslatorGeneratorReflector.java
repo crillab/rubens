@@ -1,7 +1,7 @@
 package fr.cril.rubens.utils;
 
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
  * A class used to retrieve all the available {@link TestGeneratorFactory} instances.
@@ -9,14 +9,14 @@ import fr.cril.rubens.specs.TestGeneratorFactoryParams;
  * 
  * It ignores the factories marked as disabled and allows to get a new instance of one given its name.
  * Each factory may be disabled or named by a unique string.
- * See {@link TestGeneratorFactoryParams} annotation for more information about disabling and naming factories.
+ * See {@link ReflectorParam} annotation for more information about disabling and naming factories.
  * 
  * As this class uses the reflection mechanism, {@link TestGeneratorFactory} implementors must be correctly exported in order to be visible.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @SuppressWarnings("rawtypes")
-public class TranslatorGeneratorReflector extends AReflector<TestGeneratorFactory, TestGeneratorFactoryParams> {
+public class TranslatorGeneratorReflector extends AReflector<TestGeneratorFactory> {
 	
 	/** the instance of {@link TranslatorGeneratorReflector} */
 	private static TranslatorGeneratorReflector instance = null;
@@ -33,18 +33,8 @@ public class TranslatorGeneratorReflector extends AReflector<TestGeneratorFactor
 	}
 
 	private TranslatorGeneratorReflector() {
-		super(TestGeneratorFactory.class, TestGeneratorFactoryParams.class);
+		super(TestGeneratorFactory.class);
 		resetClasses();
-	}
-	
-	@Override
-	protected boolean isEnabled(final TestGeneratorFactoryParams paramAnnotation) {
-		return paramAnnotation.enabled();
-	}
-
-	@Override
-	protected String getName(final TestGeneratorFactoryParams paramAnnotation) {
-		return paramAnnotation.name();
 	}
 
 }

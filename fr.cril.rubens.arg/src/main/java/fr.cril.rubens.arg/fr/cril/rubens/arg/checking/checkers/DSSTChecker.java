@@ -4,14 +4,14 @@ import fr.cril.rubens.arg.checking.AbstractCheckerFactory;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.testgen.StableSemTestGeneratorFactory;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A {@link CheckerFactory} for the DS-ST problem.
  *  
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@CheckerFactoryParams(name="DS-ST")
+@ReflectorParam(name="DS-ST")
 public class DSSTChecker extends AbstractCheckerFactory {
 	
 	/**

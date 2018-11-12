@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.cril.rubens.specs.InstanceTranslator;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 import fr.cril.rubens.utils.TranslatorGeneratorReflector;
 import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
 
@@ -19,7 +19,7 @@ import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(name="CNF")
+@ReflectorParam(name="CNF")
 public class CnfTestGeneratorFactory extends WeightedTestGeneratorFactoryAdapter<CnfInstance> {
 	
 	private final List<InstanceTranslator<CnfInstance>> translators = new ArrayList<>();

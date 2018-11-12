@@ -10,8 +10,8 @@ import fr.cril.rubens.cnf.utils.CnfTranslatorAdapter;
 import fr.cril.rubens.cnf.wmodels.WeightedModelsCnfInstance;
 import fr.cril.rubens.cnf.wmodels.WeightedModelsCnfTestGeneratorFactory;
 import fr.cril.rubens.specs.InstanceTranslator;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 import fr.cril.rubens.utils.TranslatorGeneratorReflector;
 import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
 
@@ -22,7 +22,7 @@ import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(name="WMCCNF")
+@ReflectorParam(name="WMCCNF")
 public class WeightedModelCountingCnfTestGeneratorFactory extends WeightedTestGeneratorFactoryAdapter<WeightedModelCountingCnfInstance> {
 	
 	private final List<InstanceTranslator<WeightedModelCountingCnfInstance>> initTranslators;

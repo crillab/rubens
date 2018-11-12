@@ -1,14 +1,14 @@
 package fr.cril.rubens.arg.testgen;
 
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
  * A {@link TestGeneratorFactory} instance used to build abstract argumentation problems for the Complete semantics.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(name="ARG-ST")
+@ReflectorParam(name="ARG-ST")
 public class StableSemTestGeneratorFactory extends ASemTestGeneratorFactory {
 
 	/**

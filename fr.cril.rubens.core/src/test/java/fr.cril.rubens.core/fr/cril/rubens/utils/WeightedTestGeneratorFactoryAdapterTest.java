@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.InstanceTranslator;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.testutils.StringConcatGeneratorFactory;
 import fr.cril.rubens.testutils.StringInstance;
 
@@ -51,7 +51,7 @@ public class WeightedTestGeneratorFactoryAdapterTest {
 		}
 	}
 	
-	@TestGeneratorFactoryParams(enabled=false)
+	@ReflectorParam(enabled=false)
 	private class WeightedStringConcatGeneratorFactory extends WeightedTestGeneratorFactoryAdapter<StringInstance> {
 		
 		private final StringConcatGeneratorFactory factory;

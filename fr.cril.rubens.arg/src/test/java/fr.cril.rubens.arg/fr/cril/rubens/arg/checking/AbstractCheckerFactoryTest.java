@@ -17,7 +17,7 @@ import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.testgen.SemistableSemTestGeneratorFactory;
 import fr.cril.rubens.arg.utils.Forget;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 public class AbstractCheckerFactoryTest {
@@ -48,7 +48,7 @@ public class AbstractCheckerFactoryTest {
 		assertEquals(CheckResult.SUCCESS, result);
 	}
 	
-	@CheckerFactoryParams(enabled=false)
+	@ReflectorParam(enabled=false)
 	private class Factory extends AbstractCheckerFactory {
 
 		private Factory() {

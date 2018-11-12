@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.InstanceTranslator;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 import fr.cril.rubens.testutils.StringConcatGeneratorFactory;
 
 
@@ -64,7 +64,7 @@ public class TranslatorGeneratorReflectorTest {
 		TranslatorGeneratorReflector.getInstance().resetClasses();
 	}
 	
-	@TestGeneratorFactoryParams(enabled=false)
+	@ReflectorParam(enabled=false)
 	private class UnbuildableFactory implements TestGeneratorFactory<Instance> {
 		
 		private UnbuildableFactory(final Object nevermind) {

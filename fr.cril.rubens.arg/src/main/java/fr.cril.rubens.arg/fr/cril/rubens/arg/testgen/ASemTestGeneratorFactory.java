@@ -6,15 +6,15 @@ import java.util.stream.Stream;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.specs.InstanceTranslator;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
  * Common code for abstract argumentation based test generator factories.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(enabled=false)
+@ReflectorParam(enabled=false)
 public class ASemTestGeneratorFactory implements TestGeneratorFactory<ArgumentationFramework> {
 	
 	private final EExtensionSetComputer extensionSetComputer;

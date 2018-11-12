@@ -1,14 +1,14 @@
 package fr.cril.rubens.arg.testgen;
 
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
  * A {@link TestGeneratorFactory} instance used to build abstract argumentation problems for the Ideal semantics.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@TestGeneratorFactoryParams(name="ARG-ID")
+@ReflectorParam(name="ARG-ID")
 public class IdealSemTestGeneratorFactory extends ASemTestGeneratorFactory {
 
 	/**

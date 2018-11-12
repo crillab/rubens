@@ -4,14 +4,14 @@ import fr.cril.rubens.arg.checking.AbstractCheckerFactory;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.testgen.PreferredSemTestGeneratorFactory;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A {@link CheckerFactory} for the EE-PR problem.
  *  
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@CheckerFactoryParams(name="EE-PR")
+@ReflectorParam(name="EE-PR")
 public class EEPRChecker extends AbstractCheckerFactory {
 
 	/**

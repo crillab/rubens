@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**
@@ -28,7 +28,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  *  
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@CheckerFactoryParams(enabled=false)
+@ReflectorParam(enabled=false)
 public abstract class AbstractCheckerFactory implements CheckerFactory<ArgumentationFramework> {
 	
 	/** the logger */

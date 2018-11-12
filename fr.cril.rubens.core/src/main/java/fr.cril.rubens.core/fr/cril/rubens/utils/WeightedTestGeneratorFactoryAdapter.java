@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.InstanceTranslator;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
 /**
  * A utility class used transform a {@link TestGeneratorFactory} type by adding weights to its translators.
@@ -23,7 +23,7 @@ import fr.cril.rubens.specs.TestGeneratorFactoryParams;
  *
  * @param <T> the type of instances under consideration
  */
-@TestGeneratorFactoryParams(enabled=false)
+@ReflectorParam(enabled=false)
 public abstract class WeightedTestGeneratorFactoryAdapter<T extends Instance> implements TestGeneratorFactory<T> {
 	
 	protected final Logger logger = LoggerFactory.getLogger(WeightedTestGeneratorFactoryAdapter.class);

@@ -2,10 +2,10 @@ package fr.cril.rubens.testutils;
 
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
-@CheckerFactoryParams(enabled=false)
+@ReflectorParam(enabled=false)
 public class StringConcatCheckerFactory implements CheckerFactory<StringInstance> {
 
 	@Override

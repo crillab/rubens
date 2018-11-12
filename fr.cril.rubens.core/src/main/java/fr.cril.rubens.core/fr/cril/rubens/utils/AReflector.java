@@ -1,6 +1,5 @@
 package fr.cril.rubens.utils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,10 +10,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.cril.rubens.specs.ReflectorParam;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 /**
- * A class used to retrieve all the available instances of some classes implementing a given interface parameterized by some special annotations setting them an "enabled" flag and a unique name.
+ * A class used to retrieve all the available instances of some classes implementing a given interface parameterized by annotations setting them an "enabled" flag and a unique name.
  * The classes under consideration must implement the default constructor.
  * 
  * It ignores the classes marked as disabled and allows to get a new instance of one given its name.
@@ -25,9 +25,8 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
  * @author Emmanuel Lonca - lonca@cril.fr
  *
  * @param <F> the class type
- * @param <P> the parameterization annotation type
  */
-public abstract class AReflector<F, P extends Annotation> {
+public abstract class AReflector<F> {
 	
 	/** the logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(AReflector.class);
@@ -38,18 +37,14 @@ public abstract class AReflector<F, P extends Annotation> {
 	/** the implemented type */
 	private final Class<F> interfaceClass;
 	
-	/** the parametrization annotation type */
-	private final Class<P> paramClass;
-
 	/**
 	 * Builds a new reflector given the types of both interface and annotation under consideration.
 	 * 
 	 * @param interfaceClass the type of the interface under consideration
 	 * @param paramClass the type of the annotation under consideration
 	 */
-	protected AReflector(final Class<F> interfaceClass, final Class<P> paramClass) {
+	protected AReflector(final Class<F> interfaceClass) {
 		this.interfaceClass = interfaceClass;
-		this.paramClass = paramClass;
 	}
 	
 	/**
@@ -65,7 +60,7 @@ public abstract class AReflector<F, P extends Annotation> {
 	public void addClass(final String implementorName, final Class<? extends F> classClass) {
 		if(this.classes.containsKey(implementorName)) {
 			final IllegalStateException exception = new IllegalStateException(this.classes.get(implementorName).getCanonicalName()+" and "
-					+ classClass.getCanonicalName()+" share the same name (given by the annotation "+this.paramClass.getCanonicalName());
+					+ classClass.getCanonicalName()+" share the same name (given by the annotation "+ReflectorParam.class.getCanonicalName());
 			LOGGER.error(exception.getMessage());
 			throw exception;
 		}
@@ -86,36 +81,19 @@ public abstract class AReflector<F, P extends Annotation> {
 		for(final Class<?> classClass0 : classClasses) {
 			@SuppressWarnings({ "unchecked" })
 			final Class<? extends F> fClass = (Class<? extends F>) classClass0;
-			P annotation = fClass.getAnnotation(this.paramClass);
+			ReflectorParam annotation = fClass.getAnnotation(ReflectorParam.class);
 			if(annotation == null) {
 				final IllegalStateException exception = new IllegalStateException(fClass.getCanonicalName()+" has no "
-						+ this.paramClass.getCanonicalName()+" annotation");
+						+ ReflectorParam.class.getCanonicalName()+" annotation");
 				LOGGER.error(exception.getMessage());
 				throw exception;
 			}
-			if(!isEnabled(annotation)) {
+			if(!annotation.enabled()) {
 				continue;
 			}
-			final String className = getName(annotation);
-			addClass(className, fClass);
+			addClass(annotation.name(), fClass);
 		}
 	}
-	
-	/**
-	 * Returns the value of the "enable" flag contained in the annotation.
-	 * 
-	 * @param paramAnnotation the annotation
-	 * @return the value of the "enable" flag contained in the annotation
-	 */
-	protected abstract boolean isEnabled(P paramAnnotation);
-	
-	/**
-	 * Returns the name defined in the annotation.
-	 * 
-	 * @param paramAnnotation the annotation
-	 * @return the name defined in the annotation
-	 */
-	protected abstract String getName(P paramAnnotation);
 	
 	/**
 	 * Returns the names of the implementors discovered by the reflection process.

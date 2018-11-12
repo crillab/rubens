@@ -1,7 +1,7 @@
 package fr.cril.rubens.utils;
 
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
+import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A class used to retrieve all the available {@link CheckerFactory} instances.
@@ -9,14 +9,14 @@ import fr.cril.rubens.specs.CheckerFactoryParams;
  * 
  * It ignores the factories marked as disabled and allows to get a new instance of one given its name.
  * Each factory may be disabled or named by a unique string.
- * See {@link CheckerFactoryParams} annotation for more information about disabling and naming factories.
+ * See {@link ReflectorParam} annotation for more information about disabling and naming factories.
  * 
  * As this class uses the reflection mechanism, {@link CheckerFactory} implementors must be correctly exported in order to be visible.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @SuppressWarnings("rawtypes")
-public class CheckerFactoryReflector extends AReflector<CheckerFactory, CheckerFactoryParams> {
+public class CheckerFactoryReflector extends AReflector<CheckerFactory> {
 	
 	/** the only instance of this reflector */
 	private static CheckerFactoryReflector instance = null;
@@ -34,18 +34,8 @@ public class CheckerFactoryReflector extends AReflector<CheckerFactory, CheckerF
 	}
 
 	private CheckerFactoryReflector() {
-		super(CheckerFactory.class, CheckerFactoryParams.class);
+		super(CheckerFactory.class);
 		resetClasses();
-	}
-
-	@Override
-	protected boolean isEnabled(final CheckerFactoryParams paramAnnotation) {
-		return paramAnnotation.enabled();
-	}
-
-	@Override
-	protected String getName(final CheckerFactoryParams paramAnnotation) {
-		return paramAnnotation.name();
 	}
 
 }

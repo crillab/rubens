@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.CheckerFactoryParams;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.testutils.StringConcatCheckerFactory;
 
@@ -63,7 +63,7 @@ public class CheckerFactoryReflectorTest {
 		CheckerFactoryReflector.getInstance().resetClasses();
 	}
 	
-	@CheckerFactoryParams(enabled=false)
+	@ReflectorParam(enabled=false)
 	private class UnbuildableFactory implements CheckerFactory<Instance> {
 		
 		private UnbuildableFactory(final Object nevermind) {
