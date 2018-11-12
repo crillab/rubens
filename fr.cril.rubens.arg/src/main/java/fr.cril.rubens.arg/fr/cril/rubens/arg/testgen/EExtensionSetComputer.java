@@ -175,6 +175,10 @@ public enum EExtensionSetComputer {
 				if(attackers.isEmpty()) {
 					inExt.add(cand);
 					noMoreCandidates.add(cand);
+					attacks.stream().filter(att -> att.getAttacker().equals(cand)).map(Attack::getAttacked).forEach(a -> {
+						defeated.add(a);
+						noMoreCandidates.add(a);
+					});
 				} else if(attackers.stream().anyMatch(inExt::contains)) {
 					defeated.add(cand);
 					noMoreCandidates.add(cand);

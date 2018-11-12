@@ -181,5 +181,26 @@ public class EExtensionSetComputerTest {
 		final ExtensionSet exts = EExtensionSetComputer.STABLE_SEM.compute(Stream.of(arg1, arg2).collect(ArgumentSet.collector()), Stream.of(att11).collect(AttackSet.collector()));
 		assertEquals(0, exts.size());
 	}
+	
+	@Test
+	public void testEEGRAutoattack() {
+		final Argument arg1 = Argument.getInstance("a1");
+		final Argument arg2 = Argument.getInstance("a2");
+		final Attack att11 = Attack.getInstance(arg1, arg1);
+		final Attack att12 = Attack.getInstance(arg1, arg2);
+		final ExtensionSet exts = EExtensionSetComputer.GROUNDED_SEM.compute(Stream.of(arg1, arg2).collect(ArgumentSet.collector()), Stream.of(att11, att12).collect(AttackSet.collector()));
+		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), exts);
+	}
+	
+	@Test
+	public void testEEGRDefense() {
+		final Argument arg1 = Argument.getInstance("a1");
+		final Argument arg2 = Argument.getInstance("a2");
+		final Argument arg3 = Argument.getInstance("a3");
+		final Attack att12 = Attack.getInstance(arg1, arg2);
+		final Attack att23 = Attack.getInstance(arg2, arg3);
+		final ExtensionSet exts = EExtensionSetComputer.GROUNDED_SEM.compute(Stream.of(arg1, arg2, arg3).collect(ArgumentSet.collector()), Stream.of(att12, att23).collect(AttackSet.collector()));
+		assertEquals(ExtensionSet.getInstance(Collections.singleton(Stream.of(arg1, arg3).collect(ArgumentSet.collector()))), exts);
+	}
 
 }
