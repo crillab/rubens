@@ -18,7 +18,7 @@ public class DSGRChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DSGRChecker() {
-		super(GroundedSemTestGeneratorFactory::new, SoftwareOutputChecker.DS::check, "DS-GR");
+		super(() -> new GroundedSemTestGeneratorFactory(false), SoftwareOutputChecker.DS::check, "DS-GR");
 	}
 
 }

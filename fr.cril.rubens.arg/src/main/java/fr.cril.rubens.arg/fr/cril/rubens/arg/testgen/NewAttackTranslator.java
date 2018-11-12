@@ -47,7 +47,10 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 			if(alreadyAttacked.size() < args.size() - (this.autoAttacksAllowed ? 0 : 1)) {
 				final List<Argument> candidateTargets = args.stream().filter(arg -> !alreadyAttacked.contains(arg)).collect(Collectors.toList());
 				Collections.shuffle(candidateTargets);
-				return translate(instance, Attack.getInstance(attacker, candidateTargets.get(0)));
+				final ArgumentationFramework af = translate(instance, Attack.getInstance(attacker, candidateTargets.get(0)));
+				Collections.shuffle(args);
+				af.setArgUnderDecision(args.get(0));
+				return af;
 			}
 		}
 		throw new IllegalStateException();

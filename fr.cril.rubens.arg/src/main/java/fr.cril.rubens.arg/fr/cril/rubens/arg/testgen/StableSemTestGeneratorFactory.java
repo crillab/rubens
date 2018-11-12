@@ -1,11 +1,5 @@
 package fr.cril.rubens.arg.testgen;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import fr.cril.rubens.arg.core.ArgumentationFramework;
-import fr.cril.rubens.specs.InstanceTranslator;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.specs.TestGeneratorFactoryParams;
 
@@ -15,16 +9,26 @@ import fr.cril.rubens.specs.TestGeneratorFactoryParams;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @TestGeneratorFactoryParams(name="ARG-ST")
-public class StableSemTestGeneratorFactory implements TestGeneratorFactory<ArgumentationFramework> {
+public class StableSemTestGeneratorFactory extends ASemTestGeneratorFactory {
 
-	@Override
-	public ArgumentationFramework initInstance() {
-		return new ArgumentationFramework();
+	/**
+	 * Builds a new factory for this semantics with the empty instance used as the root test generation instance.
+	 */
+	public StableSemTestGeneratorFactory() {
+		this(true);
 	}
 
-	@Override
-	public List<InstanceTranslator<ArgumentationFramework>> translators() {
-		return Stream.of(new NewArgTranslator(), new NewAttackTranslator(EExtensionSetComputer.STABLE_SEM)).collect(Collectors.toList());
+	/**
+	 * Builds a new factory for this semantics.
+	 * 
+	 * A flag is used to allow/disallow the empty argumentation framework.
+	 * In case it is allowed, it is the root instance.
+	 * In the other case, the root instance is the one having a single argument and no attacks.
+	 * 
+	 * @param emptyInstanceAllowed the flag used to allow/disallow the empty argumentation framework
+	 */
+	public StableSemTestGeneratorFactory(final boolean emptyInstanceAllowed) {
+		super(EExtensionSetComputer.STABLE_SEM, emptyInstanceAllowed);
 	}
 
 }

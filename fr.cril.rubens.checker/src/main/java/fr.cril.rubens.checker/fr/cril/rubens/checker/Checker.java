@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -38,8 +40,6 @@ public class Checker {
 	
 	private final CheckerOptionsReader checkerOptions;
 
-	private CheckerFactory<Instance> checkerFactory;
-	
 	private int instanceCount;
 	
 	private boolean cleanedOldFiles = false;
@@ -79,33 +79,41 @@ public class Checker {
 			LOGGER.error("an error occurred while parsing this generator parameters; ignoring the checking process");
 			return;
 		}
-		this.checkerFactory = this.checkerOptions.getFactory();
-		final TestGenerator<Instance> generator = new TestGenerator<>(this.checkerFactory.newTestGenerator());
-		generator.computeToDepth(this.checkerOptions.getMaxDepth(), this::checkInstance);
+		final Map<String, CheckerFactory<Instance>> factories = this.checkerOptions.getFactories();
+		for(final Entry<String, CheckerFactory<Instance>> factoryEntry : factories.entrySet()) {
+			final CheckerFactory<Instance> factory = factoryEntry.getValue();
+			final TestGenerator<Instance> generator = new TestGenerator<>(factory.newTestGenerator());
+			final String factoryName = factoryEntry.getKey();
+			LOGGER.info("checking {}", factoryName);
+			generator.computeToDepth(this.checkerOptions.getMaxDepth(), i -> this.checkInstance(factory, factoryName, i));
+		}
 		final Supplier<String> strTimeSupplier = () -> String.format("%.3f", (System.currentTimeMillis() - startTime)/1000f);
 		LOGGER.info("checked {} instances in {}s", this.checkCount, strTimeSupplier.get());
 		LOGGER.info("found {} errors.", this.errorCount);
 	}
 	
 	/**
-	 * Executes the software under test on the provided instance and checks the result.
+	 * Given a checking factory, executes the software under test on the provided instance and checks the result.
+	 * @param factory 
 	 * 
+	 * @param factory the factory
+	 * @param factoryName the name of the factory under consideration
 	 * @param instance the instance
 	 */
-	public void checkInstance(final Instance instance) {
-		final String softwareOutput = this.checkerFactory.execSoftware(this.checkerOptions.getExecLocation(), instance);
-		final CheckResult checkResult = this.checkerFactory.checkSoftwareOutput(instance, softwareOutput);
+	public void checkInstance(final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
+		final String softwareOutput = factory.execSoftware(this.checkerOptions.getExecLocation(), instance);
+		final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
 		if(!checkResult.isSuccessful()) {
 			this.errorCount++;
-			LOGGER.error("error ({}) for instance {}: {}.", this.instanceCount, instance, checkResult.getExplanation());
+			LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.instanceCount, instance, checkResult.getExplanation());
 			if(this.checkerOptions.getOutputDirectory() != null) {
-				outputInstance(instance);
+				outputInstance(factoryName, instance);
 			}
 		}
 		this.checkCount++;
 	}
 	
-	private void outputInstance(final Instance instance) {
+	private void outputInstance(final String factoryName, final Instance instance) {
 		if(this.statusCode != 0) {
 			return;
 		}
@@ -114,7 +122,7 @@ public class Checker {
 		cleanOldFiles(outputDirectory, extensions);
 		try {
 			for(final String ext : extensions) {
-				instance.write(ext, new FileOutputStream(new File(outputDirectory, instanceCount+ext)));
+				instance.write(ext, new FileOutputStream(new File(outputDirectory, factoryName+"-"+instanceCount+ext)));
 			}
 			this.instanceCount++;
 		} catch (IOException e) {

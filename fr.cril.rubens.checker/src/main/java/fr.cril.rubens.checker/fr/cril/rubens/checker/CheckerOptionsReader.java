@@ -3,6 +3,12 @@ package fr.cril.rubens.checker;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -14,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.specs.CheckerFactory;
+import fr.cril.rubens.specs.CheckerFactoryCollection;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.utils.CheckerFactoryCollectionReflector;
 import fr.cril.rubens.utils.CheckerFactoryReflector;
 
 /**
@@ -47,7 +55,7 @@ public class CheckerOptionsReader {
 
 	private int status;
 
-	private CheckerFactory<Instance> factory;
+	private final Map<String, CheckerFactory<Instance>> factories = new HashMap<>();
 	
 	private File outputDirectory;
 	
@@ -101,7 +109,7 @@ public class CheckerOptionsReader {
 		this.options = null;
 		this.mustExit = false;
 		this.status = 0;
-		this.factory = null;
+		this.factories.clear();
 		this.maxDepth = DEFAULT_MAX_DEPTH;
 	}
 	
@@ -121,7 +129,7 @@ public class CheckerOptionsReader {
 	}
 	
 	private void checkOptionsRequirements() {
-		if(this.factory == null) {
+		if(this.factories.isEmpty()) {
 			LOGGER.error("no method set; use -m or --method");
 			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
 			return;
@@ -159,10 +167,28 @@ public class CheckerOptionsReader {
 	 * The available methods are loaded through reflection.
 	 */
 	public void printMethodNamesAndExit() {
-		final String methods = CheckerFactoryReflector.getInstance().classesNames().stream().sorted().reduce((a,b) -> a+", "+b).orElse("<none>");
+		final Stream<String> checkerFactories = CheckerFactoryReflector.getInstance().classesNames().stream();
+		final Stream<String> checkerFactoryCollections = CheckerFactoryCollectionReflector.getInstance().classesNames().stream();
+		final String methods = Stream.concat(checkerFactories, checkerFactoryCollections).sorted().reduce((a,b) -> a+", "+b).orElse("<none>");
 		LOGGER.info("available methods: {}", methods);
 		setMustExit(STATUS_OPTION_EXIT_OK);
 	}
+	
+//	/**
+//	 * Selects the generation methods, setting the one which name is provided.
+//	 * 
+//	 * If the name does not correspond to an available method, the application exits with a status of {@link CheckerOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
+//	 * 
+//	 * @param name the name of the selected generation method
+//	 */
+//	@SuppressWarnings("unchecked")
+//	public void setMethod(final String name) {
+//		try {
+//			this.factories.put(name, CheckerFactoryReflector.getInstance().getClassInstance(name));
+//		} catch(IllegalArgumentException e) {
+//			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+//		}
+//	}
 	
 	/**
 	 * Selects the generation methods, setting the one which name is provided.
@@ -173,11 +199,25 @@ public class CheckerOptionsReader {
 	 */
 	@SuppressWarnings("unchecked")
 	public void setMethod(final String name) {
-		try {
-			this.factory = CheckerFactoryReflector.getInstance().getClassInstance(name);
-		} catch(IllegalArgumentException e) {
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+		final CheckerFactoryCollectionReflector checkerFactoryCollectionReflector = CheckerFactoryCollectionReflector.getInstance();
+		final Collection<String> checkerFactoryCollections = checkerFactoryCollectionReflector.classesNames();
+		if(CheckerFactoryReflector.getInstance().classesNames().contains(name)) {
+			if(checkerFactoryCollections.contains(name)) {
+				LOGGER.error("multiple declaraction of method {}", name);
+				setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+				return;
+			}
+			this.factories.put(name, CheckerFactoryReflector.getInstance().getClassInstance(name));
+			return;
 		}
+		if(!checkerFactoryCollections.contains(name)) {
+			LOGGER.error("no method {}", name);
+			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+			return;
+		}
+		final CheckerFactoryCollection<Instance> collection = checkerFactoryCollectionReflector.getClassInstance(name);
+		final Set<String> collectionNames = collection.getNames();
+		collectionNames.stream().forEach(n -> this.factories.put(n, collection.getFactory(n)));
 	}
 	
 	/**
@@ -280,14 +320,15 @@ public class CheckerOptionsReader {
 	}
 	
 	/**
-	 * Returns the {@link CheckerFactory} instance to use as a generation method.
+	 * Returns the {@link CheckerFactory} instances to use as as checking method.
+	 * Instances are returned as a mapping from the method names to the factories themselves.
 	 * 
-	 * If it has not been set by the appropriate option, the value is <code>null</code>.
+	 * If it has not been set by the appropriate option, the map is empty.
 	 * 
-	 * @return the {@link CheckerFactory} instance to use as a generation method
+	 * @return the {@link CheckerFactory} instances
 	 */
-	public CheckerFactory<Instance> getFactory() {
-		return this.factory;
+	public Map<String, CheckerFactory<Instance>> getFactories() {
+		return Collections.unmodifiableMap(this.factories);
 	}
 	
 	/**

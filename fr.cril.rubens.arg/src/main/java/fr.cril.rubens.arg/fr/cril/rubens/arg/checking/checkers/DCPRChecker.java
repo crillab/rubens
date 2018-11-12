@@ -18,7 +18,7 @@ public class DCPRChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DCPRChecker() {
-		super(PreferredSemTestGeneratorFactory::new, SoftwareOutputChecker.DC::check, "DC-PR");
+		super(() -> new PreferredSemTestGeneratorFactory(false), SoftwareOutputChecker.DC::check, "DC-PR");
 	}
 
 }

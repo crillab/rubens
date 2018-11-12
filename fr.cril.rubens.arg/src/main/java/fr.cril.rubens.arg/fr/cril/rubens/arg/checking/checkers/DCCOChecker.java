@@ -18,7 +18,7 @@ public class DCCOChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DCCOChecker() {
-		super(CompleteSemTestGeneratorFactory::new, SoftwareOutputChecker.DC::check, "DC-CO");
+		super(() -> new CompleteSemTestGeneratorFactory(false), SoftwareOutputChecker.DC::check, "DC-CO");
 	}
 
 }

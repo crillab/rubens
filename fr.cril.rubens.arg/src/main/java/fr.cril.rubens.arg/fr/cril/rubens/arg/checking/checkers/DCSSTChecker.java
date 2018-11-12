@@ -18,7 +18,7 @@ public class DCSSTChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DCSSTChecker() {
-		super(SemistableSemTestGeneratorFactory::new, SoftwareOutputChecker.DC::check, "DC-SST");
+		super(() -> new SemistableSemTestGeneratorFactory(false), SoftwareOutputChecker.DC::check, "DC-SST");
 	}
 
 }

@@ -18,7 +18,7 @@ public class DSSTChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DSSTChecker() {
-		super(StableSemTestGeneratorFactory::new, SoftwareOutputChecker.DS::check, "DS-ST");
+		super(() -> new StableSemTestGeneratorFactory(false), SoftwareOutputChecker.DS::check, "DS-ST");
 	}
 
 }

@@ -16,7 +16,7 @@ import fr.cril.rubens.specs.CheckerFactoryParams;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @SuppressWarnings("rawtypes")
-public class CheckerFactoryReflector extends AReflector<CheckerFactory, CheckerFactoryParams>{
+public class CheckerFactoryReflector extends AReflector<CheckerFactory, CheckerFactoryParams> {
 	
 	/** the only instance of this reflector */
 	private static CheckerFactoryReflector instance = null;

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fr.cril.rubens.arg.checking.checkers.EECOChecker;
+import fr.cril.rubens.specs.CheckerFactory;
+import fr.cril.rubens.specs.Instance;
 
 public class CheckerOptionsReaderTest {
 	
@@ -98,7 +101,9 @@ public class CheckerOptionsReaderTest {
 	public void testDefaultMaxDepth() throws IOException {
 		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO"});
 		assertFalse(this.optReader.mustExit());
-		assertTrue(this.optReader.getFactory().getClass().equals(EECOChecker.class));
+		final Map<String, CheckerFactory<Instance>> factories = this.optReader.getFactories();
+		assertEquals(1, factories.size());
+		assertTrue(factories.entrySet().iterator().next().getValue().getClass().equals(EECOChecker.class));
 		assertEquals(CheckerOptionsReader.DEFAULT_MAX_DEPTH, this.optReader.getMaxDepth());
 	}
 	
@@ -106,7 +111,9 @@ public class CheckerOptionsReaderTest {
 	public void testSetMaxDepth() throws IOException {
 		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-d", "3"});
 		assertFalse(this.optReader.mustExit());
-		assertTrue(this.optReader.getFactory().getClass().equals(EECOChecker.class));
+		final Map<String, CheckerFactory<Instance>> factories = this.optReader.getFactories();
+		assertEquals(1, factories.size());
+		assertTrue(factories.entrySet().iterator().next().getValue().getClass().equals(EECOChecker.class));
 		assertEquals(3, this.optReader.getMaxDepth());
 	}
 	

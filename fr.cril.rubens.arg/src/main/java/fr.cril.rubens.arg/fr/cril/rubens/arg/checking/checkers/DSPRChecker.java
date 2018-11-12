@@ -18,7 +18,7 @@ public class DSPRChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DSPRChecker() {
-		super(PreferredSemTestGeneratorFactory::new, SoftwareOutputChecker.DS::check, "DS-PR");
+		super(() -> new PreferredSemTestGeneratorFactory(false), SoftwareOutputChecker.DS::check, "DS-PR");
 	}
 
 }

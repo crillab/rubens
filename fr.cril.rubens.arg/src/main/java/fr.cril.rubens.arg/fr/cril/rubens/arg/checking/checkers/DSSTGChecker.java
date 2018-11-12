@@ -18,7 +18,7 @@ public class DSSTGChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DSSTGChecker() {
-		super(StageSemTestGeneratorFactory::new, SoftwareOutputChecker.DS::check, "DS-STG");
+		super(() -> new StageSemTestGeneratorFactory(false), SoftwareOutputChecker.DS::check, "DS-STG");
 	}
 
 }

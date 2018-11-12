@@ -18,7 +18,7 @@ public class DSIDChecker extends AbstractCheckerFactory {
 	 * Builds a new instance of this factory.
 	 */
 	public DSIDChecker() {
-		super(IdealSemTestGeneratorFactory::new, SoftwareOutputChecker.DS::check, "DS-ID");
+		super(() -> new IdealSemTestGeneratorFactory(false), SoftwareOutputChecker.DS::check, "DS-ID");
 	}
 
 }
