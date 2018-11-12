@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import fr.cril.rubens.utils.CheckerFactoryReflector;
+import fr.cril.rubens.reflection.CheckerFactoryReflector;
 
 public class CheckersInstantiationTest {
 	

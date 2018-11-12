@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import fr.cril.rubens.utils.CheckerFactoryReflector;
+import fr.cril.rubens.reflection.CheckerFactoryReflector;
+import fr.cril.rubens.reflection.ReflectorParam;
 
 /**
  * Common code for {@link CheckerFactoryCollection} instances.

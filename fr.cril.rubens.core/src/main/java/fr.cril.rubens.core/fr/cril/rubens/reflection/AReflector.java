@@ -1,4 +1,4 @@
-package fr.cril.rubens.utils;
+package fr.cril.rubens.reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -10,7 +10,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.cril.rubens.specs.ReflectorParam;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 /**

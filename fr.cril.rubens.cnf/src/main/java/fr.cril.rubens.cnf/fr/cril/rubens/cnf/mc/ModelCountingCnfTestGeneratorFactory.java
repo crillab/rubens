@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.CnfTestGeneratorFactory;
 import fr.cril.rubens.cnf.utils.CnfTranslatorAdapter;
+import fr.cril.rubens.reflection.ReflectorParam;
+import fr.cril.rubens.reflection.TranslatorGeneratorReflector;
 import fr.cril.rubens.specs.InstanceTranslator;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.utils.TranslatorGeneratorReflector;
 import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
 
 /**

@@ -1,6 +1,6 @@
 package fr.cril.rubens.arg.testgen;
 
-import fr.cril.rubens.specs.ReflectorParam;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**

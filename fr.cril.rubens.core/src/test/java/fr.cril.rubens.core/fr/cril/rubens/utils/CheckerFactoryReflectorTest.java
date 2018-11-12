@@ -9,9 +9,10 @@ import org.junit.After;
 import org.junit.Test;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.reflection.CheckerFactoryReflector;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.testutils.StringConcatCheckerFactory;
 

@@ -1,7 +1,6 @@
-package fr.cril.rubens.utils;
+package fr.cril.rubens.reflection;
 
 import fr.cril.rubens.specs.CheckerFactoryCollection;
-import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A class used to retrieve all the available {@link CheckerFactoryCollection} instances.

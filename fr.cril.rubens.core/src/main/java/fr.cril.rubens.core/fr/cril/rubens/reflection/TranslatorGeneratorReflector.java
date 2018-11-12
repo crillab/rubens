@@ -1,6 +1,5 @@
-package fr.cril.rubens.utils;
+package fr.cril.rubens.reflection;
 
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**

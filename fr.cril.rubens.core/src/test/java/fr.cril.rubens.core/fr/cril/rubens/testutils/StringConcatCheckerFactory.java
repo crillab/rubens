@@ -1,8 +1,8 @@
 package fr.cril.rubens.testutils;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 @ReflectorParam(enabled=false)

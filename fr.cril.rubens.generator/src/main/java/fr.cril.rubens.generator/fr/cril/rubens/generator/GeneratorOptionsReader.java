@@ -13,9 +13,9 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.cril.rubens.reflection.TranslatorGeneratorReflector;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.utils.TranslatorGeneratorReflector;
 
 /**
  * This class is used to parse the options of the command line interface and translate them into a configuration for the instance generator.

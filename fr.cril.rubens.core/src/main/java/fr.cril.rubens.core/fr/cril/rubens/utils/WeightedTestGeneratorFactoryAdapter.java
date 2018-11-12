@@ -8,9 +8,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.InstanceTranslator;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**

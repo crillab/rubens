@@ -1,4 +1,4 @@
-package fr.cril.rubens.specs;
+package fr.cril.rubens.reflection;
 
 import static java.lang.annotation.ElementType.TYPE;
 

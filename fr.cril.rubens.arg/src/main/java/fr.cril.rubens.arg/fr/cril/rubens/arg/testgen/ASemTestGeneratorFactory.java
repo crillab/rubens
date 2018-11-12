@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.InstanceTranslator;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**

@@ -2,6 +2,8 @@ package fr.cril.rubens.specs;
 
 import java.util.Set;
 
+import fr.cril.rubens.reflection.ReflectorParam;
+
 /**
  * An interface for collections of {@link CheckerFactory} instances.
  * 

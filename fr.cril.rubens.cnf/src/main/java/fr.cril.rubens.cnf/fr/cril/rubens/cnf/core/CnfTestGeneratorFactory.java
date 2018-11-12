@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.cril.rubens.reflection.ReflectorParam;
+import fr.cril.rubens.reflection.TranslatorGeneratorReflector;
 import fr.cril.rubens.specs.InstanceTranslator;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
-import fr.cril.rubens.utils.TranslatorGeneratorReflector;
 import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
 
 /**

@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**

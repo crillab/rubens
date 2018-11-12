@@ -3,8 +3,8 @@ package fr.cril.rubens.arg.checking.checkers;
 import fr.cril.rubens.arg.checking.AbstractCheckerFactory;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.testgen.PreferredSemTestGeneratorFactory;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
-import fr.cril.rubens.specs.ReflectorParam;
 
 /**
  * A {@link CheckerFactory} for the SE-PR problem.
