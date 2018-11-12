@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.specs.InstanceTranslator;
 
@@ -39,7 +40,7 @@ public class NewArgTranslator implements InstanceTranslator<ArgumentationFramewo
 		final ArgumentSet newArguments = Stream.concat(instance.getArguments().stream(), Stream.of(newArg)).collect(ArgumentSet.collector());
 		final ExtensionSet newExtensions = instance.getExtensions().isEmpty() ? Stream.of(ArgumentSet.getInstance(Collections.singleton(newArg))).collect(ExtensionSet.collector())
 				: instance.getExtensions().stream().map(s -> Stream.concat(s.stream(), Stream.of(newArg)).collect(ArgumentSet.collector())).collect(ExtensionSet.collector());
-		final ArgumentationFramework af = new ArgumentationFramework(newArguments, instance.getAttacks(), newExtensions);
+		final ArgumentationFramework af = new ArgumentationFramework(newArguments, instance.getAttacks(), newExtensions, instance, ArgumentationFrameworkTranslation.newArgument(newArg));
 		final List<Argument> argList = newArguments.stream().collect(Collectors.toList());
 		Collections.shuffle(argList);
 		af.setArgUnderDecision(argList.get(0));

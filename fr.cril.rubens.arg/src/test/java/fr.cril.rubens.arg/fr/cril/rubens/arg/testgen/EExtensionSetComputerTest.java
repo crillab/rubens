@@ -172,5 +172,14 @@ public class EExtensionSetComputerTest {
 		assertEquals(1, exts.size());
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
 	}
+	
+	@Test
+	public void testEESTAutoattacks() {
+		final Argument arg1 = Argument.getInstance("a1");
+		final Argument arg2 = Argument.getInstance("a2");
+		final Attack att11 = Attack.getInstance(arg1, arg1);
+		final ExtensionSet exts = EExtensionSetComputer.STABLE_SEM.compute(Stream.of(arg1, arg2).collect(ArgumentSet.collector()), Stream.of(att11).collect(AttackSet.collector()));
+		assertEquals(0, exts.size());
+	}
 
 }

@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation;
 import fr.cril.rubens.arg.core.Attack;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
@@ -67,7 +68,7 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 		final AttackSet newAttacks = Stream.concat(instance.getAttacks().stream(), Stream.of(newAttack)).collect(AttackSet.collector());
 		final ArgumentSet args = instance.getArguments();
 		final ExtensionSet newExtensions = this.extensionSetComputer.compute(args, newAttacks);
-		return new ArgumentationFramework(args, newAttacks, newExtensions);
+		return new ArgumentationFramework(args, newAttacks, newExtensions, instance, ArgumentationFrameworkTranslation.newAttack(newAttack));
 	}
 
 	/**

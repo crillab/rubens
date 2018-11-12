@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,6 +15,10 @@ import fr.cril.rubens.specs.Instance;
 
 /**
  * A class used to handle argumentation frameworks.
+ * 
+ * In case a framework is the result of applying a sequence of translations from the empty framework,
+ * it is advised to instantiate it using the {@link ArgumentationFramework#ArgumentationFramework(ArgumentSet, AttackSet, ExtensionSet, ArgumentationFramework, ArgumentationFrameworkTranslation)}
+ * constructor to build the new one; this will keep the translation history.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
@@ -37,13 +42,15 @@ public class ArgumentationFramework implements Instance {
 	/** the argument under consideration while considering DC/DS queries */
 	private Argument argUnderDecision;
 	
+	/** the history of translation applied from the initial framework to this one */
+	private final List<ArgumentationFrameworkTranslation> translationHistory;
+	
 	/**
 	 * Builds a new empty instance of {@link ArgumentationFramework}.
 	 */
 	public ArgumentationFramework() {
-		this.arguments = ArgumentSet.getInstance(Collections.emptySet());
-		this.attacks = AttackSet.getInstance(Collections.emptySet());
-		this.extensions = ExtensionSet.getInstance(Collections.emptySet());
+		this(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.emptySet()),
+				Stream.of(ArgumentationFrameworkTranslation.emptyAF()).collect(Collectors.toUnmodifiableList()));
 	}
 	
 	/**
@@ -54,12 +61,34 @@ public class ArgumentationFramework implements Instance {
 	 * @param extensions the set of extensions
 	 */
 	public ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions) {
+		this(arguments, attacks, extensions, null);
+	}
+	
+	/**
+	 * Builds a new argumentation frameworks given all its characteristics and the translation that created it.
+	 * 
+	 * In case a framework is the result of applying a sequence of translations from the empty framework,
+	 * it is advised to instantiate it using this constructor to build the new one; this will keep the translation history.
+	 * 
+	 * @param arguments the set of arguments
+	 * @param attacks the set of attacks
+	 * @param extensions the set of extensions
+	 * @param oldFramework the previous argumentation framework
+	 * @param translation the translation used to translate the old framework to this new one
+	 */
+	public ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, final ArgumentationFramework oldFramework,
+			final ArgumentationFrameworkTranslation translation) {
+		this(arguments, attacks, extensions, Stream.concat(oldFramework.translationHistory.stream(), Stream.of(translation)).collect(Collectors.toUnmodifiableList()));
+	}
+	
+	private ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, List<ArgumentationFrameworkTranslation> history) {
 		if(arguments == null || attacks == null || extensions == null) {
 			throw new IllegalArgumentException();
 		}
 		this.arguments = arguments;
 		this.attacks = attacks;
 		this.extensions = extensions;
+		this.translationHistory = history;
 	}
 
 	@Override
@@ -153,6 +182,18 @@ public class ArgumentationFramework implements Instance {
 	 */
 	public Argument getArgUnderDecision() {
 		return this.argUnderDecision;
+	}
+	
+	/**
+	 * Returns the translation history from the root instance that have lead to this instance.
+	 * 
+	 * If this instance was obtained by {@link ArgumentationFramework#ArgumentationFramework(ArgumentSet, AttackSet, ExtensionSet)},
+	 * this method will return <code>null</code>.
+	 * 
+	 * @return the translation history from the root instance that have lead to this instance
+	 */
+	public List<ArgumentationFrameworkTranslation> getTranslationHistory() {
+		return this.translationHistory;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.core.CheckResult;
 
@@ -35,6 +36,9 @@ public enum SoftwareOutputChecker {
 
 	/** algorithm for the DC query */
 	DC(SoftwareOutputChecker::checkDC);
+	
+	/** a flag indicating the generation history must be appended to the error message when a check fails */
+	private static final boolean ADD_HISTORY_TO_ERR = true;
 
 	private final BiFunction<ArgumentationFramework, String, CheckResult> checkingFunction;
 
@@ -59,42 +63,42 @@ public enum SoftwareOutputChecker {
 	private static CheckResult checkEE(final ArgumentationFramework expected, final String result) {
 		try {
 			final ExtensionSet ext = readExtensionList(result);
-			return expected.getExtensions().equals(ext) ? CheckResult.SUCCESS : CheckResult.newError("got "+result+"; expected "+expected.getExtensions());
+			return expected.getExtensions().equals(ext) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected "+expected.getExtensions());
 		} catch (SyntaxErrorException e) {
-			return CheckResult.newError(e.getMessage());
+			return newError(expected, e.getMessage());
 		}
 	}
 
 	private static CheckResult checkDS(final ArgumentationFramework expected, final String result) {
 		final Argument arg = expected.getArgUnderDecision();
 		if(result.equals("YES")) {
-			return expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : CheckResult.newError("got \"YES\"; expected \"NO\"");
+			return expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\"; expected \"NO\"");
 		} else if(result.equals("NO")) {
-			return expected.getExtensions().stream().anyMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : CheckResult.newError("got \"NO\"; expected \"YES\"");
+			return expected.getExtensions().stream().anyMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\"; expected \"YES\"");
 		} else {
-			return CheckResult.newError("got \""+result+"\"; expected \""+(expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
+			return newError(expected, "got \""+result+"\"; expected \""+(expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
 		}
 	}
 
 	private static CheckResult checkDC(final ArgumentationFramework expected, final String result) {
 		final Argument arg = expected.getArgUnderDecision();
 		if(result.equals("YES")) {
-			return expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : CheckResult.newError("got \"YES\"; expected \"NO\"");
+			return expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"YES\"; expected \"NO\"");
 		} else if(result.equals("NO")) {
-			return expected.getExtensions().stream().allMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : CheckResult.newError("got \"NO\"; expected \"YES\"");
+			return expected.getExtensions().stream().allMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : newError(expected, "got \"NO\"; expected \"YES\"");
 		} else {
-			return CheckResult.newError("got \""+result+"\"; expected \""+(expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
+			return newError(expected, "got \""+result+"\"; expected \""+(expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? "YES" : "NO" )+"\"");
 		}
 	}
 
 	private static CheckResult checkSE(final ArgumentationFramework expected, final String result) {
 		if(result.equals("NO")) {
-			return expected.getExtensions().isEmpty() ? CheckResult.SUCCESS : CheckResult.newError("got \"NO\"; expected one extension in "+expected.getExtensions());
+			return expected.getExtensions().isEmpty() ? CheckResult.SUCCESS : newError(expected, "got \"NO\"; expected one extension in "+expected.getExtensions());
 		}
 		try {
-			return expected.getExtensions().contains(readExtension(result)) ? CheckResult.SUCCESS : CheckResult.newError("got "+result+"; expected one extension in "+expected.getExtensions());
+			return expected.getExtensions().contains(readExtension(result)) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected one extension in "+expected.getExtensions());
 		} catch (SyntaxErrorException e) {
-			return CheckResult.newError(e.getMessage());
+			return newError(expected, e.getMessage());
 		}
 	}
 
@@ -143,6 +147,21 @@ public enum SoftwareOutputChecker {
 		if(test) {
 			throw e;
 		}
+	}
+	
+	/**
+	 * Returns a new {@link CheckResult} instance for fail check with the given reason.
+	 * 
+	 * If the dedicated flag is set, the generation history of the instance is added to the reason.
+	 * 
+	 * @param instance the instance that failed the check
+	 * @param reason the reason of the fail
+	 * @return the corresponding {@link CheckResult} instance
+	 */
+	private static CheckResult newError(final ArgumentationFramework instance, final String reason) {
+		final String effectiveReason = ADD_HISTORY_TO_ERR ? reason+" (generation history: "+instance.getTranslationHistory().stream().map(ArgumentationFrameworkTranslation::getDescription)
+				.reduce((a,b) -> a+", "+b).orElseThrow()+")" : reason;
+		return CheckResult.newError(effectiveReason);
 	}
 
 	private static ArgumentSet readExtension(final String extension) throws SyntaxErrorException {
