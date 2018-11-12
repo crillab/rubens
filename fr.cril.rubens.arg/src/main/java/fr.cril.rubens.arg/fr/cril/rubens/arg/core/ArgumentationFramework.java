@@ -49,7 +49,7 @@ public class ArgumentationFramework implements Instance {
 	 * Builds a new empty instance of {@link ArgumentationFramework}.
 	 */
 	public ArgumentationFramework() {
-		this(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.emptySet()),
+		this(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))),
 				Stream.of(ArgumentationFrameworkTranslation.emptyAF()).collect(Collectors.toUnmodifiableList()));
 	}
 	
@@ -78,7 +78,8 @@ public class ArgumentationFramework implements Instance {
 	 */
 	public ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, final ArgumentationFramework oldFramework,
 			final ArgumentationFrameworkTranslation translation) {
-		this(arguments, attacks, extensions, Stream.concat(oldFramework.translationHistory.stream(), Stream.of(translation)).collect(Collectors.toUnmodifiableList()));
+		this(arguments, attacks, extensions, oldFramework.translationHistory == null ? null :
+			Stream.concat(oldFramework.translationHistory.stream(), Stream.of(translation)).collect(Collectors.toUnmodifiableList()));
 	}
 	
 	private ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, List<ArgumentationFrameworkTranslation> history) {

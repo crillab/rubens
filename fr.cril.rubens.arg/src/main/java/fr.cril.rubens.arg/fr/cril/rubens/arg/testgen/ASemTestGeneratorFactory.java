@@ -21,7 +21,7 @@ public class ASemTestGeneratorFactory implements TestGeneratorFactory<Argumentat
 	
 	private final ArgumentationFramework initInstance;
 	
-	private NewArgTranslator newArgTranslator = new NewArgTranslator();
+	private NewArgTranslator newArgTranslator;
 
 	/**
 	 * Builds a new abstract argumentation based test generator factory.
@@ -36,6 +36,7 @@ public class ASemTestGeneratorFactory implements TestGeneratorFactory<Argumentat
 	protected ASemTestGeneratorFactory(final EExtensionSetComputer extensionSetComputer, final boolean emptyExtensionAllowed) {
 		this.extensionSetComputer = extensionSetComputer;
 		final ArgumentationFramework emptyInstance = new ArgumentationFramework();
+		this.newArgTranslator = new NewArgTranslator(extensionSetComputer);
 		this.initInstance = emptyExtensionAllowed ? emptyInstance : this.newArgTranslator.translate(emptyInstance);
 	}
 	
@@ -47,7 +48,7 @@ public class ASemTestGeneratorFactory implements TestGeneratorFactory<Argumentat
 	@Override
 	public List<InstanceTranslator<ArgumentationFramework>> translators() {
 		final List<InstanceTranslator<ArgumentationFramework>> result = Stream.of(this.newArgTranslator, new NewAttackTranslator(this.extensionSetComputer)).collect(Collectors.toList());
-		this.newArgTranslator = new NewArgTranslator();
+		this.newArgTranslator = new NewArgTranslator(this.extensionSetComputer);
 		return result;
 	}
 

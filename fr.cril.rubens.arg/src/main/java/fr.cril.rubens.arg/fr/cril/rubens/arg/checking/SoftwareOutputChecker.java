@@ -159,8 +159,8 @@ public enum SoftwareOutputChecker {
 	 * @return the corresponding {@link CheckResult} instance
 	 */
 	private static CheckResult newError(final ArgumentationFramework instance, final String reason) {
-		final String effectiveReason = ADD_HISTORY_TO_ERR ? reason+" (generation history: "+instance.getTranslationHistory().stream().map(ArgumentationFrameworkTranslation::getDescription)
-				.reduce((a,b) -> a+", "+b).orElseThrow()+")" : reason;
+		final String effectiveReason = ADD_HISTORY_TO_ERR && instance.getTranslationHistory() != null ?
+				reason+" (generation history: "+instance.getTranslationHistory().stream().map(ArgumentationFrameworkTranslation::getDescription).reduce((a,b) -> a+", "+b).orElseThrow()+")" : reason;
 		return CheckResult.newError(effectiveReason);
 	}
 

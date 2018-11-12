@@ -33,7 +33,7 @@ public class NewArgTranslatorTest {
 	@Before
 	public void setUp() {
 		Forget.all();
-		this.translator = new NewArgTranslator();
+		this.translator = new NewArgTranslator(EExtensionSetComputer.COMPLETE_SEM);
 		final Argument argA = Argument.getInstance("a0");
 		final Argument argB = Argument.getInstance("a1");
 		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());

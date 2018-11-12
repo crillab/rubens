@@ -98,6 +98,9 @@ public enum EExtensionSetComputer {
 	}
 	
 	private static ExtensionSet computeStableExtensions(final ArgumentSet arguments, final AttackSet attacks) {
+		if(arguments.size() == 0) {
+			return ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet())));
+		}
 		final ExtensionSet completeExts = computeCompleteExtensions(arguments, attacks);
 		return completeExts.stream().filter(ext -> attacks.rangeOf(ext).size() == arguments.size()).collect(ExtensionSet.collector());
 	}

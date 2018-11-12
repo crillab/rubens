@@ -21,6 +21,18 @@ public class NewArgTranslator implements InstanceTranslator<ArgumentationFramewo
 	
 	/** the integer index used to build argument names */
 	private int nextArgIndex = 0;
+	
+	/** the algorithm used to compute extensions */
+	private EExtensionSetComputer extensionSetComputer;
+	
+	/**
+	 * Builds a new instance of this translator given the algorithm used to compute extensions.
+	 * 
+	 * @param extensionSetComputer the algorithm used to compute extensions
+	 */
+	public NewArgTranslator(final EExtensionSetComputer extensionSetComputer) {
+		this.extensionSetComputer = extensionSetComputer;
+	}
 
 	@Override
 	public boolean canBeAppliedTo(final ArgumentationFramework instance) {
@@ -38,8 +50,7 @@ public class NewArgTranslator implements InstanceTranslator<ArgumentationFramewo
 		}
 		final Argument newArg = newArg0;
 		final ArgumentSet newArguments = Stream.concat(instance.getArguments().stream(), Stream.of(newArg)).collect(ArgumentSet.collector());
-		final ExtensionSet newExtensions = instance.getExtensions().isEmpty() ? Stream.of(ArgumentSet.getInstance(Collections.singleton(newArg))).collect(ExtensionSet.collector())
-				: instance.getExtensions().stream().map(s -> Stream.concat(s.stream(), Stream.of(newArg)).collect(ArgumentSet.collector())).collect(ExtensionSet.collector());
+		final ExtensionSet newExtensions = this.extensionSetComputer.compute(newArguments, instance.getAttacks());
 		final ArgumentationFramework af = new ArgumentationFramework(newArguments, instance.getAttacks(), newExtensions, instance, ArgumentationFrameworkTranslation.newArgument(newArg));
 		final List<Argument> argList = newArguments.stream().collect(Collectors.toList());
 		Collections.shuffle(argList);

@@ -31,7 +31,7 @@ public class ArgumentationFrameworkTest {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		assertEquals(ArgumentSet.getInstance(Collections.emptySet()), af.getArguments());
 		assertEquals(AttackSet.getInstance(Collections.emptySet()), af.getAttacks());
-		assertEquals(ExtensionSet.getInstance(Collections.emptySet()), af.getExtensions());
+		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), af.getExtensions());
 	}
 	
 	@Test
@@ -70,9 +70,10 @@ public class ArgumentationFrameworkTest {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		af.write(".exts", os);
 		final List<String> lines = Arrays.stream(new String(os.toByteArray()).split("\n")).map(String::trim).filter(l -> !l.isEmpty()).collect(Collectors.toList());
-		assertEquals(2, lines.size());
+		assertEquals(3, lines.size());
 		assertEquals("[", lines.get(0));
-		assertEquals("]", lines.get(1));
+		assertEquals("[]", lines.get(1));
+		assertEquals("]", lines.get(2));
 	}
 	
 	@Test
@@ -129,7 +130,7 @@ public class ArgumentationFrameworkTest {
 		final ArgumentationFramework af = new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.emptySet()),
-				ExtensionSet.getInstance(Collections.emptySet()));
+				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))));
 		assertEquals(new ArgumentationFramework().hashCode(), af.hashCode());
 	}
 	
@@ -138,7 +139,7 @@ public class ArgumentationFrameworkTest {
 		final ArgumentationFramework af = new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.emptySet()),
-				ExtensionSet.getInstance(Collections.emptySet()));
+				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))));
 		assertTrue(new ArgumentationFramework().equals(af));
 	}
 	
@@ -194,7 +195,7 @@ public class ArgumentationFrameworkTest {
 	
 	@Test
 	public void testToString() {
-		assertEquals("[[], [], []]", new ArgumentationFramework().toString());
+		assertEquals("[[], [], [[]]]", new ArgumentationFramework().toString());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
