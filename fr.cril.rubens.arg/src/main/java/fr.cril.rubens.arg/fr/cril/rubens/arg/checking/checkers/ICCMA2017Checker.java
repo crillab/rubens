@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.specs.ACheckerFactoryCollection;
+import fr.cril.rubens.utils.ACheckerFactoryCollection;
 
 /**
  * A checker factory collection matching the regular tracks of ICCMA 2017.
