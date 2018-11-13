@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -117,7 +118,9 @@ public class SoftwareExecutor {
 	private static Path writeInstanceToTemp(final ArgumentationFramework instance) throws IOException {
 		Path apxPath;
 		apxPath = Files.createTempFile("rubens-arg-", ".tmp", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr-x---")));
-		instance.write(AArgumentationFrameworkGraph.APX_EXT, Files.newOutputStream(apxPath));
+		final OutputStream os = Files.newOutputStream(apxPath);
+		instance.write(AArgumentationFrameworkGraph.APX_EXT, os);
+		os.close();
 		return apxPath;
 	}
 	
