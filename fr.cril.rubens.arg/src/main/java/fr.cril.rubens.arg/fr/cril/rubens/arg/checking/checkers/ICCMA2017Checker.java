@@ -12,6 +12,7 @@ import fr.cril.rubens.utils.ACheckerFactoryCollection;
  * 
  * These tracks consist of the Cartesian product of the queries (all extensions, one extension, credulous acceptance, skeptical acceptance)
  * and the semantics (complete, grounded, preferred, stable, semistable, stage and ideal) involved in the competition.
+ * The "Dung's Triathlon" is added to these tracks.
  * 
  * Note that contrary to the competition, some equivalent tasks are launched more than once (e.g. SE-GR and EE-GR).
  * 
@@ -24,7 +25,10 @@ public class ICCMA2017Checker extends ACheckerFactoryCollection<ArgumentationFra
 	 * Builds a new instance of {@link ICCMA2017Checker}.
 	 */
 	public ICCMA2017Checker() {
-		super(Stream.of("CO", "GR", "PR", "ST", "SST", "STG", "ID").map(sem -> Stream.of("EE", "SE", "DS", "DC").map(q -> q+"-"+sem)).flatMap(s -> s).collect(Collectors.toList()));
+		super(Stream.concat(
+				Stream.of("CO", "GR", "PR", "ST", "SST", "STG", "ID").map(sem -> Stream.of("EE", "SE", "DS", "DC").map(q -> q+"-"+sem)).flatMap(s -> s),
+				Stream.of("D3")
+		).collect(Collectors.toList()));
 	}
 
 }
