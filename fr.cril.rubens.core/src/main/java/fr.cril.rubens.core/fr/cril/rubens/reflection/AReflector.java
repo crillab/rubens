@@ -1,5 +1,6 @@
 package fr.cril.rubens.reflection;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public abstract class AReflector<F> {
 			return clazz.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			final IllegalArgumentException exception = new IllegalArgumentException("cannot instantiate class: \"+name+\"", e);
+			final IllegalArgumentException exception = new IllegalArgumentException("cannot instantiate class: "+name, e);
 			LOGGER.error(exception.getMessage());
 			throw exception;
 		}
