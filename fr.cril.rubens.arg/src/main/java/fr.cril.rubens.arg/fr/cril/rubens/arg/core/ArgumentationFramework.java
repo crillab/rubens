@@ -4,14 +4,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import fr.cril.rubens.specs.Instance;
 
 /**
  * A class used to handle argumentation frameworks.
@@ -22,28 +19,13 @@ import fr.cril.rubens.specs.Instance;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class ArgumentationFramework implements Instance {
-	
-	/** file extension associated with the Aspartix format */
-	private static final String APX_EXT = ".apx";
-	
-	/** file extension associated with the set of extensions */
-	private static final String EXTS_EXT = ".exts";
-	
-	/** the set of arguments involved in the framework */
-	private final ArgumentSet arguments;
-	
-	/** the set of attacks of the framework */
-	private final AttackSet attacks;
+public class ArgumentationFramework extends AArgumentationFrameworkGraph {
 	
 	/** the set of extensions associated with this framework */
 	private final ExtensionSet extensions;
 	
 	/** the argument under consideration while considering DC/DS queries */
 	private Argument argUnderDecision;
-	
-	/** the history of translation applied from the initial framework to this one */
-	private final List<ArgumentationFrameworkTranslation> translationHistory;
 	
 	/**
 	 * Builds a new empty instance of {@link ArgumentationFramework}.
@@ -78,49 +60,20 @@ public class ArgumentationFramework implements Instance {
 	 */
 	public ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, final ArgumentationFramework oldFramework,
 			final ArgumentationFrameworkTranslation translation) {
-		this(arguments, attacks, extensions, oldFramework.translationHistory == null ? null :
-			Stream.concat(oldFramework.translationHistory.stream(), Stream.of(translation)).collect(Collectors.toUnmodifiableList()));
+		this(arguments, attacks, extensions, oldFramework.getTranslationHistory() == null ? null :
+			Stream.concat(oldFramework.getTranslationHistory().stream(), Stream.of(translation)).collect(Collectors.toUnmodifiableList()));
 	}
 	
 	private ArgumentationFramework(final ArgumentSet arguments, final AttackSet attacks, final ExtensionSet extensions, List<ArgumentationFrameworkTranslation> history) {
-		if(arguments == null || attacks == null || extensions == null) {
+		super(arguments, attacks, history);
+		if(extensions == null) {
 			throw new IllegalArgumentException();
 		}
-		this.arguments = arguments;
-		this.attacks = attacks;
 		this.extensions = extensions;
-		this.translationHistory = history;
 	}
 
 	@Override
-	public Collection<String> getFileExtensions() {
-		return Stream.of(APX_EXT, EXTS_EXT).collect(Collectors.toList());
-	}
-
-	@Override
-	public void write(final String extension, final OutputStream os) throws IOException {
-		if(os == null) {
-			throw new IllegalArgumentException();
-		}
-		if(APX_EXT.equals(extension)) {
-			writeInstance(os);
-		} else if(EXTS_EXT.equals(extension)) {
-			writeExtensions(os);
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	private void writeInstance(final OutputStream os) throws IOException {
-		try(final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-			final StringBuilder builder = new StringBuilder();
-			this.arguments.stream().map(Argument::getName).forEach(s -> builder.append("arg(").append(s).append(").\n"));
-			this.attacks.stream().map(att -> "att("+att.getAttacker().getName()+","+att.getAttacked().getName()+").\n").forEach(builder::append);
-			writer.write(builder.toString());
-		}
-	}
-
-	private void writeExtensions(final OutputStream os) throws IOException {
+	protected void writeExtensions(final OutputStream os) throws IOException {
 		try(final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
 			final Optional<String> content = this.extensions.stream().map(this::extensionToString).reduce((acc, ext) -> acc+",\n"+ext);
 			if(!content.isPresent()) {
@@ -131,28 +84,6 @@ public class ArgumentationFramework implements Instance {
 				writer.write("\n]\n");
 			}
 		}
-	}
-	
-	private String extensionToString(final ArgumentSet extension) {
-		return "["+extension.stream().map(Argument::getName).reduce((acc, ext) -> acc+","+ext).orElse("")+"]";
-	}
-	
-	/**
-	 * Returns the set of arguments contained in this instance.
-	 * 
-	 * @return the set of arguments contained in this instance
-	 */
-	public ArgumentSet getArguments() {
-		return this.arguments;
-	}
-	
-	/**
-	 * Returns the set of attacks contained in this instance.
-	 * 
-	 * @return the set of attacks contained in this instance
-	 */
-	public AttackSet getAttacks() {
-		return this.attacks;
 	}
 	
 	/**
@@ -185,18 +116,6 @@ public class ArgumentationFramework implements Instance {
 		return this.argUnderDecision;
 	}
 	
-	/**
-	 * Returns the translation history from the root instance that have lead to this instance.
-	 * 
-	 * If this instance was obtained by {@link ArgumentationFramework#ArgumentationFramework(ArgumentSet, AttackSet, ExtensionSet)},
-	 * this method will return <code>null</code>.
-	 * 
-	 * @return the translation history from the root instance that have lead to this instance
-	 */
-	public List<ArgumentationFrameworkTranslation> getTranslationHistory() {
-		return this.translationHistory;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
