@@ -62,6 +62,8 @@ public class CheckerOptionsReader {
 	private int maxDepth = DEFAULT_MAX_DEPTH;
 	
 	private String execLocation;
+	
+	private String checkerOptions = "";
 
 	private CheckerOptionsReader() {
 		// nothing to do
@@ -278,6 +280,27 @@ public class CheckerOptionsReader {
 	 */
 	public String getExecLocation() {
 		return this.execLocation;
+	}
+	
+	/**
+	 * Sets the options dedicated to the checker itself.
+	 * 
+	 * These options must be contained in a single string.
+	 * There is no other formatting requirements; the checker is responsible of the use of this string.
+	 * 
+	 * @param options the checker options
+	 */
+	public void setCheckerOptions(final String options) {
+		this.checkerOptions = options;
+	}
+	
+	/**
+	 * Returns the options dedicated to the checker.
+	 * 
+	 * @return the options dedicated to the checker
+	 */
+	public String getCheckerOptions() {
+		return this.checkerOptions;
 	}
 	
 	/**

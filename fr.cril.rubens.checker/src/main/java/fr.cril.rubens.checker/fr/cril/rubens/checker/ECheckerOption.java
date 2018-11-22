@@ -27,7 +27,10 @@ public enum ECheckerOption {
 	SET_DEPTH("d", "depth", true, "set the computation tree max depth", setMaxDepth()),
 	
 	/** set the binary under test */
-	SET_EXEC("e", "exec", true, "set the software location", setExecLocation());
+	SET_EXEC("e", "exec", true, "set the software location", setExecLocation()),
+	
+	/** set the options dedicated to the checker */
+	SET_CHECKER_OPTS("c", "checker-options", true, "set the checker options", setCheckerOptions());
 
 	private final String opt;
 
@@ -112,6 +115,10 @@ public enum ECheckerOption {
 	
 	private static BiConsumer<CheckerOptionsReader, String> setExecLocation() {
 		return (o, s) -> o.setExecLocation(s);
+	}
+	
+	private static BiConsumer<CheckerOptionsReader, String> setCheckerOptions() {
+		return (o, s) -> o.setCheckerOptions(s);
 	}
 
 }
