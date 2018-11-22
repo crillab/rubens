@@ -22,5 +22,10 @@ public class StringConcatCheckerFactory implements CheckerFactory<StringInstance
 	public CheckResult checkSoftwareOutput(final StringInstance instance, final String result) {
 		return CheckResult.SUCCESS;
 	}
+	
+	@Override
+	public void setOptions(final String options) {
+		// nothing to do here
+	}
 
 }

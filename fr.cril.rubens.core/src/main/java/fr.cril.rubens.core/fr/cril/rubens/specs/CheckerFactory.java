@@ -12,6 +12,13 @@ import fr.cril.rubens.core.CheckResult;
 public interface CheckerFactory<T extends Instance> {
 	
 	/**
+	 * Sets the options dedicated to the checker itself.
+	 * 
+	 * @param options the options as a string
+	 */
+	void setOptions(String options);
+	
+	/**
 	 * Returns a new test generator used to generate the instances used for the checking process.
 	 * 
 	 * @return a new test generator used to generate the instances used for the checking process

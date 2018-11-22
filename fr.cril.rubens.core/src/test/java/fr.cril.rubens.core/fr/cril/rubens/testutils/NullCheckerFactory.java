@@ -23,5 +23,10 @@ public class NullCheckerFactory implements CheckerFactory<Instance> {
 	public CheckResult checkSoftwareOutput(Instance instance, String result) {
 		return null;
 	}
+	
+	@Override
+	public void setOptions(final String options) {
+		// nothing to do here
+	}
 
 }

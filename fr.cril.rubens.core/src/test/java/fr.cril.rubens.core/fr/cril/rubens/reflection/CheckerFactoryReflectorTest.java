@@ -89,6 +89,10 @@ public class CheckerFactoryReflectorTest {
 			return null;
 		}
 		
+		@Override
+		public void setOptions(String opts) {
+			// nothing to do here
+		}
 		
 	}
 
