@@ -1,9 +1,11 @@
 package fr.cril.rubens.arg.checking;
 
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
+import fr.cril.rubens.arg.core.CheckerOptionsApplier;
+import fr.cril.rubens.arg.core.TriFunction;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
@@ -15,16 +17,19 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @ReflectorParam(enabled=false)
-public abstract class AbstractCheckerFactory implements CheckerFactory<ArgumentationFramework> {
+public abstract class AbstractCheckerFactory implements ArgumentationFrameworkCheckerFactory<ArgumentationFramework> {
 	
 	/** the supplier of test generators */
 	private Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier;
 	
 	/** the function used to check results */
-	private BiFunction<ArgumentationFramework, String, CheckResult> resultChecker;
+	private TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker;
 
 	/** the textual representation of the problem (-p parameter of argumentation solvers) */
 	private final String problem;
+	
+	/** the decoder used to read the solver output */ 
+	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.ICCMA17.getDecoderInstance();
 
 	/**
 	 * Builds a new checker factory given the test generator supplier and the checking function.
@@ -33,8 +38,8 @@ public abstract class AbstractCheckerFactory implements CheckerFactory<Argumenta
 	 * @param resultChecker the checking function
 	 * @param the textual representation of the problem (-p parameter of argumentation solvers)
 	 */
-	protected AbstractCheckerFactory(final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier, final BiFunction<ArgumentationFramework, String, CheckResult> resultChecker,
-			final String problem) {
+	protected AbstractCheckerFactory(final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier,
+			final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker, final String problem) {
 		this.generatorSupplier = generatorSupplier;
 		this.resultChecker = resultChecker;
 		this.problem = problem;
@@ -47,12 +52,22 @@ public abstract class AbstractCheckerFactory implements CheckerFactory<Argumenta
 
 	@Override
 	public CheckResult checkSoftwareOutput(final ArgumentationFramework instance, final String result) {
-		return this.resultChecker.apply(instance, result);
+		return this.resultChecker.apply(instance, result, this.outputFormatDecoder);
 	}
 	
 	@Override
 	public String execSoftware(final String exec, final ArgumentationFramework instance) {
 		return SoftwareExecutor.execSoftware(exec, this.problem, instance);
+	}
+	
+	@Override
+	public void setOptions(final String options) {
+		CheckerOptionsApplier.apply(options, this);
+	}
+	
+	@Override
+	public void setOutputFormat(final ISolverOutputDecoder decoder) {
+		this.outputFormatDecoder = decoder;
 	}
 
 }

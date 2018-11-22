@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fr.cril.rubens.arg.checking.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.SoftwareExecutor;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
+import fr.cril.rubens.arg.checking.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.SyntaxErrorException;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
+import fr.cril.rubens.arg.core.CheckerOptionsApplier;
 import fr.cril.rubens.arg.core.D3ArgumentationFramework;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.testgen.D3TestGeneratorFactory;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
 /**
@@ -22,7 +25,10 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @ReflectorParam(name="D3")
-public class D3Checker implements CheckerFactory<D3ArgumentationFramework> {
+public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3ArgumentationFramework> {
+	
+	/** the decoder used to read the solver output */ 
+	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.ICCMA17.getDecoderInstance();
 	
 	/**
 	 * Builds a new instance of this factory.
@@ -49,15 +55,18 @@ public class D3Checker implements CheckerFactory<D3ArgumentationFramework> {
 		} catch (SyntaxErrorException e) {
 			return CheckResult.newError(e.getMessage());
 		}
-		final CheckResult grCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getGrExts()), extensionSets.get(0));
+		final CheckResult grCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getGrExts()), extensionSets.get(0),
+				this.outputFormatDecoder);
 		if(!grCheck.isSuccessful()) {
 			return CheckResult.newError("in GR part: "+grCheck.getExplanation());
 		}
-		final CheckResult stCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getStExts()), extensionSets.get(1));
+		final CheckResult stCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getStExts()), extensionSets.get(1),
+				this.outputFormatDecoder);
 		if(!stCheck.isSuccessful()) {
 			return CheckResult.newError("in ST part: "+stCheck.getExplanation());
 		}
-		final CheckResult prCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getPrExts()), extensionSets.get(2));
+		final CheckResult prCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getPrExts()), extensionSets.get(2),
+				this.outputFormatDecoder);
 		if(!prCheck.isSuccessful()) {
 			return CheckResult.newError("in PR part: "+stCheck.getExplanation());
 		}
@@ -100,6 +109,16 @@ public class D3Checker implements CheckerFactory<D3ArgumentationFramework> {
 			throw new SyntaxErrorException("syntax error: \""+result+"\" is not a valid result");
 		}
 		return extSets;
+	}
+	
+	@Override
+	public void setOptions(final String options) {
+		CheckerOptionsApplier.apply(options, this);
+	}
+	
+	@Override
+	public void setOutputFormat(final ISolverOutputDecoder decoder) {
+		this.outputFormatDecoder = decoder;
 	}
 
 }

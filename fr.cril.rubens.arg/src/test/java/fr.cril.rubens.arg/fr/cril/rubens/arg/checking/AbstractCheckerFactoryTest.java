@@ -3,7 +3,6 @@ package fr.cril.rubens.arg.checking;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import org.junit.Before;
@@ -14,6 +13,7 @@ import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
+import fr.cril.rubens.arg.core.TriFunction;
 import fr.cril.rubens.arg.testgen.SemistableSemTestGeneratorFactory;
 import fr.cril.rubens.arg.utils.Forget;
 import fr.cril.rubens.core.CheckResult;
@@ -26,7 +26,7 @@ public class AbstractCheckerFactoryTest {
 	
 	private final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier = SemistableSemTestGeneratorFactory::new;
 	
-	private final BiFunction<ArgumentationFramework, String, CheckResult> resultChecker = SoftwareOutputChecker.EE::check;
+	private final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker = SoftwareOutputChecker.EE::check;
 	
 	@Before
 	public void setUp() {

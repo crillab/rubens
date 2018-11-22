@@ -1,11 +1,10 @@
 package fr.cril.rubens.arg.checking;
 
-import java.util.function.BiFunction;
-
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation;
 import fr.cril.rubens.arg.core.ExtensionSet;
+import fr.cril.rubens.arg.core.TriFunction;
 import fr.cril.rubens.core.CheckResult;
 
 /**
@@ -32,11 +31,9 @@ public enum SoftwareOutputChecker {
 	/** a flag indicating the generation history must be appended to the error message when a check fails */
 	private static final boolean ADD_HISTORY_TO_ERR = true;
 
-	private final BiFunction<ArgumentationFramework, String, CheckResult> checkingFunction;
+	private final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> checkingFunction;
 	
-	private static ISolverOutputDecoder outputReader = new ICCMA17SolverOutputDecoder();
-
-	private SoftwareOutputChecker(final BiFunction<ArgumentationFramework, String, CheckResult> checkingFunction) {
+	private SoftwareOutputChecker(final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> checkingFunction) {
 		this.checkingFunction = checkingFunction;
 	}
 	
@@ -48,28 +45,29 @@ public enum SoftwareOutputChecker {
 	 * 
 	 * @param af the argumentation framework
 	 * @param result the solver output
+	 * @param outputDecoder the decoder for the solver output
 	 * @return a {@link CheckResult} instance indicating the result of the check
 	 */
-	public CheckResult check(final ArgumentationFramework af, final String result) {
-		return this.checkingFunction.apply(af, normalizeResult(result));
+	public CheckResult check(final ArgumentationFramework af, final String result, final ISolverOutputDecoder outputDecoder) {
+		return this.checkingFunction.apply(af, normalizeResult(result), outputDecoder);
 	}
 
-	private static CheckResult checkEE(final ArgumentationFramework expected, final String result) {
+	private static CheckResult checkEE(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
 		try {
-			final ExtensionSet ext = outputReader.readExtensionSet(result);
+			final ExtensionSet ext = outputDecoder.readExtensionSet(result);
 			return expected.getExtensions().equals(ext) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected "+expected.getExtensions());
 		} catch (SyntaxErrorException e) {
 			return newError(expected, e.getMessage());
 		}
 	}
 
-	private static CheckResult checkDS(final ArgumentationFramework expected, final String result) {
+	private static CheckResult checkDS(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
 		final Argument arg = expected.getArgUnderDecision();
-		final String yesStr = outputReader.getAcceptanceTrue();
-		final String noStr = outputReader.getAcceptanceFalse();
-		if(outputReader.isAcceptanceTrue(result)) {
+		final String yesStr = outputDecoder.getAcceptanceTrue();
+		final String noStr = outputDecoder.getAcceptanceFalse();
+		if(outputDecoder.isAcceptanceTrue(result)) {
 			return expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : wrongAcceptanceStatusMsg(arg, expected, yesStr, noStr);
-		} else if(outputReader.isAcceptanceFalse(result)) {
+		} else if(outputDecoder.isAcceptanceFalse(result)) {
 			return expected.getExtensions().stream().anyMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : wrongAcceptanceStatusMsg(arg, expected, noStr, yesStr);
 		} else {
 			return wrongAcceptanceStatusMsg(arg, expected, result, expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? yesStr : noStr);
@@ -80,25 +78,25 @@ public enum SoftwareOutputChecker {
 		return newError(af, "got \""+got+"\" for argument "+arg.getName()+"; expected \""+expected+"\"");
 	}
 
-	private static CheckResult checkDC(final ArgumentationFramework expected, final String result) {
+	private static CheckResult checkDC(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
 		final Argument arg = expected.getArgUnderDecision();
-		final String yesStr = outputReader.getAcceptanceTrue();
-		final String noStr = outputReader.getAcceptanceFalse();
-		if(outputReader.isAcceptanceTrue(result)) {
+		final String yesStr = outputDecoder.getAcceptanceTrue();
+		final String noStr = outputDecoder.getAcceptanceFalse();
+		if(outputDecoder.isAcceptanceTrue(result)) {
 			return expected.getExtensions().stream().anyMatch(ext -> ext.contains(arg)) ? CheckResult.SUCCESS : wrongAcceptanceStatusMsg(arg, expected, yesStr, noStr);
-		} else if(outputReader.isAcceptanceFalse(result)) {
+		} else if(outputDecoder.isAcceptanceFalse(result)) {
 			return expected.getExtensions().stream().allMatch(ext -> !ext.contains(arg)) ? CheckResult.SUCCESS : wrongAcceptanceStatusMsg(arg, expected, noStr, yesStr);
 		} else {
 			return wrongAcceptanceStatusMsg(arg, expected, result, expected.getExtensions().stream().allMatch(ext -> ext.contains(arg)) ? yesStr : noStr);
 		}
 	}
 
-	private static CheckResult checkSE(final ArgumentationFramework expected, final String result) {
-		if(outputReader.isNoExt(result)) {
-			return expected.getExtensions().isEmpty() ? CheckResult.SUCCESS : newError(expected, "got \""+outputReader.getNoExt()+"\"; expected one extension in "+expected.getExtensions());
+	private static CheckResult checkSE(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
+		if(outputDecoder.isNoExt(result)) {
+			return expected.getExtensions().isEmpty() ? CheckResult.SUCCESS : newError(expected, "got \""+outputDecoder.getNoExt()+"\"; expected one extension in "+expected.getExtensions());
 		}
 		try {
-			return expected.getExtensions().contains(outputReader.readExtension(result)) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected one extension in "+expected.getExtensions());
+			return expected.getExtensions().contains(outputDecoder.readExtension(result)) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected one extension in "+expected.getExtensions());
 		} catch (SyntaxErrorException e) {
 			return newError(expected, e.getMessage());
 		}
