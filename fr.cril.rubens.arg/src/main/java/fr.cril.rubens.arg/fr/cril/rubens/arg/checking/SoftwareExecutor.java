@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -52,20 +53,24 @@ public class SoftwareExecutor {
 			throw new IllegalStateException(e);
 		}
 		final List<String> cliArgs = cliArgs(exec, problem, instance, apxPath);
-		final String result = doExecSoftware(exec, apxPath, cliArgs, false);
-		if(result.equals("")) {
+		String[] result = doExecSoftware(exec, apxPath, cliArgs, false);
+		if(result[0].isEmpty() || !result[1].isEmpty()) {
 			try {
 				apxPath = writeInstanceToTemp(instance);
 			} catch (IOException e) {
 				throw new IllegalStateException(e);
 			}
-			return doExecSoftware(exec, apxPath, cliArgs, true);
+			result = doExecSoftware(exec, apxPath, cliArgs, true);
 		}
-		return result;
+		if(!result[1].isEmpty()) {
+			Arrays.stream(result[1].split("\n")).forEach(l -> LOGGER.warn("software wrote to stderr: {}", l));
+		}
+		return result[0];
 	}
 	
 	/**
-	 * Executes the software on an instance and returned its output.
+	 * Executes the software on an instance and returned its output for both stdout and stderr.
+	 * The returned value is an array {stdout, stderr}.
 	 * 
 	 * It sometimes happen the standard output stream contains no data although it should.
 	 * This method provides a flag allowing to wait one second before waiting for the subprocess end;
@@ -76,37 +81,46 @@ public class SoftwareExecutor {
 	 * @param wait the waiting flag
 	 * @return the solver output
 	 */
-	private static String doExecSoftware(final String exec, final Path apxPath, final List<String> cliArgs, final boolean wait) {
+	private static String[] doExecSoftware(final String exec, final Path apxPath, final List<String> cliArgs, final boolean wait) {
 		try {
+			final StringBuilder stdoutBuilder = new StringBuilder();
+			final StringBuilder stderrBuilder = new StringBuilder();
 			final ProcessBuilder pBuilder = new ProcessBuilder(cliArgs);
 			pBuilder.directory(Paths.get(exec).getParent().toFile());
 			final Process p = pBuilder.start();
-			final StringBuilder builder = new StringBuilder();
-			launchStreamThread(p.getInputStream(), l -> builder.append(l).append('\n'));
-			launchStreamThread(p.getErrorStream(), l -> LOGGER.warn("software wrote to stderr: {}", l));
+			launchStreamThread(p.getInputStream(), l -> stdoutBuilder.append(l).append('\n'));
+			launchStreamThread(p.getErrorStream(), l -> stderrBuilder.append(l).append('\n'));
 			p.getOutputStream().close();
 			if(wait) {
 				Thread.sleep(500);
 			}
-			p.waitFor();
-			Files.delete(apxPath);
-			return builder.toString();
+			final int status = p.waitFor();
+			if(status != 0) {
+				LOGGER.warn("subprocess exited with status {}", status);
+			}
+			return new String[] {stdoutBuilder.toString(), stderrBuilder.toString()};
 		} catch(final IOException e) {
 			throw new IllegalStateException(e);
 		} catch(final InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException();
 		} finally {
-			try {
-				if(Files.exists(apxPath)) {
-					Files.delete(apxPath);
+			new Thread(() -> {
+				try {
+					if(Files.exists(apxPath)) {
+						Thread.sleep(500);
+						Files.delete(apxPath);
+					}
+				} catch(IOException e) {
+					LOGGER.error("an unexpected I/O exception occurred", e);
+				} catch(InterruptedException e) {
+					Thread.currentThread().interrupt();
+					LOGGER.error("an unexpected thread interruption occurred", e);
 				}
-			} catch(IOException e) {
-				// nothing to do here
-			}
+			}).start();
 		}
 	}
-
+	
 	private static List<String> cliArgs(final String exec, final String problem, final ArgumentationFramework instance, Path apxPath) {
 		final List<String> cliArgs = Stream.of(exec, "-fo", "apx", "-f", apxPath.toAbsolutePath().toString(), "-p", problem).collect(Collectors.toList());
 		if(Stream.of("DC-", "DS-").anyMatch(problem::startsWith)) {
@@ -117,7 +131,7 @@ public class SoftwareExecutor {
 
 	private static Path writeInstanceToTemp(final ArgumentationFramework instance) throws IOException {
 		Path apxPath;
-		apxPath = Files.createTempFile("rubens-arg-", ".tmp", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr-x---")));
+		apxPath = Files.createTempFile("rubens-arg-", ".tmp", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr--r--")));
 		final OutputStream os = Files.newOutputStream(apxPath);
 		instance.write(AArgumentationFrameworkGraph.APX_EXT, os);
 		os.close();
@@ -146,5 +160,5 @@ public class SoftwareExecutor {
 			}
 		}).start();
 	}
-
+	
 }
