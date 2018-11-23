@@ -1,5 +1,7 @@
 package fr.cril.rubens.arg.checking;
 
+import java.util.List;
+
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
 
@@ -74,5 +76,16 @@ public interface ISolverOutputDecoder {
 	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains an extension set
 	 */
 	ExtensionSet readExtensionSet(final String extensionSet) throws SyntaxErrorException;
+	
+	/**
+	 * Reads the solver output of the D3 problem.
+	 * 
+	 * The result in returned as a list of three elements, corresponding to the grounded, stable and preferred extension sets.
+	 * 
+	 * @param solverOutput the solver output
+	 * @return the sets of extension sets
+	 * @throws SyntaxErrorException iff the output contains syntax error while considering it as a D3 result
+	 */
+	List<ExtensionSet> readD3(final String solverOutput) throws SyntaxErrorException;
 
 }

@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.arg.checking.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
@@ -34,6 +35,7 @@ public class D3CheckerTest {
 		final ArgumentationFramework af = new ArgumentationFramework(Stream.of(arg0, arg1).collect(ArgumentSet.collector()), Stream.of(att00, att01).collect(AttackSet.collector()), ExtensionSet.getInstance(Collections.emptySet()));
 		final D3ArgumentationFramework d3af = new D3ArgumentationFramework(af);
 		final D3Checker checker = new D3Checker();
+		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[]], [], [[]]");
 		assertTrue(result.isSuccessful());
 	}

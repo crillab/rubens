@@ -49,7 +49,7 @@ public enum SoftwareOutputChecker {
 	 * @return a {@link CheckResult} instance indicating the result of the check
 	 */
 	public CheckResult check(final ArgumentationFramework af, final String result, final ISolverOutputDecoder outputDecoder) {
-		return this.checkingFunction.apply(af, normalizeResult(result), outputDecoder);
+		return this.checkingFunction.apply(af, result, outputDecoder);
 	}
 
 	private static CheckResult checkEE(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
@@ -100,10 +100,6 @@ public enum SoftwareOutputChecker {
 		} catch (SyntaxErrorException e) {
 			return newError(expected, e.getMessage());
 		}
-	}
-
-	private static String normalizeResult(final String result) {
-		return result.replaceAll("\\s", "");
 	}
 
 	/**

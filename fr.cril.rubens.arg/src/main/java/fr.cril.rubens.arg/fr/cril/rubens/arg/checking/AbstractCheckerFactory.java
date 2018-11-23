@@ -29,7 +29,7 @@ public abstract class AbstractCheckerFactory implements ArgumentationFrameworkCh
 	private final String problem;
 	
 	/** the decoder used to read the solver output */ 
-	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.ICCMA17.getDecoderInstance();
+	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.getDefault().getDecoderInstance();
 
 	/**
 	 * Builds a new checker factory given the test generator supplier and the checking function.

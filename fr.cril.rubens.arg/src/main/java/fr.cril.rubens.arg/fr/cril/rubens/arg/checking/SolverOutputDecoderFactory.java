@@ -10,7 +10,10 @@ import java.util.function.Supplier;
 public enum SolverOutputDecoderFactory {
 	
 	/** ICCMA2017 decoder */
-	ICCMA17("ICCMA17", ICCMA17SolverOutputDecoder::new);
+	ICCMA17("ICCMA17", ICCMA17SolverOutputDecoder::new),
+	
+	/** ICCMA2017 decoder */
+	ICCMA19("ICCMA19", ICCMA19SolverOutputDecoder::new);
 	
 	/** the name of the format */
 	private final String name;
@@ -46,6 +49,17 @@ public enum SolverOutputDecoderFactory {
 			}
 		}
 		throw new IllegalArgumentException();
+	}
+	
+	/**
+	 * Returns the default decoder.
+	 * 
+	 * The default decoder is currently ICCMA2019.
+	 * 
+	 * @return the default decoder
+	 */
+	public static SolverOutputDecoderFactory getDefault() {
+		return SolverOutputDecoderFactory.ICCMA19;
 	}
 
 }

@@ -32,6 +32,7 @@ public class AbstractCheckerFactoryTest {
 	public void setUp() {
 		Forget.all();
 		this.factory = new Factory();
+		this.factory.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 	}
 	
 	@Test

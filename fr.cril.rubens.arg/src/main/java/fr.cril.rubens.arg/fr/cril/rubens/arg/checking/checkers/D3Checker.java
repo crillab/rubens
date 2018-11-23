@@ -1,12 +1,10 @@
 package fr.cril.rubens.arg.checking.checkers;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import fr.cril.rubens.arg.checking.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.SoftwareExecutor;
-import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.checking.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.SyntaxErrorException;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
@@ -28,7 +26,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
 public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3ArgumentationFramework> {
 	
 	/** the decoder used to read the solver output */ 
-	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.ICCMA17.getDecoderInstance();
+	private ISolverOutputDecoder outputFormatDecoder = SolverOutputDecoderFactory.getDefault().getDecoderInstance();
 	
 	/**
 	 * Builds a new instance of this factory.
@@ -49,68 +47,27 @@ public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3Argumen
 
 	@Override
 	public CheckResult checkSoftwareOutput(final D3ArgumentationFramework instance, final String result) {
-		List<String> extensionSets;
 		try {
-			extensionSets = splitExtensionSets(result);
+			final List<ExtensionSet> extSets = this.outputFormatDecoder.readD3(result);
+			if(!instance.getGrExts().equals(extSets.get(0))) {
+				return newPartialError("GR", extSets.get(0), instance.getGrExts());
+			}
+			if(!instance.getStExts().equals(extSets.get(1))) {
+				return newPartialError("ST", extSets.get(1), instance.getStExts());
+			}
+			if(!instance.getPrExts().equals(extSets.get(2))) {
+				return newPartialError("PR", extSets.get(2), instance.getPrExts());
+			}
 		} catch (SyntaxErrorException e) {
 			return CheckResult.newError(e.getMessage());
 		}
-		final CheckResult grCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getGrExts()), extensionSets.get(0),
-				this.outputFormatDecoder);
-		if(!grCheck.isSuccessful()) {
-			return CheckResult.newError("in GR part: "+grCheck.getExplanation());
-		}
-		final CheckResult stCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getStExts()), extensionSets.get(1),
-				this.outputFormatDecoder);
-		if(!stCheck.isSuccessful()) {
-			return CheckResult.newError("in ST part: "+stCheck.getExplanation());
-		}
-		final CheckResult prCheck = SoftwareOutputChecker.EE.check(new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), instance.getPrExts()), extensionSets.get(2),
-				this.outputFormatDecoder);
-		if(!prCheck.isSuccessful()) {
-			return CheckResult.newError("in PR part: "+stCheck.getExplanation());
-		}
 		return CheckResult.SUCCESS;
 	}
-
-	/**
-	 * Splits the results of the concatenated three subtracks and return them as an array.
-	 * 
-	 * An exception is raised if the number of subresults is not 3.
-	 * 
-	 * @param result the concatenated subtracks
-	 * @return a list of the subresults
-	 * @throws SyntaxErrorException if the number of subresults is not 3
-	 */
-	private List<String> splitExtensionSets(final String result) throws SyntaxErrorException {
-		int brackets = 0;
-		final char[] chars = result.replaceAll("\\s", "").toCharArray();
-		StringBuilder current = new StringBuilder();
-		final List<String> extSets = new ArrayList<>();
-		for(int i=0; i<chars.length; ++i) {
-			final char c = chars[i];
-			if(c == '[') {
-				current.append(c);
-				brackets++;
-			} else if(c==',' && brackets==0) {
-				extSets.add(current.toString());
-				current = new StringBuilder();
-			} else if(brackets == 0) {
-				throw new SyntaxErrorException("syntax error: \""+result+"\" is not a valid result");
-			} else {
-				current.append(c);
-				if(c == ']') {
-					brackets--;
-				}
-			}
-		}
-		extSets.add(current.toString());
-		if(extSets.size() != 3) {
-			throw new SyntaxErrorException("syntax error: \""+result+"\" is not a valid result");
-		}
-		return extSets;
-	}
 	
+	private CheckResult newPartialError(final String part, final ExtensionSet got, final ExtensionSet expected) {
+		return CheckResult.newError("in "+part+" part: got "+got+", expected "+expected);
+	}
+
 	@Override
 	public void setOptions(final String options) {
 		CheckerOptionsApplier.apply(options, this);
