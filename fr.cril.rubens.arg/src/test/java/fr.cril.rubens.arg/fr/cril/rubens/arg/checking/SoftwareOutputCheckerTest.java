@@ -119,9 +119,9 @@ public class SoftwareOutputCheckerTest {
 	@Test
 	public void testWrongValDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
-		af.setArgUnderDecision(Argument.getInstance("b"));
+		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
-		af.setArgUnderDecision(Argument.getInstance("c"));
+		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
@@ -227,6 +227,13 @@ public class SoftwareOutputCheckerTest {
 	@Test
 	public void testSyntaxErrorSENotALetterOrDigit() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "[#]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+	}
+	
+	@Test
+	public void testTranslationHistoryInError() {
+		final CheckResult noHistory = SoftwareOutputChecker.EE.check(toAF(new String[]{}, new String[]{"a"}), "[[],[b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
+		final CheckResult withHistory = SoftwareOutputChecker.EE.check(new ArgumentationFramework(), "[[],[b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
+		assertTrue(noHistory.getExplanation().length() < withHistory.getExplanation().length());
 	}
 	
 	private void assertSuccess(final CheckResult result) {

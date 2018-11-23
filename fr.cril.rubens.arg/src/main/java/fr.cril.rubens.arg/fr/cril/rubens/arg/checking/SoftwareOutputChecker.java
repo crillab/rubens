@@ -28,9 +28,6 @@ public enum SoftwareOutputChecker {
 	/** algorithm for the DC query */
 	DC(SoftwareOutputChecker::checkDC);
 	
-	/** a flag indicating the generation history must be appended to the error message when a check fails */
-	private static final boolean ADD_HISTORY_TO_ERR = true;
-
 	private final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> checkingFunction;
 	
 	private SoftwareOutputChecker(final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> checkingFunction) {
@@ -112,7 +109,7 @@ public enum SoftwareOutputChecker {
 	 * @return the corresponding {@link CheckResult} instance
 	 */
 	private static CheckResult newError(final ArgumentationFramework instance, final String reason) {
-		final String effectiveReason = ADD_HISTORY_TO_ERR && instance.getTranslationHistory() != null ?
+		final String effectiveReason = instance.getTranslationHistory() != null ?
 				reason+" (generation history: "+instance.getTranslationHistory().stream().map(ArgumentationFrameworkTranslation::getDescription).reduce((a,b) -> a+", "+b).orElseThrow()+")" : reason;
 		return CheckResult.newError(effectiveReason);
 	}

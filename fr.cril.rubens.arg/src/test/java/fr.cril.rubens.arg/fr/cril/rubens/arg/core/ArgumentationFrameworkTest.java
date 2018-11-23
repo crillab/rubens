@@ -219,5 +219,14 @@ public class ArgumentationFrameworkTest {
 		af.setArgUnderDecision(argA);
 		assertEquals(argA, af.getArgUnderDecision());
 	}
+	
+	@Test
+	public void testWriteNoExtensions() throws IOException {
+		final ArgumentationFramework af = new ArgumentationFramework(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()),
+				ExtensionSet.getInstance(Collections.emptySet()));
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		af.writeExtensions(os);
+		assertEquals("[]", new String(os.toByteArray()).replaceAll("\n", ""));
+	}
 
 }

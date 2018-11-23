@@ -92,7 +92,10 @@ public class ArgumentSet {
 		if(other == null) {
 			throw new IllegalArgumentException();
 		}
-		return this.size() > other.size() && other.stream().allMatch(this::contains);
+		if(this.size() <= other.size()) {
+			return false;
+		}
+		return other.stream().allMatch(this::contains);
 	}
 
 	/**

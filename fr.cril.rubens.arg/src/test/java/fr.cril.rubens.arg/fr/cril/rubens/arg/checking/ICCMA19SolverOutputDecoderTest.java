@@ -45,6 +45,7 @@ public class ICCMA19SolverOutputDecoderTest {
 		final List<ExtensionSet> actual = this.decoder.readD3(""
 				+ "[\n"
 				+ "  []\n"
+				+ ""
 				+ "]\n"
 				+ "[]\n"
 				+ "[\n"
@@ -70,6 +71,41 @@ public class ICCMA19SolverOutputDecoderTest {
 		final Argument arg = Argument.getInstance("a0");
 		final ExtensionSet extSet = ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.singleton(arg))));
 		assertEquals(Stream.of(extSet, extSet, extSet).collect(Collectors.toList()), actual);
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testReadStrExtListOneLine() throws SyntaxErrorException {
+		this.decoder.readStrExtensionList("[[a0]]");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testReadStrExtListNoOpeningBracket() throws SyntaxErrorException {
+		this.decoder.readStrExtensionList("]\n]\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testReadStrExtListNoClosingBracket() throws SyntaxErrorException {
+		this.decoder.readStrExtensionList("[\n[\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitExtSetUnexpectedClosingBracket() throws SyntaxErrorException {
+		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n]\n]\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitExtSetMissingClosingBracket() throws SyntaxErrorException {
+		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitExtSetUnexpectedArg() throws SyntaxErrorException {
+		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n]\na1\n");
+	}
+	
+	@Test
+	public void testNormalizeresult() {
+		assertEquals("", this.decoder.normalizeResult(""));
 	}
 
 }

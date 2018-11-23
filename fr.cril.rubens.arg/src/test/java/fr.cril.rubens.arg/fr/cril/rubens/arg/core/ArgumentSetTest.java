@@ -114,6 +114,13 @@ public class ArgumentSetTest {
 		assertFalse(this.set1.isSupersetOf(this.set2));
 	}
 	
+	@Test
+	public void testIsNotSupersetAtAll() {
+		final Argument a3 = Argument.getInstance("a3");
+		final ArgumentSet set13 = Stream.of(this.a1, a3).collect(ArgumentSet.collector());
+		assertFalse(this.set2.isSupersetOf(set13));
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testSupersetOfNull() {
 		this.set1.isSupersetOf(null);
