@@ -18,7 +18,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.cril.rubens.arg.checking.checkers.EECOChecker;
+import fr.cril.rubens.arg.checking.checkers.ElementaryCheckers.EECOChecker;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
 
