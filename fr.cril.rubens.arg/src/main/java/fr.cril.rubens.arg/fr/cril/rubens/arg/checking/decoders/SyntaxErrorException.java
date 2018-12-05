@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.decoders;
 
 /**
  * An exception raised when there is a syntax error in the output of a software.

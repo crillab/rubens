@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 
-public class CheckersInstantiationTest {
+public class ElementaryCheckersInstantiationTest {
 	
 	@Test
 	public void testAll() {

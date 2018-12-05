@@ -1,7 +1,10 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.checkers;
 
 import java.util.function.Supplier;
 
+import fr.cril.rubens.arg.checking.SoftwareExecutor;
+import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
 import fr.cril.rubens.arg.core.CheckerOptionsApplier;
@@ -17,7 +20,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @ReflectorParam(enabled=false)
-public abstract class AbstractCheckerFactory implements ArgumentationFrameworkCheckerFactory<ArgumentationFramework> {
+public abstract class AbstractElementaryCheckerFactory implements ArgumentationFrameworkCheckerFactory<ArgumentationFramework> {
 	
 	/** the supplier of test generators */
 	private Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier;
@@ -38,7 +41,7 @@ public abstract class AbstractCheckerFactory implements ArgumentationFrameworkCh
 	 * @param resultChecker the checking function
 	 * @param the textual representation of the problem (-p parameter of argumentation solvers)
 	 */
-	protected AbstractCheckerFactory(final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier,
+	protected AbstractElementaryCheckerFactory(final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier,
 			final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker, final String problem) {
 		this.generatorSupplier = generatorSupplier;
 		this.resultChecker = resultChecker;

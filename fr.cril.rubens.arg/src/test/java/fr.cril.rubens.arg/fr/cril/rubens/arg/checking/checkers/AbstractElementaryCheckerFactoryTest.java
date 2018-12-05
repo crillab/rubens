@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.checkers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,10 @@ import java.util.function.Supplier;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
+import fr.cril.rubens.arg.checking.checkers.AbstractElementaryCheckerFactory;
+import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
@@ -20,9 +24,9 @@ import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
-public class AbstractCheckerFactoryTest {
+public class AbstractElementaryCheckerFactoryTest {
 	
-	private AbstractCheckerFactory factory;
+	private AbstractElementaryCheckerFactory factory;
 	
 	private final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier = SemistableSemTestGeneratorFactory::new;
 	
@@ -50,7 +54,7 @@ public class AbstractCheckerFactoryTest {
 	}
 	
 	@ReflectorParam(enabled=false)
-	private class Factory extends AbstractCheckerFactory {
+	private class Factory extends AbstractElementaryCheckerFactory {
 
 		private Factory() {
 			super(generatorSupplier, resultChecker, "EE-SST");

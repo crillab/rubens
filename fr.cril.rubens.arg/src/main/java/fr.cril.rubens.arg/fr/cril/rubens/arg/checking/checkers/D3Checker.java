@@ -3,10 +3,10 @@ package fr.cril.rubens.arg.checking.checkers;
 import java.util.Collections;
 import java.util.List;
 
-import fr.cril.rubens.arg.checking.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.SoftwareExecutor;
-import fr.cril.rubens.arg.checking.SolverOutputDecoderFactory;
-import fr.cril.rubens.arg.checking.SyntaxErrorException;
+import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
+import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
 import fr.cril.rubens.arg.core.CheckerOptionsApplier;

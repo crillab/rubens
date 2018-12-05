@@ -1,8 +1,10 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.decoders;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 
 public class SyntaxErrorExceptionTest {
 	

@@ -1,6 +1,6 @@
 package fr.cril.rubens.arg.core;
 
-import fr.cril.rubens.arg.checking.SolverOutputDecoderFactory;
+import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 
 /**
  * A class used to apply checker options on AF checkers.

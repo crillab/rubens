@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.decoders;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import fr.cril.rubens.arg.checking.decoders.ICCMA17SolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 
 public class ICCMA17SolverOutputDecoderTest {
 	

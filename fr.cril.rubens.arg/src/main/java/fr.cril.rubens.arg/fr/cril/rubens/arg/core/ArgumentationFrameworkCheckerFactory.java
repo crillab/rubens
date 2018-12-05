@@ -1,6 +1,6 @@
 package fr.cril.rubens.arg.core;
 
-import fr.cril.rubens.arg.checking.ISolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.specs.CheckerFactory;
 
 /**

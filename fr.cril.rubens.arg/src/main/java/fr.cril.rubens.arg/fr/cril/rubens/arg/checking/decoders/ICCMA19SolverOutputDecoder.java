@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.decoders;
 
 import java.util.ArrayList;
 import java.util.Arrays;

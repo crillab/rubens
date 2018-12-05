@@ -1,4 +1,4 @@
-package fr.cril.rubens.arg.checking;
+package fr.cril.rubens.arg.checking.decoders;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.arg.checking.decoders.ICCMA19SolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ExtensionSet;

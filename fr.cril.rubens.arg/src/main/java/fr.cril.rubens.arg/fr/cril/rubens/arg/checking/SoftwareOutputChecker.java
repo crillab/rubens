@@ -1,5 +1,7 @@
 package fr.cril.rubens.arg.checking;
 
+import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
+import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation;
