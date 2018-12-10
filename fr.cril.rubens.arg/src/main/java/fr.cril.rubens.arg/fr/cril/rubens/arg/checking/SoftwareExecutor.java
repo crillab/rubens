@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.arg.core.AArgumentationFrameworkGraph;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
+import fr.cril.rubens.arg.core.DynamicArgumentationFramework;
 
 /**
  * A class used to execute an external software for argumentation framework problems.
@@ -53,14 +54,14 @@ public class SoftwareExecutor {
 			throw new IllegalStateException(e);
 		}
 		final List<String> cliArgs = cliArgs(exec, problem, instance, apxPath);
-		String[] result = doExecSoftware(exec, apxPath, cliArgs, false);
+		String[] result = doExecSoftware(exec, apxPath, null, cliArgs, false);
 		if(result[0].isEmpty() || !result[1].isEmpty()) {
 			try {
 				apxPath = writeInstanceToTemp(instance);
 			} catch (IOException e) {
 				throw new IllegalStateException(e);
 			}
-			result = doExecSoftware(exec, apxPath, cliArgs, true);
+			result = doExecSoftware(exec, apxPath, null, cliArgs, true);
 		}
 		if(!result[1].isEmpty()) {
 			Arrays.stream(result[1].split("\n")).forEach(l -> LOGGER.warn("software wrote to stderr: {}", l));
@@ -69,19 +70,42 @@ public class SoftwareExecutor {
 	}
 	
 	/**
-	 * Executes the software on an instance and returned its output for both stdout and stderr.
-	 * The returned value is an array {stdout, stderr}.
+	 * Executes the software on an instance and a dynamics file and return its output.
 	 * 
-	 * It sometimes happen the standard output stream contains no data although it should.
-	 * This method provides a flag allowing to wait one second before waiting for the subprocess end;
-	 * this sleeping time seems to fix the problem.
+	 * The problem name is the one to pass to the "-p" parameter of the argumentation solver.
 	 * 
 	 * @param exec the software location
+	 * @param problem the problem name
 	 * @param instance the instance
-	 * @param wait the waiting flag
-	 * @return the solver output
+	 * @return the software output
 	 */
-	private static String[] doExecSoftware(final String exec, final Path apxPath, final List<String> cliArgs, final boolean wait) {
+	public static String execSoftwareForDynamicProblem(final String exec, final String problem, final DynamicArgumentationFramework instance) {
+		Path apxPath;
+		Path apxmPath;
+		try {
+			apxPath = writeInstanceToTemp(instance.getInitInstance());
+			apxmPath = writeDynamicsToTemp(instance);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+		final List<String> cliArgs = cliArgs(exec, problem, instance.getInitInstance(), apxPath, apxmPath);
+		String[] result = doExecSoftware(exec, apxPath, apxmPath, cliArgs, false);
+		if(result[0].isEmpty() || !result[1].isEmpty()) {
+			try {
+				apxPath = writeInstanceToTemp(instance.getInitInstance());
+				apxmPath = writeDynamicsToTemp(instance);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+			result = doExecSoftware(exec, apxPath, apxmPath, cliArgs, true);
+		}
+		if(!result[1].isEmpty()) {
+			Arrays.stream(result[1].split("\n")).forEach(l -> LOGGER.warn("software wrote to stderr: {}", l));
+		}
+		return result[0];
+	}
+	
+	private static String[] doExecSoftware(final String exec, final Path apxPath, final Path apxmPath, final List<String> cliArgs, final boolean wait) {
 		try {
 			final StringBuilder stdoutBuilder = new StringBuilder();
 			final StringBuilder stderrBuilder = new StringBuilder();
@@ -111,6 +135,10 @@ public class SoftwareExecutor {
 						Thread.sleep(500);
 						Files.delete(apxPath);
 					}
+					if(apxmPath != null && Files.exists(apxmPath)) {
+						Thread.sleep(500);
+						Files.delete(apxmPath);
+					}
 				} catch(IOException e) {
 					LOGGER.error("an unexpected I/O exception occurred", e);
 				} catch(InterruptedException e) {
@@ -121,8 +149,15 @@ public class SoftwareExecutor {
 		}
 	}
 	
-	private static List<String> cliArgs(final String exec, final String problem, final ArgumentationFramework instance, Path apxPath) {
+	private static List<String> cliArgs(final String exec, final String problem, final ArgumentationFramework instance, final Path apxPath) {
+		return cliArgs(exec, problem, instance, apxPath, null);
+	}
+	
+	private static List<String> cliArgs(final String exec, final String problem, final ArgumentationFramework instance, final Path apxPath, final Path apxmPath) {
 		final List<String> cliArgs = Stream.of(exec, "-fo", "apx", "-f", apxPath.toAbsolutePath().toString(), "-p", problem).collect(Collectors.toList());
+		if(apxmPath != null) {
+			Stream.of("-m", apxmPath.toAbsolutePath().toString()).forEach(cliArgs::add);
+		}
 		if(Stream.of("DC-", "DS-").anyMatch(problem::startsWith)) {
 			Stream.of("-a", instance.getArgUnderDecision().getName()).forEach(cliArgs::add);
 		}
@@ -136,6 +171,15 @@ public class SoftwareExecutor {
 		instance.write(AArgumentationFrameworkGraph.APX_EXT, os);
 		os.close();
 		return apxPath;
+	}
+	
+	private static Path writeDynamicsToTemp(final DynamicArgumentationFramework instance) throws IOException {
+		Path apxmPath;
+		apxmPath = Files.createTempFile("rubens-arg-dyn-", ".tmp", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr--r--")));
+		final OutputStream os = Files.newOutputStream(apxmPath);
+		instance.write(DynamicArgumentationFramework.APXM_EXT, os);
+		os.close();
+		return apxmPath;
 	}
 	
 	/**
