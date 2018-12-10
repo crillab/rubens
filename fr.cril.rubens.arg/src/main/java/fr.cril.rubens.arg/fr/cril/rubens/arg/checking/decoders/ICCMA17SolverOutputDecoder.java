@@ -78,15 +78,18 @@ public class ICCMA17SolverOutputDecoder extends AbstractICCMASolverOutputDecoder
 		return extSets;
 	}
 	
+	@Override
 	public List<String> splitDynAcceptanceStatuses(final String solverOutput) throws SyntaxErrorException {
 		final String normalized = normalizeResult(solverOutput);
 		return Arrays.stream(normalized.split(",")).collect(Collectors.toUnmodifiableList());
 	}
 	
+	@Override
 	public List<String> splitDynExtensions(final String solverOutput) throws SyntaxErrorException {
 		return splitExtensionSets(solverOutput);
 	}
 	
+	@Override
 	public List<String> splitDynExtensionSets(final String solverOutput) throws SyntaxErrorException {
 		return splitDynExtensions(solverOutput);
 	}

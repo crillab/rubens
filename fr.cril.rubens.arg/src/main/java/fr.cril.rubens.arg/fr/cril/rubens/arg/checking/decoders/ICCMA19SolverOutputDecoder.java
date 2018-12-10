@@ -69,6 +69,7 @@ public class ICCMA19SolverOutputDecoder extends AbstractICCMASolverOutputDecoder
 		return result;
 	}
 	
+	@Override
 	public List<String> splitDynAcceptanceStatuses(final String solverOutput) throws SyntaxErrorException {
 		final String normalized = normalizeStatusResult(solverOutput);
 		final int lastIndex = normalized.length()-1;
@@ -78,6 +79,7 @@ public class ICCMA19SolverOutputDecoder extends AbstractICCMASolverOutputDecoder
 		return Arrays.stream(normalized.substring(1, lastIndex).split(",")).collect(Collectors.toUnmodifiableList());
 	}
 	
+	@Override
 	public List<String> splitDynExtensions(final String solverOutput) throws SyntaxErrorException {
 		final List<String> lines = Arrays.stream(solverOutput.split("\n")).collect(Collectors.toList());
 		if(lines.size() < 2 || !lines.get(0).equals("[") || !lines.get(lines.size()-1).equals("]")) {
@@ -86,6 +88,7 @@ public class ICCMA19SolverOutputDecoder extends AbstractICCMASolverOutputDecoder
 		return lines.subList(1, lines.size()-1).stream().collect(Collectors.toList());
 	}
 	
+	@Override
 	public List<String> splitDynExtensionSets(final String solverOutput) throws SyntaxErrorException {
 		final List<String> lines = Arrays.stream(solverOutput.split("\n")).collect(Collectors.toList());
 		if(lines.size() < 2 || !lines.get(0).equals("[") || !lines.get(lines.size()-1).equals("]")) {
