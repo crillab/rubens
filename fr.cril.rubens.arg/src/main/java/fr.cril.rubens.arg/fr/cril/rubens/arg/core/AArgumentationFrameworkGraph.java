@@ -22,7 +22,7 @@ public abstract class AArgumentationFrameworkGraph implements Instance {
 	public static final String APX_EXT = ".apx";
 	
 	/** file extension associated with the set of extensions */
-	private static final String EXTS_EXT = ".exts";
+	public static final String EXTS_EXT = ".exts";
 	
 	/** the set of arguments involved in the framework */
 	protected final ArgumentSet arguments;
