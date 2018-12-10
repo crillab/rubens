@@ -12,7 +12,7 @@ import java.util.Map;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public final class ArgumentationFrameworkTranslation {
+public class ArgumentationFrameworkTranslation {
 	
 	private static final Map<String, ArgumentationFrameworkTranslation> INSTANCES = new HashMap<>();
 	
@@ -46,13 +46,54 @@ public final class ArgumentationFrameworkTranslation {
 	}
 	
 	/**
-	 * The description for a new attack.
+	 * Inner class dedicated to translations based on attack changes.
 	 * 
-	 * @param attack the new attack 
-	 * @return the corresponding description
+	 * @author Emmanuel Lonca - lonca@cril.fr
 	 */
-	public static ArgumentationFrameworkTranslation newAttack(final Attack attack) {
-		return getInstance("+att("+attack.getAttacker().getName()+","+attack.getAttacked().getName()+").");
+	public static class ArgumentFrameworkAttackTranslation extends ArgumentationFrameworkTranslation {
+		
+		private static final Map<String, ArgumentFrameworkAttackTranslation> INSTANCES = new HashMap<>();
+		
+		private final boolean isNewAttack;
+		
+		private static ArgumentFrameworkAttackTranslation getInstance(final String description, final boolean isNewAttack) {
+			return INSTANCES.computeIfAbsent(description, k -> new ArgumentFrameworkAttackTranslation(k, isNewAttack));
+		}
+		
+		private ArgumentFrameworkAttackTranslation(final String description, final boolean isNewAttack) {
+			super(description);
+			this.isNewAttack = isNewAttack;
+		}
+		
+		/**
+		 * The description for a new attack.
+		 * 
+		 * @param attack the new attack 
+		 * @return the corresponding description
+		 */
+		public static ArgumentFrameworkAttackTranslation newAttack(final Attack attack) {
+			return getInstance("+att("+attack.getAttacker().getName()+","+attack.getAttacked().getName()+").", true);
+		}
+		
+		/**
+		 * The description for an attack removal.
+		 * 
+		 * @param attack the attack that was removed
+		 * @return the corresponding description
+		 */
+		public static ArgumentFrameworkAttackTranslation attackRemoval(final Attack attack) {
+			return getInstance("-att("+attack.getAttacker().getName()+","+attack.getAttacked().getName()+").", false);
+		}
+		
+		/**
+		 * Returns <code>true</code> iff this translation is an attack addition.
+		 * 
+		 * @return <code>true</code> iff this translation is an attack addition
+		 */
+		public boolean isNewAttack() {
+			return this.isNewAttack;
+		}
+		
 	}
 	
 	/**

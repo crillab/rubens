@@ -16,9 +16,7 @@ import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.specs.InstanceTranslator;
 
 /**
- * An instance translator that adds new attacks to an existing frameworks.
- * 
- * The semantics is the complete one.
+ * An instance translator that adds new attacks to an existing framework.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
@@ -28,6 +26,11 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 	
 	private boolean autoAttacksAllowed = true;
 	
+	/**
+	 * Builds an instance of this translator given the extension set computer used for the current semantics.
+	 * 
+	 * @param extensionSetComputer the extension set computer
+	 */
 	public NewAttackTranslator(final EExtensionSetComputer extensionSetComputer) {
 		this.extensionSetComputer = extensionSetComputer;
 	}
@@ -40,6 +43,19 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 
 	@Override
 	public ArgumentationFramework translate(final ArgumentationFramework instance) {
+		final Attack newAttack = selectNewAttack(instance);
+		return translate(instance, newAttack);
+	}
+	
+	/**
+	 * Computes an attack that can be added to the provided AF.
+	 * 
+	 * You must check that the translator can be applied on the instance before calling this method.
+	 * 
+	 * @param instance the AF under consideration
+	 * @return an attack that can be added to the AF
+	 */
+	public Attack selectNewAttack(final ArgumentationFramework instance) {
 		final List<Argument> args = instance.getArguments().stream().collect(Collectors.toList());
 		Collections.shuffle(args);
 		for(int i=0; i<args.size(); ++i) {
@@ -48,10 +64,7 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 			if(alreadyAttacked.size() < args.size() - (this.autoAttacksAllowed ? 0 : 1)) {
 				final List<Argument> candidateTargets = args.stream().filter(arg -> !alreadyAttacked.contains(arg)).collect(Collectors.toList());
 				Collections.shuffle(candidateTargets);
-				final ArgumentationFramework af = translate(instance, Attack.getInstance(attacker, candidateTargets.get(0)));
-				Collections.shuffle(args);
-				af.setArgUnderDecision(args.get(0));
-				return af;
+				return Attack.getInstance(attacker, candidateTargets.get(0));
 			}
 		}
 		throw new IllegalStateException();
@@ -64,11 +77,15 @@ public class NewAttackTranslator implements InstanceTranslator<ArgumentationFram
 	 * @param newAttack the new attack
 	 * @return the new instance
 	 */
-	private ArgumentationFramework translate(final ArgumentationFramework instance, final Attack newAttack) {
+	public ArgumentationFramework translate(final ArgumentationFramework instance, final Attack newAttack) {
 		final AttackSet newAttacks = Stream.concat(instance.getAttacks().stream(), Stream.of(newAttack)).collect(AttackSet.collector());
 		final ArgumentSet args = instance.getArguments();
 		final ExtensionSet newExtensions = this.extensionSetComputer.compute(args, newAttacks);
-		return new ArgumentationFramework(args, newAttacks, newExtensions, instance, ArgumentationFrameworkTranslation.newAttack(newAttack));
+		final ArgumentationFramework af = new ArgumentationFramework(args, newAttacks, newExtensions, instance, ArgumentationFrameworkTranslation.ArgumentFrameworkAttackTranslation.newAttack(newAttack));
+		final List<Argument> argsList = instance.getArguments().stream().collect(Collectors.toList());
+		Collections.shuffle(argsList);
+		af.setArgUnderDecision(argsList.get(0));
+		return af;
 	}
 
 	/**
