@@ -3,6 +3,8 @@ package fr.cril.rubens.arg.checking.decoders;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +50,24 @@ public class ICCMA17SolverOutputDecoderTest {
 		for(final String ext : list) {
 			assertEquals("[[a0,a1]]", ext);
 		}
+	}
+	
+	@Test
+	public void testDynAcceptanceStatuses() throws SyntaxErrorException {
+		final List<String> statuses = this.decoder.splitDynAcceptanceStatuses("YES, NO");
+		assertEquals(Stream.of("YES", "NO").collect(Collectors.toList()), statuses);
+	}
+	
+	@Test
+	public void testSplitDynExtensions() throws SyntaxErrorException {
+		final List<String> extensions = this.decoder.splitDynExtensions("[a0],[a1]");
+		assertEquals(Stream.of("[a0]", "[a1]").collect(Collectors.toList()), extensions);
+	}
+	
+	@Test
+	public void testSplitDynExtensionSets() throws SyntaxErrorException {
+		final List<String> extensions = this.decoder.splitDynExtensionSets("[[a0]],[[a1]]");
+		assertEquals(Stream.of("[[a0]]", "[[a1]]").collect(Collectors.toList()), extensions);
 	}
 
 }

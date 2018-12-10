@@ -3,6 +3,7 @@ package fr.cril.rubens.arg.checking.decoders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A solver output decoder corresponding to the outputs of ICCMA17.
@@ -75,6 +76,19 @@ public class ICCMA17SolverOutputDecoder extends AbstractICCMASolverOutputDecoder
 		}
 		extSets.add(current.toString());
 		return extSets;
+	}
+	
+	public List<String> splitDynAcceptanceStatuses(final String solverOutput) throws SyntaxErrorException {
+		final String normalized = normalizeResult(solverOutput);
+		return Arrays.stream(normalized.split(",")).collect(Collectors.toUnmodifiableList());
+	}
+	
+	public List<String> splitDynExtensions(final String solverOutput) throws SyntaxErrorException {
+		return splitExtensionSets(solverOutput);
+	}
+	
+	public List<String> splitDynExtensionSets(final String solverOutput) throws SyntaxErrorException {
+		return splitDynExtensions(solverOutput);
 	}
 	
 }

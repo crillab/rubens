@@ -87,5 +87,32 @@ public interface ISolverOutputDecoder {
 	 * @throws SyntaxErrorException iff the output contains syntax error while considering it as a D3 result
 	 */
 	List<ExtensionSet> readD3(final String solverOutput) throws SyntaxErrorException;
+	
+	/**
+	 * Reads the solver output of a dynamic acceptance problem.
+	 * 
+	 * @param solverOutput the solver output
+	 * @return a list containing the successive acceptance statuses
+	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains a sequence of acceptance statuses
+	 */
+	List<String> splitDynAcceptanceStatuses(final String solverOutput) throws SyntaxErrorException;
+	
+	/**
+	 * Reads the solver output of a dynamic single extension search problem.
+	 * 
+	 * @param solverOutput the solver output
+	 * @return a list containing the successive extensions
+	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains a sequence of extensions
+	 */
+	List<String> splitDynExtensions(final String solverOutput) throws SyntaxErrorException;
+	
+	/**
+	 * Reads the solver output of a dynamic extension set search problem.
+	 * 
+	 * @param solverOutput the solver output
+	 * @return a list containing the successive extension sets
+	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains a sequence of extension sets
+	 */
+	List<String> splitDynExtensionSets(final String solverOutput) throws SyntaxErrorException;
 
 }

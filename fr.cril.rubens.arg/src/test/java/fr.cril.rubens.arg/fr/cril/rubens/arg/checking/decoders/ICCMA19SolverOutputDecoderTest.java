@@ -109,5 +109,68 @@ public class ICCMA19SolverOutputDecoderTest {
 	public void testNormalizeresult() {
 		assertEquals("", this.decoder.normalizeResult(""));
 	}
+	
+	@Test
+	public void testDynAcceptanceStatuses() throws SyntaxErrorException {
+		final List<String> statuses = this.decoder.splitDynAcceptanceStatuses("[YES, NO]");
+		assertEquals(Stream.of("YES", "NO").collect(Collectors.toList()), statuses);
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testDynAcceptanceStatusesTooShort() throws SyntaxErrorException {
+		this.decoder.splitDynAcceptanceStatuses("[");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testDynAcceptanceStatusesNoOpeningBracket() throws SyntaxErrorException {
+		this.decoder.splitDynAcceptanceStatuses("]]");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testDynAcceptanceStatusesNoClosingBracket() throws SyntaxErrorException {
+		this.decoder.splitDynAcceptanceStatuses("[[");
+	}
+	
+	@Test
+	public void testSplitDynExtensions() throws SyntaxErrorException {
+		final List<String> extensions = this.decoder.splitDynExtensions("[\n[a0]\n[a1]\n]\n");
+		assertEquals(Stream.of("[a0]", "[a1]").collect(Collectors.toList()), extensions);
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionsTooShort() throws SyntaxErrorException {
+		this.decoder.splitDynExtensions("[\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionsNoOpeningBracket() throws SyntaxErrorException {
+		this.decoder.splitDynExtensions("]\n]\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionsNoClosingBracket() throws SyntaxErrorException {
+		this.decoder.splitDynExtensions("[\n[\n");
+	}
+	
+	@Test
+	public void testSplitDynExtensionSets() throws SyntaxErrorException {
+		final List<String> extensions = this.decoder.splitDynExtensionSets("[\n[\n[a0]\n]\n[\n[a1]\n]\n]\n");
+		assertEquals(Stream.of("[\n[a0]\n]", "[\n[a1]\n]").collect(Collectors.toList()), extensions);
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionSetsTooShort() throws SyntaxErrorException {
+		this.decoder.splitDynExtensionSets("[\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionSetsNoOpeningBracket() throws SyntaxErrorException {
+		this.decoder.splitDynExtensionSets("]\n]\n");
+	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testSplitDynExtensionSetsNoClosingBracket() throws SyntaxErrorException {
+		this.decoder.splitDynExtensionSets("[\n[\n");
+	}
 
 }
