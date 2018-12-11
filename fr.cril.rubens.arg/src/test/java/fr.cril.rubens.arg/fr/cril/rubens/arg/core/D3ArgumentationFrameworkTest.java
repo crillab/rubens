@@ -55,7 +55,7 @@ public class D3ArgumentationFrameworkTest {
 				Attack.getInstance(argl.get(2), argl.get(1))
 		).collect(Collectors.toSet()));
 		final D3ArgumentationFramework d3af = new D3ArgumentationFramework(new ArgumentationFramework(args, attacks, ExtensionSet.getInstance(Collections.emptySet())));
-		assertEquals("[[a1, a2, a3, a0], [att(a0,a1), att(a1,a2), att(a2,a1), att(a3,a0), att(a0,a2)], [[a3]], [[a1, a3], [a2, a3]], [[a1, a3], [a2, a3]]]", d3af.toString());
+		assertEquals("[[a0, a1, a2, a3], [att(a0,a1), att(a0,a2), att(a1,a2), att(a2,a1), att(a3,a0)], [[a3]], [[a1, a3], [a2, a3]], [[a1, a3], [a2, a3]]]", d3af.toString());
 	}
 	
 	@Test

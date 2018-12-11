@@ -11,7 +11,7 @@ import java.util.Map;
  *  
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class Attack {
+public class Attack implements Comparable<Attack> {
 	
 	/** the arguments that attacks */
 	private final Argument attacker;
@@ -93,6 +93,15 @@ public class Attack {
 	@Override
 	public String toString() {
 		return "att("+this.attacker+","+this.attacked+")";
+	}
+
+	@Override
+	public int compareTo(final Attack other) {
+		final int cmp = this.attacker.compareTo(other.attacker);
+		if(cmp != 0) {
+			return cmp;
+		}
+		return this.attacked.compareTo(other.attacked);
 	}
 
 }

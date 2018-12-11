@@ -11,7 +11,7 @@ import java.util.Map;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class Argument {
+public class Argument implements Comparable<Argument> {
 	
 	/** a map used to store all existing arguments */
 	private static final Map<String, Argument> ARGUMENTS = new HashMap<>();
@@ -73,6 +73,11 @@ public class Argument {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+	@Override
+	public int compareTo(final Argument other) {
+		return this.name.compareTo(other.name);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class ArgumentSet {
+public class ArgumentSet implements Comparable<ArgumentSet> {
 
 	/** the set of arguments */
 	private final Set<Argument> args;
@@ -164,7 +165,12 @@ public class ArgumentSet {
 	
 	@Override
 	public String toString() {
-		return this.args.toString();
+		return new TreeSet<>(this.args).toString();
+	}
+
+	@Override
+	public int compareTo(final ArgumentSet other) {
+		return this.toString().compareTo(other.toString());
 	}
 	
 }

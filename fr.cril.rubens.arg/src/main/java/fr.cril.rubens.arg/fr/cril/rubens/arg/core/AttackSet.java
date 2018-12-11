@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -156,7 +157,7 @@ public class AttackSet {
 	
 	@Override
 	public String toString() {
-		return this.atts.toString();
+		return new TreeSet<>(this.atts).toString();
 	}
 
 }
