@@ -67,7 +67,11 @@ public abstract class AbstractICCMASolverOutputDecoder implements ISolverOutputD
 		for(final String arg : result) {
 			throwOn(e, arg.chars().anyMatch(c -> !Character.isLetterOrDigit(c)));
 		}
-		return result.stream().map(Argument::getInstance).collect(ArgumentSet.collector());
+		try {
+			return result.stream().map(Argument::getInstance).collect(ArgumentSet.collector());
+		} catch(IllegalArgumentException e0) {
+			throw e;
+		}
 	}
 	
 	@Override

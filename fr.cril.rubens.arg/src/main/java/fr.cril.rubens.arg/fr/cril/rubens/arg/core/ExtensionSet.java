@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -24,7 +26,7 @@ import java.util.stream.Stream;
 public class ExtensionSet {
 	
 	/** the set of extension */
-	private final Set<ArgumentSet> exts;
+	private final SortedSet<ArgumentSet> exts;
 	
 	/** the id of this set of extensions */
 	private final int id;
@@ -42,7 +44,7 @@ public class ExtensionSet {
 	 * @param id the id
 	 */
 	private ExtensionSet(final Set<ArgumentSet> args, final int id) {
-		this.exts = Collections.unmodifiableSet(new HashSet<>(args));
+		this.exts = Collections.unmodifiableSortedSet(new TreeSet<>(args));
 		this.id = id;
 	}
 	
