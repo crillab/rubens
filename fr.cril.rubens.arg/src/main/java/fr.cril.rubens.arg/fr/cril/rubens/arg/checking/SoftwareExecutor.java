@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,6 +34,21 @@ public class SoftwareExecutor {
 	
 	/** the logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SoftwareExecutor.class);
+	
+	/** a thread pool used to clean temporary files */
+	private static final ExecutorService TEMP_CLEANING_TH_POOL = Executors.newCachedThreadPool();
+	
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			TEMP_CLEANING_TH_POOL.shutdown();
+			try {
+				TEMP_CLEANING_TH_POOL.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new IllegalStateException(e);
+			}
+		}));
+	}
 	
 	private SoftwareExecutor() {
 		// nothing to do here
@@ -54,15 +72,7 @@ public class SoftwareExecutor {
 			throw new IllegalStateException(e);
 		}
 		final List<String> cliArgs = cliArgs(exec, problem, instance, apxPath);
-		String[] result = doExecSoftware(exec, apxPath, null, cliArgs, false);
-		if(result[0].isEmpty() || !result[1].isEmpty()) {
-			try {
-				apxPath = writeInstanceToTemp(instance);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-			result = doExecSoftware(exec, apxPath, null, cliArgs, true);
-		}
+		final String[] result = doExecSoftware(exec, apxPath, cliArgs);
 		if(!result[1].isEmpty()) {
 			Arrays.stream(result[1].split("\n")).forEach(l -> LOGGER.warn("software wrote to stderr: {}", l));
 		}
@@ -89,35 +99,30 @@ public class SoftwareExecutor {
 			throw new IllegalStateException(e);
 		}
 		final List<String> cliArgs = cliArgs(exec, problem, instance.getInitInstance(), apxPath, apxmPath);
-		String[] result = doExecSoftware(exec, apxPath, apxmPath, cliArgs, false);
-		if(result[0].isEmpty() || !result[1].isEmpty()) {
-			try {
-				apxPath = writeInstanceToTemp(instance.getInitInstance());
-				apxmPath = writeDynamicsToTemp(instance);
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-			result = doExecSoftware(exec, apxPath, apxmPath, cliArgs, true);
-		}
+		String[] result = doExecSoftware(exec, apxPath, apxmPath, cliArgs);
 		if(!result[1].isEmpty()) {
 			Arrays.stream(result[1].split("\n")).forEach(l -> LOGGER.warn("software wrote to stderr: {}", l));
 		}
 		return result[0];
 	}
 	
-	private static String[] doExecSoftware(final String exec, final Path apxPath, final Path apxmPath, final List<String> cliArgs, final boolean wait) {
+	private static String[] doExecSoftware(final String exec, final Path apxPath, final List<String> cliArgs) {
+		return doExecSoftware(exec, apxPath, null, cliArgs);
+	}
+	
+	private static String[] doExecSoftware(final String exec, final Path apxPath, final Path apxmPath, final List<String> cliArgs) {
 		try {
 			final StringBuilder stdoutBuilder = new StringBuilder();
 			final StringBuilder stderrBuilder = new StringBuilder();
 			final ProcessBuilder pBuilder = new ProcessBuilder(cliArgs);
 			pBuilder.directory(Paths.get(exec).getParent().toFile());
 			final Process p = pBuilder.start();
-			launchStreamThread(p.getInputStream(), l -> stdoutBuilder.append(l).append('\n'));
-			launchStreamThread(p.getErrorStream(), l -> stderrBuilder.append(l).append('\n'));
+			final ExecutorService thPool = Executors.newFixedThreadPool(2);
+			launchStreamThread(thPool, p.getInputStream(), l -> stdoutBuilder.append(l).append('\n'));
+			launchStreamThread(thPool, p.getErrorStream(), l -> stderrBuilder.append(l).append('\n'));
 			p.getOutputStream().close();
-			if(wait) {
-				Thread.sleep(500);
-			}
+			thPool.shutdown();
+			thPool.awaitTermination(1, TimeUnit.DAYS);
 			final int status = p.waitFor();
 			if(status != 0) {
 				LOGGER.warn("subprocess exited with status {}", status);
@@ -129,23 +134,16 @@ public class SoftwareExecutor {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException();
 		} finally {
-			new Thread(() -> {
+			TEMP_CLEANING_TH_POOL.submit(() -> {
 				try {
-					if(Files.exists(apxPath)) {
-						Thread.sleep(500);
-						Files.delete(apxPath);
-					}
-					if(apxmPath != null && Files.exists(apxmPath)) {
-						Thread.sleep(500);
-						Files.delete(apxmPath);
+					Files.deleteIfExists(apxPath);
+					if(apxmPath != null) {
+						Files.deleteIfExists(apxmPath);
 					}
 				} catch(IOException e) {
 					LOGGER.error("an unexpected I/O exception occurred", e);
-				} catch(InterruptedException e) {
-					Thread.currentThread().interrupt();
-					LOGGER.error("an unexpected thread interruption occurred", e);
 				}
-			}).start();
+			});
 		}
 	}
 	
@@ -187,11 +185,12 @@ public class SoftwareExecutor {
 	 * 
 	 * The stream is read line per line; each line is then process by the provided {@link Consumer}.
 	 * 
+	 * @param the thread pool used to launch this thread
 	 * @param is the input stream
 	 * @param lineHandler the line consumer
 	 */
-	private static void launchStreamThread(final InputStream is, final Consumer<String> lineHandler) {
-		new Thread(() -> {
+	private static void launchStreamThread(final ExecutorService threadPool, final InputStream is, final Consumer<String> lineHandler) {
+		threadPool.submit(() -> {
 			try(final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 				String line;
 				while((line = reader.readLine()) != null) {
@@ -202,7 +201,7 @@ public class SoftwareExecutor {
 				LOGGER.warn("got an I/O exception while reading software output with reason: {}", e.getMessage());
 				return;
 			}
-		}).start();
+		});
 	}
 	
 }
