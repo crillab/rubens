@@ -134,16 +134,18 @@ public class SoftwareExecutor {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException();
 		} finally {
-			TEMP_CLEANING_TH_POOL.submit(() -> {
-				try {
-					Files.deleteIfExists(apxPath);
-					if(apxmPath != null) {
-						Files.deleteIfExists(apxmPath);
+			synchronized(TEMP_CLEANING_TH_POOL) {
+				TEMP_CLEANING_TH_POOL.submit(() -> {
+					try {
+						Files.deleteIfExists(apxPath);
+						if(apxmPath != null) {
+							Files.deleteIfExists(apxmPath);
+						}
+					} catch(IOException e) {
+						LOGGER.error("an unexpected I/O exception occurred", e);
 					}
-				} catch(IOException e) {
-					LOGGER.error("an unexpected I/O exception occurred", e);
-				}
-			});
+				});
+			}
 		}
 	}
 	

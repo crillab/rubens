@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -34,9 +37,9 @@ public class Checker {
 	
 	private int statusCode;
 	
-	private int checkCount;
+	private Integer checkCount = 0;
 	
-	private int errorCount;
+	private Integer errorCount = 0;
 	
 	private final CheckerOptionsReader checkerOptions;
 
@@ -78,13 +81,21 @@ public class Checker {
 			return;
 		}
 		final Map<String, CheckerFactory<Instance>> factories = this.checkerOptions.getFactories();
+		final ExecutorService threadPool = Executors.newCachedThreadPool();
 		for(final Entry<String, CheckerFactory<Instance>> factoryEntry : factories.entrySet()) {
 			final CheckerFactory<Instance> factory = factoryEntry.getValue();
 			factory.setOptions(this.checkerOptions.getCheckerOptions());
 			final TestGenerator<Instance> generator = new TestGenerator<>(factory.newTestGenerator());
 			final String factoryName = factoryEntry.getKey();
 			LOGGER.info("checking {}", factoryName);
-			generator.computeToDepth(this.checkerOptions.getMaxDepth(), i -> this.checkInstance(factory, factoryName, i));
+			generator.computeToDepth(this.checkerOptions.getMaxDepth(), i -> this.checkInstance(threadPool, factory, factoryName, i));
+		}
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			LOGGER.error("got an error while waiting for checking threads", e);
 		}
 		final Supplier<String> strTimeSupplier = () -> String.format("%.3f", (System.currentTimeMillis() - startTime)/1000f);
 		LOGGER.info("checked {} instances in {}s", this.checkCount, strTimeSupplier.get());
@@ -93,23 +104,30 @@ public class Checker {
 	
 	/**
 	 * Given a checking factory, executes the software under test on the provided instance and checks the result.
-	 * @param factory 
+	 * This method uses a thread pool to allow parallelization of instance checking.
 	 * 
+	 * @param threadPool the thread pool
 	 * @param factory the factory
 	 * @param factoryName the name of the factory under consideration
 	 * @param instance the instance
 	 */
-	public void checkInstance(final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
-		final String softwareOutput = factory.execSoftware(this.checkerOptions.getExecLocation(), instance);
-		final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
-		if(!checkResult.isSuccessful()) {
-			this.errorCount++;
-			LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.errorCount, instance, checkResult.getExplanation());
-			if(this.checkerOptions.getOutputDirectory() != null) {
-				outputInstance(factoryName, instance);
+	private void checkInstance(final ExecutorService threadPool, final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
+		threadPool.submit(() -> {
+			final String softwareOutput = factory.execSoftware(this.checkerOptions.getExecLocation(), instance);
+			final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
+			if(!checkResult.isSuccessful()) {
+				synchronized (this.errorCount) {
+					this.errorCount++;
+					LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.errorCount, instance, checkResult.getExplanation());
+					if(this.checkerOptions.getOutputDirectory() != null) {
+						outputInstance(factoryName, instance);
+					}
+				}
 			}
-		}
-		this.checkCount++;
+			synchronized (this.checkCount) {
+				this.checkCount++;
+			}
+		});
 	}
 	
 	private void outputInstance(final String factoryName, final Instance instance) {
