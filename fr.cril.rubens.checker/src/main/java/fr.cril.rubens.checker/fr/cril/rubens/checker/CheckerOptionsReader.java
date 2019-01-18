@@ -4,8 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -55,7 +54,7 @@ public class CheckerOptionsReader {
 
 	private int status;
 
-	private final Map<String, CheckerFactory<Instance>> factories = new HashMap<>();
+	private final Map<String, CheckerFactory<Instance>> factories = new LinkedHashMap<>();
 	
 	private File outputDirectory;
 	
@@ -335,7 +334,7 @@ public class CheckerOptionsReader {
 	 * @return the {@link CheckerFactory} instances
 	 */
 	public Map<String, CheckerFactory<Instance>> getFactories() {
-		return Collections.unmodifiableMap(this.factories);
+		return new LinkedHashMap<>(this.factories);
 	}
 	
 	/**

@@ -1,10 +1,10 @@
 package fr.cril.rubens.utils;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 import fr.cril.rubens.reflection.ReflectorParam;
@@ -22,13 +22,14 @@ import fr.cril.rubens.specs.Instance;
 @ReflectorParam(enabled=false)
 public abstract class ACheckerFactoryCollection<T extends Instance> implements CheckerFactoryCollection<T> {
 	
-	private final Map<String, CheckerFactory<T>> factories;
+	private final Map<String, CheckerFactory<T>> factories = new LinkedHashMap<>();
 	
 	/**
 	 * Builds a factory collection given the factory names.
 	 * 
 	 * @param factoryNames the factory names
 	 */
+	@SuppressWarnings("unchecked")
 	protected ACheckerFactoryCollection(final List<String> factoryNames) {
 		final CheckerFactoryReflector reflector = CheckerFactoryReflector.getInstance();
 		final Collection<String> availableFactories = reflector.classesNames();
@@ -36,7 +37,8 @@ public abstract class ACheckerFactoryCollection<T extends Instance> implements C
 		if(!unexpected.equals("")) {
 			throw new IllegalArgumentException("unavailable factories: "+unexpected);
 		}
-		this.factories = factoryNames.stream().collect(Collectors.toMap(k -> k, reflector::getClassInstance));
+		// this.factories = factoryNames.stream().collect(Collectors.toMap(k -> k, reflector::getClassInstance));
+		factoryNames.stream().forEach(k -> this.factories.put(k, reflector.getClassInstance(k)));
 	}
 	
 	@Override
