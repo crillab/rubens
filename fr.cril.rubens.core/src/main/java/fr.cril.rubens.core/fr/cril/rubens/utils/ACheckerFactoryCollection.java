@@ -37,7 +37,6 @@ public abstract class ACheckerFactoryCollection<T extends Instance> implements C
 		if(!unexpected.equals("")) {
 			throw new IllegalArgumentException("unavailable factories: "+unexpected);
 		}
-		// this.factories = factoryNames.stream().collect(Collectors.toMap(k -> k, reflector::getClassInstance));
 		factoryNames.stream().forEach(k -> this.factories.put(k, reflector.getClassInstance(k)));
 	}
 	
