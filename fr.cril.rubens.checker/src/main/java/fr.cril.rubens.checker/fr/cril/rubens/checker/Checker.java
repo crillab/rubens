@@ -81,7 +81,6 @@ public class Checker {
 			return;
 		}
 		final Map<String, CheckerFactory<Instance>> factories = this.checkerOptions.getFactories();
-//		final ExecutorService threadPool = Executors.newCachedThreadPool();
 		final ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		for(final Entry<String, CheckerFactory<Instance>> factoryEntry : factories.entrySet()) {
 			final CheckerFactory<Instance> factory = factoryEntry.getValue();
