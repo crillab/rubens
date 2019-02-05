@@ -37,9 +37,13 @@ public class Checker {
 	
 	private int statusCode;
 	
-	private Integer checkCount = 0;
+	private int checkCount = 0;
 	
-	private Integer errorCount = 0;
+	private final Object checkCountLock = new Object();
+	
+	private int errorCount = 0;
+	
+	private final Object errorCountLock = new Object();
 	
 	private final CheckerOptionsReader checkerOptions;
 
@@ -116,7 +120,7 @@ public class Checker {
 			final String softwareOutput = factory.execSoftware(this.checkerOptions.getExecLocation(), instance);
 			final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
 			if(!checkResult.isSuccessful()) {
-				synchronized (this.errorCount) {
+				synchronized (this.errorCountLock) {
 					this.errorCount++;
 					LOGGER.error("{} error ({}) for instance {}: {}.", factoryName, this.errorCount, instance, checkResult.getExplanation());
 					if(this.checkerOptions.getOutputDirectory() != null) {
@@ -124,7 +128,7 @@ public class Checker {
 					}
 				}
 			}
-			synchronized (this.checkCount) {
+			synchronized (this.checkCountLock) {
 				this.checkCount++;
 			}
 		});
