@@ -123,8 +123,12 @@ public class SoftwareExecutor {
 			p.getOutputStream().close();
 			thPool.shutdown();
 			thPool.awaitTermination(1, TimeUnit.DAYS);
+			final boolean timeout = !p.waitFor(1, TimeUnit.MINUTES);
+			p.destroy();
 			final int status = p.waitFor();
-			if(status != 0) {
+			if(timeout) {
+				LOGGER.warn("subprocess exited by timeout (one minute)");
+			} else if(status != 0) {
 				LOGGER.warn("subprocess exited with status {}", status);
 			}
 			return new String[] {stdoutBuilder.toString(), stderrBuilder.toString()};
