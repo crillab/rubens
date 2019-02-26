@@ -209,7 +209,7 @@ public class CheckerOptionsReader {
 	 * Sets the output directory as the one described by the provided path.
 	 * 
 	 * If such path cannot be used as a directory to store instances,
-	 * the application exits with a status of {@link GeneratorOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
+	 * the application exits with a status of {@link CheckerOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
 	 * 
 	 * @param path the path of the output directory to set
 	 */

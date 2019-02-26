@@ -18,8 +18,6 @@ import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation.ArgumentFramewo
  * A dynamic argumentation framework is a list of argumentation framework, such that passing from one to the next is made by adding or removing an attack.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
- *
- * @param <T> the type of frameworks under dynamics
  */
 public class DynamicArgumentationFramework extends AArgumentationFrameworkGraph {
 	

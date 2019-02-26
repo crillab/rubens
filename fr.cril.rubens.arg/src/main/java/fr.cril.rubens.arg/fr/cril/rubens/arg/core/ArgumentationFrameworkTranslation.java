@@ -8,7 +8,7 @@ import java.util.Map;
  * 
  * Creating an empty argumentation framework is considered as a translation; an instance of {@link ArgumentationFrameworkTranslation} describing it
  * can be obtained by calling {@link ArgumentationFrameworkTranslation#emptyAF()}.
- * Adding an argument or an attack can be decribed by respectively {@link ArgumentationFrameworkTranslation#newArgument(Argument)} and {@link ArgumentationFrameworkTranslation#newAttack(Attack)}.
+ * Adding an argument or an attack can be decribed by respectively {@link ArgumentationFrameworkTranslation#newArgument(Argument)} and {@link ArgumentationFrameworkTranslation.ArgumentFrameworkAttackTranslation#newAttack(Attack)}.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */

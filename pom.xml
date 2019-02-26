@@ -140,6 +140,7 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.0.1</version>
 					<configuration>
+						<failOnWarnings>true</failOnWarnings>
 						<sourceFileIncludes>
 							<sourceFileInclude>**/*.java</sourceFileInclude>
 						</sourceFileIncludes>

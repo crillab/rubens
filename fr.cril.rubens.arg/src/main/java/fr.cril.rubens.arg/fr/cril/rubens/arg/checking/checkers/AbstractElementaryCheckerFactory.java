@@ -39,7 +39,7 @@ public abstract class AbstractElementaryCheckerFactory implements ArgumentationF
 	 * 
 	 * @param generatorSupplier the generator supplier
 	 * @param resultChecker the checking function
-	 * @param the textual representation of the problem (-p parameter of argumentation solvers)
+	 * @param problem the textual representation of the problem (-p parameter of argumentation solvers)
 	 */
 	protected AbstractElementaryCheckerFactory(final Supplier<TestGeneratorFactory<ArgumentationFramework>> generatorSupplier,
 			final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker, final String problem) {

@@ -2,6 +2,8 @@ package fr.cril.rubens.specs;
 
 import java.util.List;
 
+import fr.cril.rubens.reflection.ReflectorParam;
+
 /**
  * An interface for factories providing all the element needed for a generation process.
  * <ul>
@@ -9,11 +11,11 @@ import java.util.List;
  * <li> {@link TestGeneratorFactory#translators()} provides the list of translators used to generate the instances. </li>
  * </ul>
  * 
- * A {@link TestGeneratorFactory} implementor MUST be parameterized by a {@link TestGeneratorFactoryParams} annotation.
+ * A {@link TestGeneratorFactory} implementor MUST be parameterized by a {@link ReflectorParam} annotation.
  * The annotation declaration MUST meet at least one of the following requirements:
  * <ul>
- * <li> declare the implementor as disabled (see {@link TestGeneratorFactoryParams#enabled()};</li>
- * <li> give a unique name to the implementor (see {@link TestGeneratorFactoryParams#name()}).</li>
+ * <li> declare the implementor as disabled (see {@link ReflectorParam#enabled()};</li>
+ * <li> give a unique name to the implementor (see {@link ReflectorParam#name()}).</li>
  * </ul>
  * 
  * @author Emmanuel Lonca - lonca@cril.fr

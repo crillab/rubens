@@ -40,7 +40,6 @@ public abstract class AReflector<F> {
 	 * Builds a new reflector given the types of both interface and annotation under consideration.
 	 * 
 	 * @param interfaceClass the type of the interface under consideration
-	 * @param paramClass the type of the annotation under consideration
 	 */
 	protected AReflector(final Class<F> interfaceClass) {
 		this.interfaceClass = interfaceClass;

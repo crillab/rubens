@@ -75,7 +75,7 @@ public interface ISolverOutputDecoder {
 	 * @return the extension set
 	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains an extension set
 	 */
-	ExtensionSet readExtensionSet(final String extensionSet) throws SyntaxErrorException;
+	ExtensionSet readExtensionSet(final String solverOutput) throws SyntaxErrorException;
 	
 	/**
 	 * Reads the solver output of the D3 problem.
