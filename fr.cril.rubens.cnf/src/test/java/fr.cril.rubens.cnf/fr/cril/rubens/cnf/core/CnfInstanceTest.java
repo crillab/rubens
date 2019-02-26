@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class CnfInstanceTest {
 	
@@ -87,6 +88,11 @@ public class CnfInstanceTest {
 		assertEquals(this.instance.nVars(), copy.nVars());
 		assertEquals(this.instance.clauses(), copy.clauses());
 		assertEquals(this.instance.models(), copy.models());
+	}
+	
+	@Test
+	public void testHashcodeAndEquals() {
+		EqualsVerifier.forClass(CnfInstance.class).verify();
 	}
 
 }

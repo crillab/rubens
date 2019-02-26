@@ -64,6 +64,20 @@ public class NewLitInClauseTranslatorTest {
 	}
 	
 	@Test
+	public void testApplyFreeVars2() {
+		for(int i=0; i<8; ++i) {
+			final CnfInstance instance = new CnfInstance(3, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
+					Stream.of(new int[]{1, -2, -3}, new int[]{1, -2, 3}, new int[]{1, 2, -3}, new int[]{1, 2, 3})
+					.map(m -> Arrays.stream(m).boxed().collect(Collectors.toSet())).collect(Collectors.toSet()));
+			final CnfInstance newInstance = this.translator.translate(instance);
+			assertEquals(instance.nVars(), newInstance.nVars());
+			assertEquals(1, newInstance.clauses().size());
+			assertEquals(2, newInstance.clauses().iterator().next().size());
+			assertTrue(newInstance.models().size() >= 6);
+		}
+	}
+	
+	@Test
 	public void testApplyFullClause() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(-1, 1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(new int[]{-1}).map(m -> Arrays.stream(m).boxed().collect(Collectors.toSet())).collect(Collectors.toSet()));
