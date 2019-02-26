@@ -56,7 +56,7 @@ public class ExtensionSet {
 	 * @param exts the set of extensions
 	 * @return the corresponding instance
 	 */
-	public static ExtensionSet getInstance(final Set<ArgumentSet> exts) {
+	public static synchronized ExtensionSet getInstance(final Set<ArgumentSet> exts) {
 		return EXTSETS.computeIfAbsent(exts, k -> new ExtensionSet(k, nextId++));
 	}
 	
