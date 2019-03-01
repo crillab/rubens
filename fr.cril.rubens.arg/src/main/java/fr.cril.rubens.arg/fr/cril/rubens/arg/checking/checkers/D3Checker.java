@@ -1,13 +1,12 @@
 package fr.cril.rubens.arg.checking.checkers;
 
-import java.util.Collections;
+import java.nio.file.Path;
 import java.util.List;
 
-import fr.cril.rubens.arg.checking.SoftwareExecutor;
+import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
-import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
 import fr.cril.rubens.arg.core.CheckerOptionsApplier;
 import fr.cril.rubens.arg.core.D3ArgumentationFramework;
@@ -16,6 +15,7 @@ import fr.cril.rubens.arg.testgen.D3TestGeneratorFactory;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
  * A checker factory for the D3 ("Dung's Triathlon") track.
@@ -41,8 +41,8 @@ public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3Argumen
 	}
 
 	@Override
-	public String execSoftware(final String exec, final D3ArgumentationFramework instance) {
-		return SoftwareExecutor.execSoftware(exec, "D3", new ArgumentationFramework(instance.getArguments(), instance.getAttacks(), ExtensionSet.getInstance(Collections.emptySet())));
+	public ASoftwareExecutor<D3ArgumentationFramework> newExecutor(final Path execPath) {
+		return new AFSolverExecutor<>(execPath, "D3");
 	}
 
 	@Override

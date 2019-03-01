@@ -1,8 +1,9 @@
 package fr.cril.rubens.arg.checking.checkers;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import fr.cril.rubens.arg.checking.SoftwareExecutor;
+import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
@@ -13,6 +14,7 @@ import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
  * An abstract checker factory used to factor the code of the several {@link CheckerFactory} instances of this module.
@@ -59,8 +61,8 @@ public abstract class AbstractElementaryCheckerFactory implements ArgumentationF
 	}
 	
 	@Override
-	public String execSoftware(final String exec, final ArgumentationFramework instance) {
-		return SoftwareExecutor.execSoftware(exec, this.problem, instance);
+	public ASoftwareExecutor<ArgumentationFramework> newExecutor(final Path execPath) {
+		return new AFSolverExecutor<>(execPath, problem);
 	}
 	
 	@Override

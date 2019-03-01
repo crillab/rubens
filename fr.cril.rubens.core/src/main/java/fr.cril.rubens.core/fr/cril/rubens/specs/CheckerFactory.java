@@ -1,6 +1,9 @@
 package fr.cril.rubens.specs;
 
+import java.nio.file.Path;
+
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
  * An interface to be implemented by factories building software checkers.
@@ -26,13 +29,13 @@ public interface CheckerFactory<T extends Instance> {
 	TestGeneratorFactory<T> newTestGenerator();
 	
 	/**
-	 * Executes the software on an instance and returned its output.
+	 * Returns a new object dedicated to instantiate software under checking.
+	 * @see ASoftwareExecutor
 	 * 
-	 * @param exec the software location
-	 * @param instance the instance
-	 * @return the software output
+	 * @param execPath the path to he software under checking
+	 * @return the software executor
 	 */
-	String execSoftware(String exec, T instance);
+	ASoftwareExecutor<T> newExecutor(final Path execPath);
 	
 	/**
 	 * Checks the output of a solver for an instance.

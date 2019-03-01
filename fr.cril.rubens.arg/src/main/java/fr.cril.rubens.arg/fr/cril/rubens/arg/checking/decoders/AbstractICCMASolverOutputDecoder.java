@@ -63,7 +63,7 @@ public abstract class AbstractICCMASolverOutputDecoder implements ISolverOutputD
 		if(normalized.length() == 2) {
 			return ArgumentSet.getInstance(Collections.emptySet());
 		}
-		final List<String> result = Arrays.stream(normalized.substring(1, normalized.length()-1).split(",")).collect(Collectors.toList());
+		final List<String> result = Arrays.stream(normalized.substring(1, normalized.length()-1).split(",", -1)).collect(Collectors.toList());
 		for(final String arg : result) {
 			throwOn(e, arg.chars().anyMatch(c -> !Character.isLetterOrDigit(c)));
 		}

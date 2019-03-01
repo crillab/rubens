@@ -24,9 +24,6 @@ public class ArgumentationFramework extends AArgumentationFrameworkGraph {
 	/** the set of extensions associated with this framework */
 	private final ExtensionSet extensions;
 	
-	/** the argument under consideration while considering DC/DS queries */
-	private Argument argUnderDecision;
-	
 	/**
 	 * Builds a new empty instance of {@link ArgumentationFramework}.
 	 */
@@ -93,27 +90,6 @@ public class ArgumentationFramework extends AArgumentationFrameworkGraph {
 	 */
 	public ExtensionSet getExtensions() {
 		return this.extensions;
-	}
-	
-	/**
-	 * Sets the argument under consideration while considering DC/DS queries.
-	 *
-	 * @param arg the argument
-	 */
-	public void setArgUnderDecision(final Argument arg) {
-		if(arg == null || !this.arguments.contains(arg)) {
-			throw new IllegalArgumentException();
-		}
-		this.argUnderDecision = arg;
-	}
-	
-	/**
-	 * Returns the argument under consideration while considering DC/DS queries.
-	 *
-	 * @return the argument under consideration while considering DC/DS queries
-	 */
-	public Argument getArgUnderDecision() {
-		return this.argUnderDecision;
 	}
 	
 	@Override

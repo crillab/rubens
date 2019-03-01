@@ -3,6 +3,7 @@ package fr.cril.rubens.reflection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 import org.junit.After;
@@ -15,6 +16,7 @@ import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.testutils.StringConcatCheckerFactory;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 public class CheckerFactoryReflectorTest {
 	
@@ -78,12 +80,6 @@ public class CheckerFactoryReflectorTest {
 		}
 
 		@Override
-		public String execSoftware(String exec, Instance instance) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
 		public CheckResult checkSoftwareOutput(Instance instance, String result) {
 			// TODO Auto-generated method stub
 			return null;
@@ -92,6 +88,12 @@ public class CheckerFactoryReflectorTest {
 		@Override
 		public void setOptions(String opts) {
 			// nothing to do here
+		}
+
+		@Override
+		public ASoftwareExecutor<Instance> newExecutor(Path execPath) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 		
 	}

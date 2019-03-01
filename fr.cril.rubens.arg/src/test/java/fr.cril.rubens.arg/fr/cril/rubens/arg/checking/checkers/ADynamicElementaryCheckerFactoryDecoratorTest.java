@@ -2,12 +2,15 @@ package fr.cril.rubens.arg.checking.checkers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
@@ -146,6 +149,11 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 			super(new ElementaryCheckers.EECOChecker(), EExtensionSetComputer.COMPLETE_SEM, "FOOBAR-D");
 		}
 		
+	}
+	
+	@Test
+	public void testNewExecutor() {
+		assertTrue(new DCCODChecker().newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
 	}
 
 }

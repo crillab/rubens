@@ -23,6 +23,8 @@ import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.utils.ASoftwareExecutor;
+import fr.cril.rubens.utils.SoftwareExecutorResult;
 
 /**
  * The main class of the checker module, acting as entry point for the binary.
@@ -116,9 +118,10 @@ public class Checker {
 	 * @param instance the instance
 	 */
 	private void checkInstance(final ExecutorService threadPool, final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
+		final ASoftwareExecutor<Instance> executor = factory.newExecutor(Paths.get(this.checkerOptions.getExecLocation()));
 		threadPool.submit(() -> {
-			final String softwareOutput = factory.execSoftware(this.checkerOptions.getExecLocation(), instance);
-			final CheckResult checkResult = factory.checkSoftwareOutput(instance, softwareOutput);
+			final SoftwareExecutorResult result = executor.exec(instance);
+			final CheckResult checkResult = factory.checkSoftwareOutput(instance, result.getStdout());
 			if(!checkResult.isSuccessful()) {
 				synchronized (this.errorCountLock) {
 					this.errorCount++;
@@ -168,6 +171,34 @@ public class Checker {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Returns the number of checks that have been realized.
+	 * 
+	 * @return the number of checks that have been realized
+	 */
+	public int getCheckCount() {
+		return this.checkCount;
+	}
+	
+	/**
+	 * Returns the number of errors found during the checking process.
+	 * 
+	 * @return the number of errors found during the checking process
+	 */
+	public int getErrorCount() {
+		return this.errorCount;
+	}
+	
+	/**
+	 * Returns the app status code.
+	 * It is equals to zero if the process exited normally, even if the software under test has errors. 
+	 * 
+	 * @return the app status code
+	 */
+	public int getStatusCode() {
+		return this.statusCode;
 	}
 	
 }

@@ -172,5 +172,10 @@ public class ICCMA19SolverOutputDecoderTest {
 	public void testSplitDynExtensionSetsNoClosingBracket() throws SyntaxErrorException {
 		this.decoder.splitDynExtensionSets("[\n[\n");
 	}
+	
+	@Test(expected=SyntaxErrorException.class)
+	public void testEmptyArgName() throws SyntaxErrorException {
+		this.decoder.readExtension("[a0,]");
+	}
 
 }

@@ -19,8 +19,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fr.cril.rubens.arg.checking.checkers.ElementaryCheckers.EECOChecker;
+import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.reflection.CheckerFactoryReflector;
+import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 public class CheckerOptionsReaderTest {
 	
@@ -146,11 +151,101 @@ public class CheckerOptionsReaderTest {
 	
 	@Test
 	public void testNoOutputDirectory() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
-		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-m", "CNF"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(CheckerOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
+	}
+	
+	@Test
+	public void testNoExecLocation() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		this.optReader.loadOptions(new String[] {"-m", "CNF", "-o", file.toString()});
+		assertTrue(this.optReader.mustExit());
+		assertEquals(CheckerOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
+	}
+	
+	@Test
+	public void testNameIsBothAFactoryAndAFactoryCollection() {
+		final CheckerFactoryReflector instance = CheckerFactoryReflector.getInstance();
+		instance.addClass("ICCMA2019", ACheckerFactory.class);
+		this.optReader.setMethod("ICCMA2019");
+		boolean mustExit = this.optReader.mustExit();
+		instance.resetClasses();
+		assertTrue(mustExit);
+	}
+	
+	@Test
+	public void testMethodIsACollection() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-o", file.toString()});
+		assertFalse(this.optReader.mustExit());
+		this.optReader.setMethod("ICCMA2019");
+		assertFalse(this.optReader.mustExit());
+	}
+	
+	@Test
+	public void testGetExecLoc() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-o", file.toString()});
+		assertEquals("foo", this.optReader.getExecLocation());
+	}
+	
+	@Test
+	public void testCheckerOptions() {
+		this.optReader.setCheckerOptions("a=b;c=d");
+		assertEquals("a=b;c=d", this.optReader.getCheckerOptions());
+	}
+	
+	@Test
+	public void testGetOutputDir() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-o", file.toString()});
+		assertEquals(file.toFile(), this.optReader.getOutputDirectory());
+	}
+	
+	@Test
+	public void testSetNANMaxDepth() {
+		this.optReader.setMaxDepth("foo");
+		assertTrue(this.optReader.mustExit());
+	}
+	
+	@Test
+	public void testSetNegMaxDepth() {
+		this.optReader.setMaxDepth("-1");
+		assertTrue(this.optReader.mustExit());
+	}
+	
+	@ReflectorParam(enabled=false)
+	private class ACheckerFactory implements CheckerFactory<Instance> {
+
+		@Override
+		public void setOptions(String options) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public TestGeneratorFactory<Instance> newTestGenerator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ASoftwareExecutor<Instance> newExecutor(Path execPath) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CheckResult checkSoftwareOutput(Instance instance, String result) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 	
 	@AfterClass

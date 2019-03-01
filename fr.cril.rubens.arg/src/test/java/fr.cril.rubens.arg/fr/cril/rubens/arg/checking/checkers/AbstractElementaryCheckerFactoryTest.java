@@ -1,17 +1,19 @@
 package fr.cril.rubens.arg.checking.checkers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.function.Supplier;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
 import fr.cril.rubens.arg.checking.checkers.AbstractElementaryCheckerFactory;
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
-import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
@@ -36,7 +38,7 @@ public class AbstractElementaryCheckerFactoryTest {
 	public void setUp() {
 		Forget.all();
 		this.factory = new Factory();
-		this.factory.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
+		this.factory.setOptions("outputFormat=ICCMA17");
 	}
 	
 	@Test
@@ -51,6 +53,11 @@ public class AbstractElementaryCheckerFactoryTest {
 		final ArgumentationFramework af = new ArgumentationFramework(argSet, AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.singleton(argSet)));
 		final CheckResult result = this.factory.checkSoftwareOutput(af, "[[a]]");
 		assertEquals(CheckResult.SUCCESS, result);
+	}
+	
+	@Test
+	public void testNewExecutor() {
+		assertTrue(this.factory.newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
 	}
 	
 	@ReflectorParam(enabled=false)

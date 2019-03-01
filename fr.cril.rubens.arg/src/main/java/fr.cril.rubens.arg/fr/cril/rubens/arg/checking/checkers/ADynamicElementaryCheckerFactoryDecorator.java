@@ -1,8 +1,9 @@
 package fr.cril.rubens.arg.checking.checkers;
 
+import java.nio.file.Path;
 import java.util.List;
 
-import fr.cril.rubens.arg.checking.SoftwareExecutor;
+import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
@@ -15,6 +16,7 @@ import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
  * A decorator for {@link ElementaryCheckers} checkers that allows to check dynamic AFs.
@@ -49,10 +51,10 @@ public abstract class ADynamicElementaryCheckerFactoryDecorator implements Argum
 	public TestGeneratorFactory<DynamicArgumentationFramework> newTestGenerator() {
 		return new DynamicSemTestGeneratorFactoryDecorator(this.decorated.newTestGenerator(), this.extensionSetComputer);
 	}
-
+	
 	@Override
-	public String execSoftware(final String exec, final DynamicArgumentationFramework instance) {
-		return SoftwareExecutor.execSoftwareForDynamicProblem(exec, this.problem, instance);
+	public ASoftwareExecutor<DynamicArgumentationFramework> newExecutor(final Path execPath) {
+		return new AFSolverExecutor<>(execPath, this.problem);
 	}
 
 	@Override
