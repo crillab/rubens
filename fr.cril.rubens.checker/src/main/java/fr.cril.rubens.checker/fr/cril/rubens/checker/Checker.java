@@ -120,8 +120,14 @@ public class Checker {
 	private void checkInstance(final ExecutorService threadPool, final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
 		final ASoftwareExecutor<Instance> executor = factory.newExecutor(Paths.get(this.checkerOptions.getExecLocation()));
 		threadPool.submit(() -> {
-			final SoftwareExecutorResult result = executor.exec(instance);
-			final CheckResult checkResult = factory.checkSoftwareOutput(instance, result.getStdout());
+			CheckResult checkResult;
+			try {
+				final SoftwareExecutorResult result = executor.exec(instance);
+				checkResult = factory.checkSoftwareOutput(instance, result.getStdout());
+			} catch(Exception e) {
+				LOGGER.error("an unexpected exception occurred for instance {} with the message \"{}\"", instance, e.getMessage());
+				checkResult = CheckResult.newError("an unexpected exception occurred");
+			}
 			if(!checkResult.isSuccessful()) {
 				synchronized (this.errorCountLock) {
 					this.errorCount++;
