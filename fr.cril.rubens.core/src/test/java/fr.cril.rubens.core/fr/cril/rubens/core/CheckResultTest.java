@@ -20,5 +20,16 @@ public class CheckResultTest {
 		assertFalse(result.isSuccessful());
 		assertEquals("foobar", result.getExplanation());
 	}
+	
+	@Test
+	public void testAsException() {
+		final CheckResult result = CheckResult.newError("foobar");
+		assertEquals("foobar", result.asException().getErrorResult().getExplanation());
+	}
+	
+	@Test(expected=UnsupportedOperationException.class)
+	public void testSuccessAsException() {
+		CheckResult.SUCCESS.asException();
+	}
 
 }
