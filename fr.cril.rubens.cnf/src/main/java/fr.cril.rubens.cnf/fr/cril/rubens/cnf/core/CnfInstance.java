@@ -201,5 +201,10 @@ public class CnfInstance implements Instance {
 		}
 		return nVars == other.nVars;
 	}
+	
+	@Override
+	public String toString() {
+		return "[nVars="+this.nVars+", clauses="+this.clauses+", models="+this.models()+"]";
+	}
 
 }

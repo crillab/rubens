@@ -94,5 +94,10 @@ public class CnfInstanceTest {
 	public void testHashcodeAndEquals() {
 		EqualsVerifier.forClass(CnfInstance.class).verify();
 	}
+	
+	@Test
+	public void testToString() {
+		assertEquals("[nVars=1, clauses=[[1]], models=[[1]]]", this.instance.toString());
+	}
 
 }
