@@ -1,5 +1,7 @@
 package fr.cril.rubens.core;
 
+import java.io.Serializable;
+
 /**
  * A class used to handle results of a checking process executed on an instance.
  * It handles both the result (success / fail) and a message corresponding to the error, if any.
@@ -9,8 +11,10 @@ package fr.cril.rubens.core;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public final class CheckResult {
+public final class CheckResult implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	/** a flag indicating the check was successful */
 	private final boolean isSuccesful;
 	
