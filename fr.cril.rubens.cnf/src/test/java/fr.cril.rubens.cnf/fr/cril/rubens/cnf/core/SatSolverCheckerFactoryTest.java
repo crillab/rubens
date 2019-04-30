@@ -25,11 +25,6 @@ public class SatSolverCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testSetOptions() {
-		this.factory.setOptions("nevermind");
-	}
-	
-	@Test
 	public void testNewGenerator() {
 		assertTrue(this.factory.newTestGenerator() instanceof CnfTestGeneratorFactory);
 	}

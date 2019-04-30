@@ -27,11 +27,6 @@ public class ModelCounterCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testSetOptions() {
-		this.factory.setOptions("nevermind");
-	}
-	
-	@Test
 	public void testNewGenerator() {
 		assertTrue(this.factory.newTestGenerator() instanceof ModelCountingCnfTestGeneratorFactory);
 	}
@@ -85,6 +80,16 @@ public class ModelCounterCheckerFactoryTest {
 	@Test
 	public void testUnexpectedStatusLine() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns FOO\n"));
+	}
+	
+	@Test
+	public void testStatusLineOfLength1() {
+		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns\n"));
+	}
+	
+	@Test
+	public void testStatusLineOfNoSpace() {
+		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns123\n"));
 	}
 	
 	private void assertSuccess(final CheckResult result) {

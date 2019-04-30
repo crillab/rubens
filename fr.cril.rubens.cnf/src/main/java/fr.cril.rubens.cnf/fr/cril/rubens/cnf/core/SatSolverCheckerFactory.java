@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.core.CheckResult.ResultIsErrorException;
 import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
@@ -21,13 +20,8 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @ReflectorParam(name="SAT")
-public class SatSolverCheckerFactory implements CheckerFactory<CnfInstance> {
-
-	@Override
-	public void setOptions(final String options) {
-		// no available options
-	}
-
+public class SatSolverCheckerFactory extends ASatCheckerFactory<CnfInstance> {
+	
 	@Override
 	public TestGeneratorFactory<CnfInstance> newTestGenerator() {
 		return new CnfTestGeneratorFactory();

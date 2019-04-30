@@ -19,4 +19,9 @@ public interface ArgumentationFrameworkCheckerFactory<R extends AArgumentationFr
 	 */
 	void setOutputFormat(ISolverOutputDecoder decoder);
 
+	@Override
+	default boolean ignoreInstance(final R instance) {
+		return false;
+	}
+
 }

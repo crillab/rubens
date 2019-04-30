@@ -5,11 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Test;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
@@ -86,14 +88,21 @@ public class CheckerFactoryReflectorTest {
 		}
 		
 		@Override
-		public void setOptions(String opts) {
-			// nothing to do here
-		}
-
-		@Override
 		public ASoftwareExecutor<Instance> newExecutor(Path execPath) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public List<Option> getOptions() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean ignoreInstance(Instance instance) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 		
 	}

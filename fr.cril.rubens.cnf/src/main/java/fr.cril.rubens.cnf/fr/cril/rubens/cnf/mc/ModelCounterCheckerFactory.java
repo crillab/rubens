@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fr.cril.rubens.cnf.core.ASatCheckerFactory;
 import fr.cril.rubens.cnf.core.CnfSolverExecutor;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
@@ -18,11 +18,13 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @ReflectorParam(name="sharpSAT")
-public class ModelCounterCheckerFactory implements CheckerFactory<ModelCountingCnfInstance> {
-
-	@Override
-	public void setOptions(String options) {
-		// no available options
+public class ModelCounterCheckerFactory extends ASatCheckerFactory<ModelCountingCnfInstance> {
+	
+	/**
+	 * Builds a new factory instance.
+	 */
+	public ModelCounterCheckerFactory() {
+		super();
 	}
 
 	@Override

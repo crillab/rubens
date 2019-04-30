@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +18,7 @@ import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.CnfSolverExecutor;
 import fr.cril.rubens.cnf.core.CnfTestGeneratorFactory;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 
 public class DDNNFCheckerFactoryTest {
 	
@@ -25,11 +27,6 @@ public class DDNNFCheckerFactoryTest {
 	@Before
 	public void setUp() {
 		this.factory = new DDNNFCheckerFactory();
-	}
-	
-	@Test
-	public void testSetOptions() {
-		this.factory.setOptions("nevermind");
 	}
 	
 	@Test
@@ -77,5 +74,35 @@ public class DDNNFCheckerFactoryTest {
 		).collect(Collectors.toSet()));
 		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 2 0 2\nO 0 0\nA 0\n"));
 	}
-
+	
+	@Test
+	public void testOptions() {
+		final List<Option> opts = this.factory.getOptions();
+		assertEquals(2, opts.size());
+		assertTrue(opts.stream().anyMatch(o -> o.getName().equals("ignoreUnsat")));
+		assertTrue(opts.stream().anyMatch(o -> o.getName().equals("ignorePreamble")));
+	}
+	
+	@Test
+	public void testDoNotIgnPreamble() {
+		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		opt.apply("off");
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		assertFalse(factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1").isSuccessful());
+	}
+	
+	@Test
+	public void testIgnPreamble() {
+		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		opt.apply("on");
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1"));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testIllegalArgPreamble() {
+		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		opt.apply("foo");
+	}
+	
 }

@@ -89,7 +89,7 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	@Test
 	public void testSECODSuccess() {
 		final SECODChecker checker = new SECODChecker();
-		checker.setOptions("outputFormat=ICCMA19");
+		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
 		assertEquals(CheckResult.SUCCESS, checker.checkSoftwareOutput(this.af, "[\n[a]\n[]\n[a]\n]\n"));
 	}
 	
@@ -154,6 +154,11 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	@Test
 	public void testNewExecutor() {
 		assertTrue(new DCCODChecker().newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
+	}
+	
+	@Test
+	public void testOptions() {
+		assertEquals(1, new DCCODChecker().getOptions().size());
 	}
 
 }

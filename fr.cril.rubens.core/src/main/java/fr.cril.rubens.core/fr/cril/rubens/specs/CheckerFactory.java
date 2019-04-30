@@ -1,8 +1,10 @@
 package fr.cril.rubens.specs;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
@@ -13,13 +15,6 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * @param <T> the instance type involved in the checking process
  */
 public interface CheckerFactory<T extends Instance> {
-	
-	/**
-	 * Sets the options dedicated to the checker itself.
-	 * 
-	 * @param options the options as a string
-	 */
-	void setOptions(String options);
 	
 	/**
 	 * Returns a new test generator used to generate the instances used for the checking process.
@@ -45,5 +40,23 @@ public interface CheckerFactory<T extends Instance> {
 	 * @return <code>true</code> iff the solver result matches the expected results
 	 */
 	CheckResult checkSoftwareOutput(T instance, String result);
+	
+	/**
+	 * Returns the checker specific options.
+	 * 
+	 * @return the checker specific options
+	 */
+	List<Option> getOptions();
+	
+	/**
+	 * Indicates if an instance should be ignored in the checking process.
+	 * 
+	 * This does not prevent the instance to derive new instances.
+	 * If this behavior should be changed, the test generator must be adapted.
+	 * 
+	 * @param instance an instance
+	 * @return <code>true</code> iff the instance should not be used by the checker
+	 */
+	boolean ignoreInstance(T instance);
 
 }

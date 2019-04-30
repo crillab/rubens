@@ -8,11 +8,12 @@ import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
-import fr.cril.rubens.arg.core.CheckerOptionsApplier;
 import fr.cril.rubens.arg.core.D3ArgumentationFramework;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.testgen.D3TestGeneratorFactory;
+import fr.cril.rubens.arg.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -69,13 +70,13 @@ public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3Argumen
 	}
 
 	@Override
-	public void setOptions(final String options) {
-		CheckerOptionsApplier.apply(options, this);
+	public void setOutputFormat(final ISolverOutputDecoder decoder) {
+		this.outputFormatDecoder = decoder;
 	}
 	
 	@Override
-	public void setOutputFormat(final ISolverOutputDecoder decoder) {
-		this.outputFormatDecoder = decoder;
+	public List<Option> getOptions() {
+		return CommonOptions.getInstance().getOptions(this);
 	}
 
 }

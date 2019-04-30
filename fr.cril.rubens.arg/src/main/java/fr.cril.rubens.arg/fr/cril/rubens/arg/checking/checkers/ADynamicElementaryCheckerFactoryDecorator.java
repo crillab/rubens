@@ -9,11 +9,12 @@ import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
-import fr.cril.rubens.arg.core.CheckerOptionsApplier;
 import fr.cril.rubens.arg.core.DynamicArgumentationFramework;
 import fr.cril.rubens.arg.testgen.DynamicSemTestGeneratorFactoryDecorator;
 import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
+import fr.cril.rubens.arg.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -99,8 +100,8 @@ public abstract class ADynamicElementaryCheckerFactoryDecorator implements Argum
 	}
 	
 	@Override
-	public void setOptions(final String options) {
-		CheckerOptionsApplier.apply(options, this);
+	public List<Option> getOptions() {
+		return CommonOptions.getInstance().getOptions(this);
 	}
 
 }

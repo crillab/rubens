@@ -1,5 +1,6 @@
 package fr.cril.rubens.arg.checking.checkers;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -34,7 +35,7 @@ public class D3CheckerTest {
 	public void testCheckSoftwareOutputEmptyGR() {
 		final D3ArgumentationFramework d3af = emptyGrAF();
 		final D3Checker checker = new D3Checker();
-		checker.setOptions("outputFormat=ICCMA17");
+		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[]], [], [[]]");
 		assertTrue(result.isSuccessful());
 	}
@@ -93,6 +94,11 @@ public class D3CheckerTest {
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[]], [], [[a0]]");
 		assertFalse(result.isSuccessful());
+	}
+	
+	@Test
+	public void testOptions() {
+		assertEquals(1, new D3Checker().getOptions().size());
 	}
 
 }

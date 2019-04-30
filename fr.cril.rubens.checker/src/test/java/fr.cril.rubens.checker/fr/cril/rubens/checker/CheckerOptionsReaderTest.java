@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import fr.cril.rubens.arg.checking.checkers.ElementaryCheckers.EECOChecker;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
@@ -223,12 +224,6 @@ public class CheckerOptionsReaderTest {
 	private class ACheckerFactory implements CheckerFactory<Instance> {
 
 		@Override
-		public void setOptions(String options) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public TestGeneratorFactory<Instance> newTestGenerator() {
 			// TODO Auto-generated method stub
 			return null;
@@ -244,6 +239,18 @@ public class CheckerOptionsReaderTest {
 		public CheckResult checkSoftwareOutput(Instance instance, String result) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public List<Option> getOptions() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean ignoreInstance(Instance instance) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 		
 	}

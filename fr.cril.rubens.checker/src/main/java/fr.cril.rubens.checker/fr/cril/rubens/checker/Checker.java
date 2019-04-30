@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
@@ -46,6 +47,10 @@ public class Checker {
 	private int errorCount = 0;
 	
 	private final Object errorCountLock = new Object();
+	
+	private int ignCount = 0;
+	
+	private final Object ignCountLock = new Object();
 	
 	private final CheckerOptionsReader checkerOptions;
 
@@ -90,7 +95,7 @@ public class Checker {
 		final ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		for(final Entry<String, CheckerFactory<Instance>> factoryEntry : factories.entrySet()) {
 			final CheckerFactory<Instance> factory = factoryEntry.getValue();
-			factory.setOptions(this.checkerOptions.getCheckerOptions());
+			applyCheckerOptions(this.checkerOptions.getCheckerOptions(), factory);
 			final TestGenerator<Instance> generator = new TestGenerator<>(factory.newTestGenerator());
 			final String factoryName = factoryEntry.getKey();
 			LOGGER.info("checking {}", factoryName);
@@ -106,6 +111,7 @@ public class Checker {
 		final Supplier<String> strTimeSupplier = () -> String.format("%.3f", (System.currentTimeMillis() - startTime)/1000f);
 		LOGGER.info("checked {} instances in {}s", this.checkCount, strTimeSupplier.get());
 		LOGGER.info("found {} errors.", this.errorCount);
+		LOGGER.info("ignored {} instances.", this.ignCount);
 	}
 	
 	/**
@@ -118,6 +124,12 @@ public class Checker {
 	 * @param instance the instance
 	 */
 	private void checkInstance(final ExecutorService threadPool, final CheckerFactory<Instance> factory, final String factoryName, final Instance instance) {
+		if(factory.ignoreInstance(instance)) {
+			synchronized (this.ignCountLock) {
+				this.ignCount++;
+			}
+			return;
+		}
 		final ASoftwareExecutor<Instance> executor = factory.newExecutor(Paths.get(this.checkerOptions.getExecLocation()));
 		threadPool.submit(() -> {
 			CheckResult checkResult;
@@ -144,9 +156,6 @@ public class Checker {
 	}
 	
 	private void outputInstance(final String factoryName, final Instance instance) {
-		if(this.statusCode != 0) {
-			return;
-		}
 		final Collection<String> extensions = instance.getFileExtensions();
 		final File outputDirectory = this.checkerOptions.getOutputDirectory();
 		cleanOldFiles(outputDirectory, extensions);
@@ -198,6 +207,15 @@ public class Checker {
 	}
 	
 	/**
+	 * Returns the number of ignored instances during the checking process.
+	 * 
+	 * @return the number of ignored instances during the checking process
+	 */
+	public int getIgnoredCount() {
+		return this.ignCount;
+	}
+	
+	/**
 	 * Returns the app status code.
 	 * It is equals to zero if the process exited normally, even if the software under test has errors. 
 	 * 
@@ -205,6 +223,30 @@ public class Checker {
 	 */
 	public int getStatusCode() {
 		return this.statusCode;
+	}
+	
+	/**
+	 * Applies options on a checker factory.
+	 * 
+	 * If some options are not recognized, some warnings may be logged.
+	 * 
+	 * @param options the options
+	 * @param factory the checker factory
+	 */
+	private void applyCheckerOptions(final String options, final CheckerFactory<Instance> factory) {
+		final Map<String, Option> optionMap = factory.getOptions().stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final String[] opts = options.split(",");
+		for(final String opt: opts) {
+			if(opt.trim().isEmpty()) {
+				continue;
+			}
+			int indexOf = opt.indexOf('=');
+			if(indexOf != -1 && optionMap.containsKey(opt.substring(0, indexOf))) {
+				optionMap.get(opt.substring(0, indexOf)).apply(opt.substring(1+indexOf));
+			} else {
+				LOGGER.warn("invalid checker option: {}", opt);
+			}
+		}
 	}
 	
 }

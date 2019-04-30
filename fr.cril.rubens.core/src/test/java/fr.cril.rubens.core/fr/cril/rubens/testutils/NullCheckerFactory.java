@@ -1,8 +1,10 @@
 package fr.cril.rubens.testutils;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
@@ -23,14 +25,21 @@ public class NullCheckerFactory implements CheckerFactory<Instance> {
 	}
 	
 	@Override
-	public void setOptions(final String options) {
-		// nothing to do here
-	}
-
-	@Override
 	public ASoftwareExecutor<Instance> newExecutor(Path execPath) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Option> getOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean ignoreInstance(Instance instance) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

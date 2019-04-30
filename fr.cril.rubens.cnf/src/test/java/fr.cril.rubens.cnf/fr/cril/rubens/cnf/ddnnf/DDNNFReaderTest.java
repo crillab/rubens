@@ -78,9 +78,24 @@ public class DDNNFReaderTest {
 		reader.read(instance);
 	}
 	
+	@Test
+	public void testIgnWrongNumberOfVarsInPreamble() throws DDNNFException {
+		final String instance = "nnf 7 6 1\n"
+				+ "L -1\n"
+				+ "L 2\n"
+				+ "A 2 0 1\n"
+				+ "L 1\n"
+				+ "L -2\n"
+				+ "A 2 3 4\n"
+				+ "O 1 2 2 5\n";
+		final DDNNFReader reader = new DDNNFReader(true);
+		final DDNNF ddnnf = reader.read(instance);
+		assertEquals(2, Utils.countModels(ddnnf));
+	}
+	
 	@Test(expected=DDNNFException.class)
 	public void testWrongNumberOfNodesInPreamble() throws DDNNFException {
-		final String instance = "nnf 6 6 4\n"
+		final String instance = "nnf 6 6 2\n"
 				+ "L -1\n"
 				+ "L 2\n"
 				+ "A 2 0 1\n"
@@ -92,9 +107,24 @@ public class DDNNFReaderTest {
 		reader.read(instance);
 	}
 	
+	@Test
+	public void testIgnWrongNumberOfNodesInPreamble() throws DDNNFException {
+		final String instance = "nnf 6 6 2\n"
+				+ "L -1\n"
+				+ "L 2\n"
+				+ "A 2 0 1\n"
+				+ "L 1\n"
+				+ "L -2\n"
+				+ "A 2 3 4\n"
+				+ "O 1 2 2 5\n";
+		final DDNNFReader reader = new DDNNFReader(true);
+		final DDNNF ddnnf = reader.read(instance);
+		assertEquals(2, Utils.countModels(ddnnf));
+	}
+	
 	@Test(expected=DDNNFException.class)
 	public void testWrongNumberOfEdgesInPreamble() throws DDNNFException {
-		final String instance = "nnf 7 7 4\n"
+		final String instance = "nnf 7 7 2\n"
 				+ "L -1\n"
 				+ "L 2\n"
 				+ "A 2 0 1\n"
@@ -104,6 +134,21 @@ public class DDNNFReaderTest {
 				+ "O 1 2 2 5\n";
 		final DDNNFReader reader = new DDNNFReader();
 		reader.read(instance);
+	}
+	
+	@Test
+	public void testIgnWrongNumberOfEdgesInPreamble() throws DDNNFException {
+		final String instance = "nnf 7 7 2\n"
+				+ "L -1\n"
+				+ "L 2\n"
+				+ "A 2 0 1\n"
+				+ "L 1\n"
+				+ "L -2\n"
+				+ "A 2 3 4\n"
+				+ "O 1 2 2 5\n";
+		final DDNNFReader reader = new DDNNFReader(true);
+		final DDNNF ddnnf = reader.read(instance);
+		assertEquals(2, Utils.countModels(ddnnf));
 	}
 	
 	@Test(expected=DDNNFException.class)

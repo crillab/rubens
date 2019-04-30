@@ -1,6 +1,7 @@
 package fr.cril.rubens.arg.checking.checkers;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.Supplier;
 
 import fr.cril.rubens.arg.checking.AFSolverExecutor;
@@ -8,9 +9,10 @@ import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
-import fr.cril.rubens.arg.core.CheckerOptionsApplier;
 import fr.cril.rubens.arg.core.TriFunction;
+import fr.cril.rubens.arg.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
@@ -66,13 +68,13 @@ public abstract class AbstractElementaryCheckerFactory implements ArgumentationF
 	}
 	
 	@Override
-	public void setOptions(final String options) {
-		CheckerOptionsApplier.apply(options, this);
+	public List<Option> getOptions() {
+		return CommonOptions.getInstance().getOptions(this);
 	}
-	
+
 	@Override
 	public void setOutputFormat(final ISolverOutputDecoder decoder) {
 		this.outputFormatDecoder = decoder;
 	}
-
+	
 }

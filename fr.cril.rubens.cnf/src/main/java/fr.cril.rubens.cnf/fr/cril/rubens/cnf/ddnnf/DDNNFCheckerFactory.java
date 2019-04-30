@@ -2,26 +2,35 @@ package fr.cril.rubens.cnf.ddnnf;
 
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import fr.cril.rubens.cnf.core.ASatCheckerFactory;
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.SatSolverCheckerFactory;
+import fr.cril.rubens.cnf.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
+import fr.cril.rubens.core.Option;
 import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
 @ReflectorParam(name="DDNNF")
-public class DDNNFCheckerFactory implements CheckerFactory<CnfInstance> {
+public class DDNNFCheckerFactory extends ASatCheckerFactory<CnfInstance> {
 	
 	private SatSolverCheckerFactory satFactory = new SatSolverCheckerFactory();
 	
-	@Override
-	public void setOptions(final String options) {
-		this.satFactory.setOptions(options);
+	private boolean ignorePreambleErrors = false;
+	
+	/**
+	 * Builds a new factory instance.
+	 */
+	public DDNNFCheckerFactory() {
+		super();
 	}
-
+	
 	@Override
 	public TestGeneratorFactory<CnfInstance> newTestGenerator() {
 		return this.satFactory.newTestGenerator();
@@ -34,7 +43,7 @@ public class DDNNFCheckerFactory implements CheckerFactory<CnfInstance> {
 
 	@Override
 	public CheckResult checkSoftwareOutput(final CnfInstance instance, final String result) {
-		final DDNNFReader reader = new DDNNFReader();
+		final DDNNFReader reader = new DDNNFReader(this.ignorePreambleErrors);
 		DDNNF formula = null;
 		try {
 			formula = reader.read(result);
@@ -70,6 +79,13 @@ public class DDNNFCheckerFactory implements CheckerFactory<CnfInstance> {
 		private CheckResult getResult() {
 			return this.result;
 		}
+	}
+	
+	@Override
+	public List<Option> getOptions() {
+		return Stream.concat(super.getOptions().stream(), Stream.of(
+			new Option("ignorePreamble", "ignore wrong values for preamble", v -> this.ignorePreambleErrors = CommonOptions.strToBool(v))
+		)).collect(Collectors.toUnmodifiableList());
 	}
 
 }
