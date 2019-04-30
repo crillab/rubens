@@ -19,7 +19,7 @@ import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="CNF")
+@ReflectorParam(name="CNF", family="CNF")
 public class CnfTestGeneratorFactory extends WeightedTestGeneratorFactoryAdapter<CnfInstance> {
 	
 	private final List<InstanceTranslator<CnfInstance>> translators = new ArrayList<>();

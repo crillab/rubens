@@ -5,8 +5,15 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.cli.CommandLine;
@@ -37,10 +44,10 @@ public class CheckerOptionsReader {
 	public static final int DEFAULT_MAX_DEPTH = 10;
 	
 	/** the status returned when the program exits normally after reading some options */
-	public static final int STATUS_OPTION_EXIT_OK = 1;
+	public static final int STATUS_OPTION_EXIT_OK = 0;
 	
 	/** the status returned when the program exits after encountering an error while checking CLI the options */
-	public static final int STATUS_OPTIONS_EXIT_ERROR = 2;
+	public static final int STATUS_OPTIONS_EXIT_ERROR = 1;
 	
 	private static CheckerOptionsReader instance = null; 
 	
@@ -168,11 +175,35 @@ public class CheckerOptionsReader {
 	 * The available methods are loaded through reflection.
 	 */
 	public void printMethodNamesAndExit() {
-		final Stream<String> checkerFactories = CheckerFactoryReflector.getInstance().classesNames().stream();
-		final Stream<String> checkerFactoryCollections = CheckerFactoryCollectionReflector.getInstance().classesNames().stream();
-		final String methods = Stream.concat(checkerFactories, checkerFactoryCollections).sorted().reduce((a,b) -> a+", "+b).orElse("<none>");
-		LOGGER.info("available methods: {}", methods);
+		if(LOGGER.isInfoEnabled()) {
+			final CheckerFactoryReflector chkRefl = CheckerFactoryReflector.getInstance();
+			final CheckerFactoryCollectionReflector colChkRefl = CheckerFactoryCollectionReflector.getInstance();
+			final SortedMap<String, SortedSet<String>> families = new TreeMap<>(this::pathSort);
+			chkRefl.familiesNames().stream().forEach(f -> families.computeIfAbsent(f, k -> new TreeSet<>()).addAll(chkRefl.family(f)));
+			colChkRefl.familiesNames().stream().forEach(f -> families.computeIfAbsent(f, k -> new TreeSet<>()).addAll(colChkRefl.family(f)));
+			for(final Entry<String, SortedSet<String>> entry: families.entrySet()) {
+				LOGGER.info("available methods for family {}: {}", entry.getKey(), entry.getValue().stream().reduce((a,b) -> a+", "+b).orElseThrow());
+			}
+			final List<String> others = Stream.concat(chkRefl.withoutFamily().stream(), colChkRefl.withoutFamily().stream()).sorted().collect(Collectors.toList());
+			if(!others.isEmpty()) {
+				LOGGER.info("available methods (no family): {}", others.stream().reduce((a,b) -> a+", "+b).orElseThrow());
+			}
+		}
 		setMustExit(STATUS_OPTION_EXIT_OK);
+	}
+	
+	private int pathSort(final String str1, final String str2) {
+		final String[] s1 = str1.split("/");
+		final String[] s2 = str2.split("/");
+		int i=0;
+		while(i < s1.length && i < s2.length) {
+			final int cmp = s1[i].compareTo(s2[i]);
+			if(cmp != 0) {
+				return cmp;
+			}
+			i++;
+		}
+		return s1.length - s2.length;
 	}
 	
 	/**

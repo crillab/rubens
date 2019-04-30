@@ -75,10 +75,10 @@ public class Generator {
 	 */
 	public void generate() {
 		final long startTime = System.currentTimeMillis();
-		if(this.statusCode != 0) {
-			if(statusCode == STATUS_IO_EXCEPTION_DURING_GENERATION) {
+		if(generatorOptions.mustExit()) {
+			if(this.statusCode == STATUS_IO_EXCEPTION_DURING_GENERATION) {
 				LOGGER.error("an error occurred during the last generation process using this generator instance; ignoring this one");
-			} else {
+			} else if(statusCode != 0) {
 				LOGGER.error("an error occurred while parsing this generator parameters; ignoring the generation process");
 			}
 			return;

@@ -101,7 +101,7 @@ public class TranslatorGeneratorReflectorTest {
 		annotations.setAccessible(true);
 		@SuppressWarnings("unchecked")
 		final Map<Class<? extends Annotation>, Annotation> map = (Map<Class<? extends Annotation>, Annotation>) annotations.get(annotationData);
-		map.put(ReflectorParam.class, new DynamicReflectorParam(true, "foo"));
+		map.put(ReflectorParam.class, new DynamicReflectorParam(true, "bar", "foo"));
 		final TranslatorGeneratorReflector reflector = TranslatorGeneratorReflector.getInstance();
 		reflector.resetClasses();
 		map.put(ReflectorParam.class, new DynamicReflectorParam(false, ""));

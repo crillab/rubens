@@ -17,7 +17,7 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="sharpSAT")
+@ReflectorParam(name="sharpSAT", family="CNF/SAT")
 public class ModelCounterCheckerFactory extends ASatCheckerFactory<ModelCountingCnfInstance> {
 	
 	/**

@@ -17,7 +17,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="D3")
+@ReflectorParam(name="D3", family="AF")
 public class D3TestGeneratorFactory implements TestGeneratorFactory<D3ArgumentationFramework> {
 
 	@Override

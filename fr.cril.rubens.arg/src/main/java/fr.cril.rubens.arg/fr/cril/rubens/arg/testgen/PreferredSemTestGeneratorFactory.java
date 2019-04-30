@@ -8,7 +8,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="ARG-PR")
+@ReflectorParam(name="ARG-PR", family="AF")
 public class PreferredSemTestGeneratorFactory extends ASemTestGeneratorFactory {
 
 	/**

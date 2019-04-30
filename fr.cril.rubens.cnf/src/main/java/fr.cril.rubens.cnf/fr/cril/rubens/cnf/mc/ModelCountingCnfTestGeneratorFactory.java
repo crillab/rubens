@@ -22,7 +22,7 @@ import fr.cril.rubens.utils.WeightedTestGeneratorFactoryAdapter;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="MCCNF")
+@ReflectorParam(name="MCCNF", family="CNF")
 public class ModelCountingCnfTestGeneratorFactory extends WeightedTestGeneratorFactoryAdapter<ModelCountingCnfInstance> {
 
 	private final List<InstanceTranslator<ModelCountingCnfInstance>> initTranslators;

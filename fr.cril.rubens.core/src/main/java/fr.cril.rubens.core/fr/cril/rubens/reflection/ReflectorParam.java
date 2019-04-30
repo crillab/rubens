@@ -18,6 +18,8 @@ import java.lang.annotation.Target;
  * The need of this annotation comes from the reflection algorithm used to discover all the accessible instances.
  * Allowing to disable such factories is used to ignore abstract factories, while giving a name helps at providing the users a simple way to select a factory.
  * 
+ * Providing a family name is optional. It can help for some processes, like sorting parameterized classes before printing them.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -30,6 +32,13 @@ public @interface ReflectorParam {
 	 * @return the name associated with the instance
 	 */
 	String name() default "";
+	
+	/**
+	 * Returns the name of the family the parameterized class belongs to.
+	 * 
+	 * @return the name of the family the parameterized class belongs to
+	 */
+	String family() default "";
 	
 	/**
 	 * Returns a flag indicating the instance can be used.

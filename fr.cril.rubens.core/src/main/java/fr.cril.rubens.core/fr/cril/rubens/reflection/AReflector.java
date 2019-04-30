@@ -1,9 +1,13 @@
 package fr.cril.rubens.reflection;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +37,12 @@ public abstract class AReflector<F> {
 	/** the mapping from implementor names to the implementing classes */
 	private final Map<String, Class<?>> classes = new HashMap<>();
 	
+	/** the mapping from family names to implementor names */
+	private final LinkedHashMap<String, List<String>> families = new LinkedHashMap<>();
+	
+	/** the names of the implementors that do not belongs to a family */
+	private final List<String> withoutFamily = new ArrayList<>();
+	
 	/** the implemented type */
 	private final Class<F> interfaceClass;
 	
@@ -52,10 +62,30 @@ public abstract class AReflector<F> {
 	 * It is considered to be set as enabled with the provided name.
 	 * The same uniqueness restriction apply for the name.
 	 * 
+	 * The implementor has no family.
+	 * 
 	 * @param implementorName the implementor name
 	 * @param classClass the class class
 	 */
 	public void addClass(final String implementorName, final Class<? extends F> classClass) {
+		addClass(implementorName, "", classClass);
+	}
+	
+	/**
+	 * Adds a class that would not have been discovered by the reflection mechanism.
+	 * 
+	 * This class does not need to be annotated.
+	 * It is considered to be set as enabled with the provided name.
+	 * The same uniqueness restriction apply for the name.
+	 * 
+	 * The implementor family is given by the second parameter and cannot be <code>null</code>.
+	 * An empty string indicates no family.
+	 * 
+	 * @param implementorName the implementor name
+	 * @param family the family
+	 * @param classClass the class class
+	 */
+	public void addClass(final String implementorName, final String family, final Class<? extends F> classClass) {
 		if(this.classes.containsKey(implementorName)) {
 			final IllegalStateException exception = new IllegalStateException(this.classes.get(implementorName).getCanonicalName()+" and "
 					+ classClass.getCanonicalName()+" share the same name (given by the annotation "+ReflectorParam.class.getCanonicalName());
@@ -63,6 +93,11 @@ public abstract class AReflector<F> {
 			throw exception;
 		}
 		this.classes.put(implementorName, classClass);
+		if(family.isEmpty()) {
+			this.withoutFamily.add(implementorName);
+		} else {
+			this.families.computeIfAbsent(family, k -> new ArrayList<>()).add(implementorName);
+		}
 	}
 	
 	/**
@@ -72,6 +107,8 @@ public abstract class AReflector<F> {
 	 */
 	public void resetClasses() {
 		this.classes.clear();
+		this.families.clear();
+		this.withoutFamily.clear();
 		final FastClasspathScanner scanner = new FastClasspathScanner("fr.cril.rubens");
 		final Set<Class<?>> classClasses = new HashSet<>();
 		scanner.matchClassesImplementing(this.interfaceClass, classClasses::add);
@@ -89,8 +126,45 @@ public abstract class AReflector<F> {
 			if(!annotation.enabled()) {
 				continue;
 			}
-			addClass(annotation.name(), fClass);
+			addClass(annotation.name(), annotation.family(), fClass);
 		}
+	}
+	
+	/**
+	 * Returns the names of the implementor families.
+	 * 
+	 * @return the names of the implementor families
+	 */
+	public Collection<String> familiesNames() {
+		return Collections.unmodifiableSet(this.families.keySet());
+	}
+	
+	/**
+	 * Returns the names of the implementors that belongs to a given family.
+	 * 
+	 * If no such family is defined, an {@link IllegalArgumentException} is thrown.
+	 * The set of family names may be obtained via {@link AReflector#familiesNames()}.
+	 * 
+	 * @param familyName the name of the family under consideration
+	 * @return the names of the implementors that belongs to the family
+	 */
+	public Collection<String> family(final String familyName) {
+		final List<String> family = this.families.get(familyName);
+		if(family == null) {
+			throw new IllegalArgumentException("no such family: "+familyName);
+		}
+		return Collections.unmodifiableCollection(family);
+	}
+	
+	/**
+	 * Returns the names of the implementors that do not belong to a family.
+	 * 
+	 * If no such implementors exist, an empty collection is returned.
+	 * 
+	 * @return the names of the implementors that do not belong to a family
+	 */
+	public Collection<String> withoutFamily() {
+		return Collections.unmodifiableCollection(this.withoutFamily);
 	}
 	
 	/**
@@ -99,7 +173,7 @@ public abstract class AReflector<F> {
 	 * @return the names of the implementors
 	 */
 	public Collection<String> classesNames() {
-		return this.classes.keySet();
+		return Collections.unmodifiableSet(this.classes.keySet());
 	}
 	
 	/**

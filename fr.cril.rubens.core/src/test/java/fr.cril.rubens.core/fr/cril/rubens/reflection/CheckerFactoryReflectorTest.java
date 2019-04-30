@@ -63,6 +63,36 @@ public class CheckerFactoryReflectorTest {
 		instance.getClassInstance("testFactory");
 	}
 	
+	@Test
+	public void testInFamily() {
+		final CheckerFactoryReflector instance = CheckerFactoryReflector.getInstance();
+		instance.addClass("testFactory", "foo", StringConcatCheckerFactory.class);
+		final Collection<String> families = instance.familiesNames();
+		assertEquals(1, families.size());
+		assertEquals("foo", families.iterator().next());
+		final Collection<String> family = instance.family("foo");
+		assertEquals(1, family.size());
+		assertEquals("testFactory", family.iterator().next());
+		assertEquals(0, instance.withoutFamily().size());
+		assertEquals(StringConcatCheckerFactory.class, instance.getClassInstance("testFactory").getClass());
+	}
+	
+	@Test
+	public void testNotInFamily() {
+		final CheckerFactoryReflector instance = CheckerFactoryReflector.getInstance();
+		instance.addClass("testFactory", StringConcatCheckerFactory.class);
+		assertEquals(0, instance.familiesNames().size());
+		final Collection<String> withoutFamily = instance.withoutFamily();
+		assertEquals(1, withoutFamily.size());
+		assertEquals("testFactory", withoutFamily.iterator().next());
+		assertEquals(StringConcatCheckerFactory.class, instance.getClassInstance("testFactory").getClass());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testUnknownFamily() {
+		CheckerFactoryReflector.getInstance().family("foo");
+	}
+	
 	@After
 	public void tearDown() {
 		CheckerFactoryReflector.getInstance().resetClasses();

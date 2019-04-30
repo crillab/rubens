@@ -21,6 +21,8 @@ import fr.cril.rubens.cnf.core.CnfTestGeneratorFactory;
 
 public class GeneratorOptionsReaderTest {
 	
+	private static final String TMPFILE_PREFIX = "junit-rubens-";
+
 	private GeneratorOptionsReader optReader;
 	
 	private static List<Path> tempFiles = new ArrayList<>();
@@ -59,7 +61,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testOutputToWrongPath() throws IOException {
+	public void testOutputToWrongPath() {
 		this.optReader.loadOptions(new String[] {"-o", "/toto/toto/toto"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
@@ -67,7 +69,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testOutputToRegularFile() throws IOException {
-		final Path file = Files.createTempFile("junit-rubens-", null);
+		final Path file = Files.createTempFile(TMPFILE_PREFIX, null);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
 		assertTrue(this.optReader.mustExit());
@@ -76,7 +78,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testOutputToUnreadableDir() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		Files.setPosixFilePermissions(file, Stream.of(PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE).collect(Collectors.toSet()));
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
@@ -86,7 +88,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testOutputToUnwritableDir() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		Files.setPosixFilePermissions(file, Stream.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_EXECUTE).collect(Collectors.toSet()));
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
@@ -96,7 +98,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testDefaultMaxDepth() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF"});
 		assertFalse(this.optReader.mustExit());
@@ -107,7 +109,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testSetMaxDepth() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
 		assertFalse(this.optReader.mustExit());
@@ -118,7 +120,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testSetMaxDepthNotInteger() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "toto"});
 		assertTrue(this.optReader.mustExit());
@@ -127,7 +129,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testSetMaxDepthNegativeInteger() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "-1"});
 		assertTrue(this.optReader.mustExit());
@@ -136,7 +138,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testNoMethod() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
 		assertTrue(this.optReader.mustExit());
@@ -145,7 +147,7 @@ public class GeneratorOptionsReaderTest {
 	
 	@Test
 	public void testNoOutputDirectory() throws IOException {
-		final Path file = Files.createTempDirectory("junit-rubens-");
+		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-m", "CNF"});
 		assertTrue(this.optReader.mustExit());

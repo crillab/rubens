@@ -20,7 +20,7 @@ import fr.cril.rubens.specs.CheckerFactory;
  */
 public class ElementaryCheckers {
 	
-	@ReflectorParam(name="DC-CO")
+	@ReflectorParam(name="DC-CO", family="AF/Base")
 	public static class DCCOChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCCOChecker() {
@@ -29,7 +29,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-GR")
+	@ReflectorParam(name="DC-GR", family="AF/Base")
 	public static class DCGRChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCGRChecker() {
@@ -38,7 +38,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-ID")
+	@ReflectorParam(name="DC-ID", family="AF/Base")
 	public static class DCIDChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCIDChecker() {
@@ -47,7 +47,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-PR")
+	@ReflectorParam(name="DC-PR", family="AF/Base")
 	public static class DCPRChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCPRChecker() {
@@ -56,7 +56,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-SST")
+	@ReflectorParam(name="DC-SST", family="AF/Base")
 	public static class DCSSTChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCSSTChecker() {
@@ -65,7 +65,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-ST")
+	@ReflectorParam(name="DC-ST", family="AF/Base")
 	public static class DCSTChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCSTChecker() {
@@ -74,7 +74,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-STG")
+	@ReflectorParam(name="DC-STG", family="AF/Base")
 	public static class DCSTGChecker extends AbstractElementaryCheckerFactory {
 		
 		public DCSTGChecker() {
@@ -83,7 +83,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-CO")
+	@ReflectorParam(name="DS-CO", family="AF/Base")
 	public static class DSCOChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSCOChecker() {
@@ -92,7 +92,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-GR")
+	@ReflectorParam(name="DS-GR", family="AF/Base")
 	public static class DSGRChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSGRChecker() {
@@ -101,7 +101,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-ID")
+	@ReflectorParam(name="DS-ID", family="AF/Base")
 	public static class DSIDChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSIDChecker() {
@@ -110,7 +110,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-PR")
+	@ReflectorParam(name="DS-PR", family="AF/Base")
 	public static class DSPRChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSPRChecker() {
@@ -119,7 +119,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-SST")
+	@ReflectorParam(name="DS-SST", family="AF/Base")
 	public static class DSSSTChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSSSTChecker() {
@@ -128,7 +128,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-ST")
+	@ReflectorParam(name="DS-ST", family="AF/Base")
 	public static class DSSTChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSSTChecker() {
@@ -137,7 +137,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-STG")
+	@ReflectorParam(name="DS-STG", family="AF/Base")
 	public static class DSSTGChecker extends AbstractElementaryCheckerFactory {
 		
 		public DSSTGChecker() {
@@ -146,7 +146,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-CO")
+	@ReflectorParam(name="EE-CO", family="AF/Base")
 	public static class EECOChecker extends AbstractElementaryCheckerFactory {
 
 		public EECOChecker() {
@@ -155,7 +155,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-GR")
+	@ReflectorParam(name="EE-GR", family="AF/Base")
 	public static class EEGRChecker extends AbstractElementaryCheckerFactory {
 
 		public EEGRChecker() {
@@ -164,7 +164,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-ID")
+	@ReflectorParam(name="EE-ID", family="AF/Base")
 	public static class EEIDChecker extends AbstractElementaryCheckerFactory {
 
 		public EEIDChecker() {
@@ -173,7 +173,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-PR")
+	@ReflectorParam(name="EE-PR", family="AF/Base")
 	public static class EEPRChecker extends AbstractElementaryCheckerFactory {
 
 		public EEPRChecker() {
@@ -182,7 +182,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-SST")
+	@ReflectorParam(name="EE-SST", family="AF/Base")
 	public static class EESSTChecker extends AbstractElementaryCheckerFactory {
 
 		public EESSTChecker() {
@@ -191,7 +191,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-ST")
+	@ReflectorParam(name="EE-ST", family="AF/Base")
 	public static class EESTChecker extends AbstractElementaryCheckerFactory {
 
 		public EESTChecker() {
@@ -200,7 +200,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-STG")
+	@ReflectorParam(name="EE-STG", family="AF/Base")
 	public static class EESTGChecker extends AbstractElementaryCheckerFactory {
 
 		public EESTGChecker() {
@@ -209,7 +209,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-CO")
+	@ReflectorParam(name="SE-CO", family="AF/Base")
 	public static class SECOChecker extends AbstractElementaryCheckerFactory {
 		
 		public SECOChecker() {
@@ -218,7 +218,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-GR")
+	@ReflectorParam(name="SE-GR", family="AF/Base")
 	public static class SEGRChecker extends AbstractElementaryCheckerFactory {
 		
 		public SEGRChecker() {
@@ -227,7 +227,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-ID")
+	@ReflectorParam(name="SE-ID", family="AF/Base")
 	public static class SEIDChecker extends AbstractElementaryCheckerFactory {
 		
 		public SEIDChecker() {
@@ -236,7 +236,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-PR")
+	@ReflectorParam(name="SE-PR", family="AF/Base")
 	public static class SEPRChecker extends AbstractElementaryCheckerFactory {
 		
 		public SEPRChecker() {
@@ -245,7 +245,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-SST")
+	@ReflectorParam(name="SE-SST", family="AF/Base")
 	public static class SESSTChecker extends AbstractElementaryCheckerFactory {
 		
 		public SESSTChecker() {
@@ -254,7 +254,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-ST")
+	@ReflectorParam(name="SE-ST", family="AF/Base")
 	public static class SESTChecker extends AbstractElementaryCheckerFactory {
 		
 		public SESTChecker() {
@@ -263,7 +263,7 @@ public class ElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-STG")
+	@ReflectorParam(name="SE-STG", family="AF/Base")
 	public static class SESTGChecker extends AbstractElementaryCheckerFactory {
 		
 		public SESTGChecker() {

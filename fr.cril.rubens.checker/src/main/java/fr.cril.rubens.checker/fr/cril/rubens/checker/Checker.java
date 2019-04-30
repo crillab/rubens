@@ -87,8 +87,10 @@ public class Checker {
 	 */
 	public void check() {
 		final long startTime = System.currentTimeMillis();
-		if(this.statusCode != 0) {
-			LOGGER.error("an error occurred while parsing this generator parameters; ignoring the checking process");
+		if(checkerOptions.mustExit()) {
+			if(this.statusCode != 0) {
+				LOGGER.error("an error occurred while parsing this generator parameters; ignoring the checking process");
+			}
 			return;
 		}
 		final Map<String, CheckerFactory<Instance>> factories = this.checkerOptions.getFactories();

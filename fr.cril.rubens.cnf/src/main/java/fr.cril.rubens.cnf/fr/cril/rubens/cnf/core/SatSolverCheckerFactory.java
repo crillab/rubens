@@ -19,7 +19,7 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="SAT")
+@ReflectorParam(name="SAT", family="CNF/SAT")
 public class SatSolverCheckerFactory extends ASatCheckerFactory<CnfInstance> {
 	
 	@Override

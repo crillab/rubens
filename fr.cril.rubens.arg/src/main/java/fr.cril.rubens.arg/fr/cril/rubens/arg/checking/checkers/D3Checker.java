@@ -23,7 +23,7 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="D3")
+@ReflectorParam(name="D3", family="AF/Triathlon")
 public class D3Checker implements ArgumentationFrameworkCheckerFactory<D3ArgumentationFramework> {
 	
 	/** the decoder used to read the solver output */ 

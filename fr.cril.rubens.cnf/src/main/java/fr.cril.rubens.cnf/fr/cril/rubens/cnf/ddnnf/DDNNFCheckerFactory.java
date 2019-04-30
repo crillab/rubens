@@ -17,7 +17,7 @@ import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
-@ReflectorParam(name="DDNNF")
+@ReflectorParam(name="DDNNF", family="CNF/KC")
 public class DDNNFCheckerFactory extends ASatCheckerFactory<CnfInstance> {
 	
 	private SatSolverCheckerFactory satFactory = new SatSolverCheckerFactory();

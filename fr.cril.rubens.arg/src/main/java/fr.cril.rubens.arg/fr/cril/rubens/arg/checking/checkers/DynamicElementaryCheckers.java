@@ -13,7 +13,7 @@ import fr.cril.rubens.specs.CheckerFactory;
  */
 public class DynamicElementaryCheckers {
 	
-	@ReflectorParam(name="DC-CO-D")
+	@ReflectorParam(name="DC-CO-D", family="AF/Dynamics")
 	public static class DynDCCOChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCCOChecker() {
@@ -22,7 +22,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-CO-D")
+	@ReflectorParam(name="DS-CO-D", family="AF/Dynamics")
 	public static class DynDSCOChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSCOChecker() {
@@ -31,7 +31,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-CO-D")
+	@ReflectorParam(name="SE-CO-D", family="AF/Dynamics")
 	public static class DynSECOChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSECOChecker() {
@@ -40,7 +40,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-CO-D")
+	@ReflectorParam(name="EE-CO-D", family="AF/Dynamics")
 	public static class DynEECOChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEECOChecker() {
@@ -49,7 +49,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-GR-D")
+	@ReflectorParam(name="DC-GR-D", family="AF/Dynamics")
 	public static class DynDCGRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCGRChecker() {
@@ -58,7 +58,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-GR-D")
+	@ReflectorParam(name="DS-GR-D", family="AF/Dynamics")
 	public static class DynDSGRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSGRChecker() {
@@ -67,7 +67,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-GR-D")
+	@ReflectorParam(name="SE-GR-D", family="AF/Dynamics")
 	public static class DynSEGRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSEGRChecker() {
@@ -76,7 +76,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-GR-D")
+	@ReflectorParam(name="EE-GR-D", family="AF/Dynamics")
 	public static class DynEEGRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEEGRChecker() {
@@ -85,7 +85,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-PR-D")
+	@ReflectorParam(name="DC-PR-D", family="AF/Dynamics")
 	public static class DynDCPRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCPRChecker() {
@@ -94,7 +94,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-PR-D")
+	@ReflectorParam(name="DS-PR-D", family="AF/Dynamics")
 	public static class DynDSPRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSPRChecker() {
@@ -103,7 +103,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-PR-D")
+	@ReflectorParam(name="SE-PR-D", family="AF/Dynamics")
 	public static class DynSEPRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSEPRChecker() {
@@ -112,7 +112,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-PR-D")
+	@ReflectorParam(name="EE-PR-D", family="AF/Dynamics")
 	public static class DynEEPRChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEEPRChecker() {
@@ -121,7 +121,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-ST-D")
+	@ReflectorParam(name="DC-ST-D", family="AF/Dynamics")
 	public static class DynDCSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCSTChecker() {
@@ -130,7 +130,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-ST-D")
+	@ReflectorParam(name="DS-ST-D", family="AF/Dynamics")
 	public static class DynDSSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSSTChecker() {
@@ -139,7 +139,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-ST-D")
+	@ReflectorParam(name="SE-ST-D", family="AF/Dynamics")
 	public static class DynSESTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSESTChecker() {
@@ -148,7 +148,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-ST-D")
+	@ReflectorParam(name="EE-ST-D", family="AF/Dynamics")
 	public static class DynEESTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEESTChecker() {
@@ -157,7 +157,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-SST-D")
+	@ReflectorParam(name="DC-SST-D", family="AF/Dynamics")
 	public static class DynDCSSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCSSTChecker() {
@@ -166,7 +166,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-SST-D")
+	@ReflectorParam(name="DS-SST-D", family="AF/Dynamics")
 	public static class DynDSSSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSSSTChecker() {
@@ -175,7 +175,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-SST-D")
+	@ReflectorParam(name="SE-SST-D", family="AF/Dynamics")
 	public static class DynSESSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSESSTChecker() {
@@ -184,7 +184,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-SST-D")
+	@ReflectorParam(name="EE-SST-D", family="AF/Dynamics")
 	public static class DynEESSTChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEESSTChecker() {
@@ -193,7 +193,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-STG-D")
+	@ReflectorParam(name="DC-STG-D", family="AF/Dynamics")
 	public static class DynDCSTGChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCSTGChecker() {
@@ -202,7 +202,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-STG-D")
+	@ReflectorParam(name="DS-STG-D", family="AF/Dynamics")
 	public static class DynDSSTGChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSSTGChecker() {
@@ -211,7 +211,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-STG-D")
+	@ReflectorParam(name="SE-STG-D", family="AF/Dynamics")
 	public static class DynSESTGChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSESTGChecker() {
@@ -220,7 +220,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-STG-D")
+	@ReflectorParam(name="EE-STG-D", family="AF/Dynamics")
 	public static class DynEESTGChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEESTGChecker() {
@@ -229,7 +229,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DC-ID-D")
+	@ReflectorParam(name="DC-ID-D", family="AF/Dynamics")
 	public static class DynDCIDChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDCIDChecker() {
@@ -238,7 +238,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="DS-ID-D")
+	@ReflectorParam(name="DS-ID-D", family="AF/Dynamics")
 	public static class DynDSIDChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynDSIDChecker() {
@@ -247,7 +247,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="SE-ID-D")
+	@ReflectorParam(name="SE-ID-D", family="AF/Dynamics")
 	public static class DynSEIDChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynSEIDChecker() {
@@ -256,7 +256,7 @@ public class DynamicElementaryCheckers {
 
 	}
 	
-	@ReflectorParam(name="EE-ID-D")
+	@ReflectorParam(name="EE-ID-D", family="AF/Dynamics")
 	public static class DynEEIDChecker extends ADynamicElementaryCheckerFactoryDecorator {
 		
 		public DynEEIDChecker() {

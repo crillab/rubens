@@ -18,7 +18,7 @@ import fr.cril.rubens.utils.ACheckerFactoryCollection;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-@ReflectorParam(name="ICCMA2017")
+@ReflectorParam(name="ICCMA2017", family="AF/Competition")
 public class ICCMA2017Checker extends ACheckerFactoryCollection<ArgumentationFramework> {
 	
 	/**

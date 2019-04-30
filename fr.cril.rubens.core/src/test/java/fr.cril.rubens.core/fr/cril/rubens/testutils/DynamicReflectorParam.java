@@ -9,10 +9,17 @@ public class DynamicReflectorParam implements ReflectorParam {
 	private final boolean enabled;
 	
 	private final String name;
+	
+	private final String family;
 
 	public DynamicReflectorParam(final boolean enabled, final String name) {
+		this(enabled, name, "");
+	}
+	
+	public DynamicReflectorParam(final boolean enabled, final String name, final String family) {
 		this.enabled = enabled;
 		this.name = name;
+		this.family = family;
 	}
 
 	@Override
@@ -28,6 +35,11 @@ public class DynamicReflectorParam implements ReflectorParam {
 	@Override
 	public boolean enabled() {
 		return this.enabled;
+	}
+	
+	@Override
+	public String family() {
+		return this.family;
 	}
 
 }
