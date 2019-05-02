@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +30,22 @@ public class DDNNFTest {
 	public void testModelsWithFreeVars() {
 		final DDNNF ddnnf = new DDNNF(4, Utils.buildXor(1, 2));
 		assertEquals(8, Utils.countModels(ddnnf));
+	}
+	
+	@Test
+	public void testModelsWithFreeVars2() throws DDNNFException {
+		final INode trueNode = new TrueNode(1);
+		final INode litNode = new LiteralNode(2, -1);
+		final INode andNode = new DecomposableAndNode(3, Stream.of(litNode, trueNode).collect(Collectors.toList()));
+		final DDNNF ddnnf = new DDNNF(3, andNode);
+		final Set<Set<Integer>> actual = new HashSet<>(Utils.models(ddnnf));
+		final Set<Set<Integer>> expected = Stream.of(
+			Stream.of(-1, -2, -3).collect(Collectors.toSet()),
+			Stream.of(-1, -2, 3).collect(Collectors.toSet()),
+			Stream.of(-1, 2, -3).collect(Collectors.toSet()),
+			Stream.of(-1, 2, 3).collect(Collectors.toSet())
+		).collect(Collectors.toSet());
+		assertEquals(expected, actual);
 	}
 	
 	@Test

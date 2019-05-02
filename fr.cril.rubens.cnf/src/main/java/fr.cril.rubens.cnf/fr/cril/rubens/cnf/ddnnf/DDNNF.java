@@ -70,7 +70,7 @@ public class DDNNF {
 	private void iterateOverFulfilledModels(final Set<Integer> model, final Consumer<Set<Integer>> modelConsumer) {
 		boolean[] missing = new boolean[this.nVars];
 		Arrays.fill(missing, true);
-		model.stream().map(Math::abs).forEach(i -> missing[i] = false);
+		model.stream().map(Math::abs).forEach(i -> missing[i-1] = false);
 		final List<Integer> missingList = IntStream.range(0, this.nVars).filter(i -> missing[i]).map(i -> i+1).boxed().collect(Collectors.toList());
 		iterateOverFulfilledModels(model, modelConsumer, missingList, 0, new TreeSet<>());
 	}
