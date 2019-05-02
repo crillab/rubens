@@ -12,8 +12,8 @@ public class DDNNFException extends Exception {
 		return new DDNNFException("syntax error in preamble");
 	}
 	
-	public static DDNNFException newErrorAtNode(final int nodeIndex) {
-		return new DDNNFException("an error was detected at node which index is "+nodeIndex);
+	public static DDNNFException newErrorAtNode(final int nodeIndex, final String reason) {
+		return new DDNNFException("an error was detected at node which index is "+nodeIndex+" ("+reason+")");
 	}
 	
 	public static DDNNFException newWrongNumberOfNodesInPreamble(final int declared, final int effective) {

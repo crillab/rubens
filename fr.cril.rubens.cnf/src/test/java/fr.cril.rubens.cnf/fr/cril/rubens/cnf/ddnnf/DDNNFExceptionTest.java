@@ -13,7 +13,7 @@ public class DDNNFExceptionTest {
 	
 	@Test
 	public void testNewErrorAtNode() {
-		assertEquals("an error was detected at node which index is 1", DDNNFException.newErrorAtNode(1).getMessage());
+		assertEquals("an error was detected at node which index is 1 (foo)", DDNNFException.newErrorAtNode(1, "foo").getMessage());
 	}
 	
 	@Test

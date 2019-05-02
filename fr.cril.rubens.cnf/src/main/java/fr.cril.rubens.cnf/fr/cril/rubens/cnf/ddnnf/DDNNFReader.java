@@ -117,18 +117,18 @@ public class DDNNFReader {
 			parseLiteralNode(words, nodeIndex);
 			break;
 		default:
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "unknown node type");
 		}
 	}
 	
 	private void parseAndNode(final String[] words, final int nodeIndex) throws DDNNFException {
 		if(words.length < 2) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "not enough params for AND node");
 		}
 		int nArgs = readPosIntParam(words[1], nodeIndex);
 		this.nEdges += nArgs;
 		if(words.length != 2 + nArgs) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "wrong param count for AND node");
 		}
 		if(nArgs == 0) {
 			this.nodes[nodeIndex] = new TrueNode(nodeIndex);
@@ -143,43 +143,43 @@ public class DDNNFReader {
 
 	private void parseOrNode(final String[] words, final int nodeIndex) throws DDNNFException {
 		if(words.length < 3) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "not enough params for OR node");
 		}
 		int cflVar = readPosIntParam(words[1], nodeIndex);
 		int nArgs = readPosIntParam(words[2], nodeIndex);
 		this.nEdges += nArgs;
 		if(words.length != 3 + nArgs) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "wrong param count for OR node");
 		}
 		if(nArgs == 0) {
 			if(cflVar != 0) {
-				throw DDNNFException.newErrorAtNode(nodeIndex);
+				throw DDNNFException.newErrorAtNode(nodeIndex, "a var index is given although OR node has no child");
 			}
 			this.nodes[nodeIndex] = new FalseNode(nodeIndex);
 		} else if(nArgs == 2) {
 			if(cflVar < 1 || cflVar > this.nDeclaredVars) {
-				throw DDNNFException.newErrorAtNode(nodeIndex);
+				throw DDNNFException.newErrorAtNode(nodeIndex, "an undefined var index is given for OR node");
 			}
 			this.nodes[nodeIndex] = new DeterministicOrNode(nodeIndex, cflVar, this.nodes[readChildNodeIndex(nodeIndex, words, 3)], this.nodes[readChildNodeIndex(nodeIndex, words, 4)]);
 		} else {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "invalid param count for OR node; must be 0 or 2");
 		}
 	}
 	
 	private void parseLiteralNode(final String[] words, final int nodeIndex) throws DDNNFException {
 		if(words.length != 2) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "not enough params for literal node");
 		}
 		final int lit = readIntParam(words[1], nodeIndex);
 		if(lit == 0) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "0 given as parameter of literal node");
 		} else {
 			final int var = Math.abs(lit);
 			if(var > this.nDeclaredVars) {
 				if(this.ignorePreambleErrors) {
 					this.nDeclaredVars = var;
 				} else {
-					throw DDNNFException.newErrorAtNode(nodeIndex);
+					throw DDNNFException.newErrorAtNode(nodeIndex, "an undefined var index is given for literal node");
 				}
 			}
 		}
@@ -189,7 +189,7 @@ public class DDNNFReader {
 	private int readChildNodeIndex(final int nodeIndex, final String[] words, int wordIndex) throws DDNNFException {
 		int index = readPosIntParam(words[wordIndex], nodeIndex);
 		if(index >= nodeIndex) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "a reference to an ancestor was made");
 		}
 		return index;
 	}
@@ -197,7 +197,7 @@ public class DDNNFReader {
 	private int readPosIntParam(final String word, final int nodeIndex) throws DDNNFException {
 		final int param = readIntParam(word, nodeIndex);
 		if(param < 0) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "expected a positive integer, found "+word);
 		}
 		return param;
 	}
@@ -206,7 +206,7 @@ public class DDNNFReader {
 		try {
 			return Integer.parseInt(word);
 		} catch(NumberFormatException e) {
-			throw DDNNFException.newErrorAtNode(nodeIndex);
+			throw DDNNFException.newErrorAtNode(nodeIndex, "expected an integer, found "+word);
 		}
 	}
 
