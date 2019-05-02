@@ -36,12 +36,16 @@ public class DeterministicOrNode extends AbstractNode {
 
 	private static void checkDeterminism(final int nodeIndex, final int conflictingVar, final INode child1, final INode child2) throws DDNNFException {
 		final List<Map<Integer, Boolean>> models1 = child1.models();
+		final List<Map<Integer, Boolean>> models2 = child2.models();
+		if(models1.isEmpty() || models2.isEmpty()) {
+			return;
+		}
 		final Boolean value1 = models1.get(0).get(conflictingVar);
 		if(value1 == null) {
 			throw DDNNFException.newNotDeterministOrNode(nodeIndex);
 		}
 		final Boolean value2 = !value1;
-		if(models1.stream().anyMatch(m -> !value1.equals(m.get(conflictingVar))) || child2.models().stream().anyMatch(m -> !value2.equals(m.get(conflictingVar)))) {
+		if(models1.stream().anyMatch(m -> !value1.equals(m.get(conflictingVar))) || models2.stream().anyMatch(m -> !value2.equals(m.get(conflictingVar)))) {
 			throw DDNNFException.newNotDeterministOrNode(nodeIndex);
 		}
 	}
