@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
 import fr.cril.rubens.core.TestGenerator;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -236,7 +236,7 @@ public class Checker {
 	 * @param factory the checker factory
 	 */
 	private void applyCheckerOptions(final String options, final CheckerFactory<Instance> factory) {
-		final Map<String, Option> optionMap = factory.getOptions().stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final Map<String, MethodOption> optionMap = factory.getOptions().stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		final String[] opts = options.split(",");
 		for(final String opt: opts) {
 			if(opt.trim().isEmpty()) {

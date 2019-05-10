@@ -1,4 +1,4 @@
-package fr.cril.rubens.core;
+package fr.cril.rubens.options;
 
 import java.util.function.Consumer;
 
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class Option {
+public class MethodOption {
 	
 	private final String name;
 	
@@ -24,7 +24,7 @@ public class Option {
 	 * @param description
 	 * @param applier
 	 */
-	public Option(final String name, final String description, final Consumer<String> applier) {
+	public MethodOption(final String name, final String description, final Consumer<String> applier) {
 		this.name = name;
 		this.description = description;
 		this.applier = applier;

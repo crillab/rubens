@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 
 /**
  * A class used to generate AF method common options.
@@ -42,7 +42,7 @@ public class CommonOptions {
 	 * @param checkerFactory the checker factory
 	 * @return the common options for the factory
 	 */
-	public List<Option> getOptions(final ArgumentationFrameworkCheckerFactory<?> checkerFactory) {
+	public List<MethodOption> getOptions(final ArgumentationFrameworkCheckerFactory<?> checkerFactory) {
 		return Arrays.stream(LocalOption.values()).map(o -> o.toOption(checkerFactory)).collect(Collectors.toUnmodifiableList());
 	}
 
@@ -64,8 +64,8 @@ public class CommonOptions {
 			this.applier = applier;
 		}
 
-		private Option toOption(final ArgumentationFrameworkCheckerFactory<?> factory) {
-			return new Option(this.name, this.description, value -> this.applier.accept(value, factory));
+		private MethodOption toOption(final ArgumentationFrameworkCheckerFactory<?> factory) {
+			return new MethodOption(this.name, this.description, value -> this.applier.accept(value, factory));
 		}
 	}
 

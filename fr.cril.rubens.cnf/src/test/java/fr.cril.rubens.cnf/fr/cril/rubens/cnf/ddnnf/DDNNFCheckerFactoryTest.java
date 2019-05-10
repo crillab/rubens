@@ -18,7 +18,7 @@ import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.CnfSolverExecutor;
 import fr.cril.rubens.cnf.core.CnfTestGeneratorFactory;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 
 public class DDNNFCheckerFactoryTest {
 	
@@ -77,7 +77,7 @@ public class DDNNFCheckerFactoryTest {
 	
 	@Test
 	public void testOptions() {
-		final List<Option> opts = this.factory.getOptions();
+		final List<MethodOption> opts = this.factory.getOptions();
 		assertEquals(2, opts.size());
 		assertTrue(opts.stream().anyMatch(o -> o.getName().equals("ignoreUnsat")));
 		assertTrue(opts.stream().anyMatch(o -> o.getName().equals("ignorePreamble")));
@@ -85,7 +85,7 @@ public class DDNNFCheckerFactoryTest {
 	
 	@Test
 	public void testDoNotIgnPreamble() {
-		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		final MethodOption opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
 		opt.apply("off");
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
 		assertFalse(factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1").isSuccessful());
@@ -93,7 +93,7 @@ public class DDNNFCheckerFactoryTest {
 	
 	@Test
 	public void testIgnPreamble() {
-		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		final MethodOption opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
 		opt.apply("on");
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
 		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1"));
@@ -101,7 +101,7 @@ public class DDNNFCheckerFactoryTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testIllegalArgPreamble() {
-		final Option opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
+		final MethodOption opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
 		opt.apply("foo");
 	}
 	

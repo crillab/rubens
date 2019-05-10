@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import fr.cril.rubens.arg.checking.checkers.ElementaryCheckers.EECOChecker;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
@@ -242,7 +242,7 @@ public class CheckerOptionsReaderTest {
 		}
 
 		@Override
-		public List<Option> getOptions() {
+		public List<MethodOption> getOptions() {
 			// TODO Auto-generated method stub
 			return null;
 		}

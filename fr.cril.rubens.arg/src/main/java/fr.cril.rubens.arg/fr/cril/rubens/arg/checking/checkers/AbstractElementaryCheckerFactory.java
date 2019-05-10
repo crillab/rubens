@@ -12,7 +12,7 @@ import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
 import fr.cril.rubens.arg.core.TriFunction;
 import fr.cril.rubens.arg.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
@@ -68,7 +68,7 @@ public abstract class AbstractElementaryCheckerFactory implements ArgumentationF
 	}
 	
 	@Override
-	public List<Option> getOptions() {
+	public List<MethodOption> getOptions() {
 		return CommonOptions.getInstance().getOptions(this);
 	}
 

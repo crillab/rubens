@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
 /**
@@ -46,7 +46,7 @@ public interface CheckerFactory<T extends Instance> {
 	 * 
 	 * @return the checker specific options
 	 */
-	List<Option> getOptions();
+	List<MethodOption> getOptions();
 	
 	/**
 	 * Indicates if an instance should be ignored in the checking process.

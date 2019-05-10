@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import fr.cril.rubens.cnf.utils.CommonOptions;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 
@@ -43,7 +43,7 @@ public abstract class ASatCheckerFactory<R extends CnfInstance> implements Check
 	}
 	
 	@Override
-	public List<Option> getOptions() {
+	public List<MethodOption> getOptions() {
 		return CommonOptions.getInstance().getOptions(this);
 	}
 

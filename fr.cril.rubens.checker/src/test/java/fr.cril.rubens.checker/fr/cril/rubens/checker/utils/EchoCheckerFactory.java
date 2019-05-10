@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.TestGeneratorFactory;
@@ -61,8 +61,8 @@ public class EchoCheckerFactory implements CheckerFactory<EchoInstance> {
 	}
 
 	@Override
-	public List<Option> getOptions() {
-		return Collections.singletonList(new Option("ignAll", "ignore all instances", v -> this.ignoreAll = true));
+	public List<MethodOption> getOptions() {
+		return Collections.singletonList(new MethodOption("ignAll", "ignore all instances", v -> this.ignoreAll = true));
 	}
 
 	@Override

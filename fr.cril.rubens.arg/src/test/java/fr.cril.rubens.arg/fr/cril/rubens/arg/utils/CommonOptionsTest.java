@@ -17,7 +17,7 @@ import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkCheckerFactory;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -31,7 +31,7 @@ public class CommonOptionsTest {
 	
 	@Test
 	public void testNames() {
-		final List<String> actual = CommonOptions.getInstance().getOptions(new LocalFactory()).stream().map(Option::getName).collect(Collectors.toList());
+		final List<String> actual = CommonOptions.getInstance().getOptions(new LocalFactory()).stream().map(MethodOption::getName).collect(Collectors.toList());
 		final List<String> expected = Stream.of("outputFormat").collect(Collectors.toList());
 		assertEquals(expected, actual);
 	}
@@ -40,7 +40,7 @@ public class CommonOptionsTest {
 	public void testOutputFormat() {
 		final LocalFactory factory = new LocalFactory();
 		factory.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
-		final Map<String, Option> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("outputFormat").apply("ICCMA19");
 		assertFalse(factory.isOutputFormatNull());
 	}
@@ -69,7 +69,7 @@ public class CommonOptionsTest {
 		}
 
 		@Override
-		public List<Option> getOptions() {
+		public List<MethodOption> getOptions() {
 			// TODO Auto-generated method stub
 			return null;
 		}

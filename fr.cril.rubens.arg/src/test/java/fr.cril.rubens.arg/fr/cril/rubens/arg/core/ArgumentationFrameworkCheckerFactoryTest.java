@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -43,7 +43,7 @@ public class ArgumentationFrameworkCheckerFactoryTest {
 		}
 
 		@Override
-		public List<Option> getOptions() {
+		public List<MethodOption> getOptions() {
 			// TODO Auto-generated method stub
 			return null;
 		}

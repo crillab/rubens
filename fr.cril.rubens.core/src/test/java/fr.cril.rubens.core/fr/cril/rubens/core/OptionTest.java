@@ -5,16 +5,18 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.cril.rubens.options.MethodOption;
+
 public class OptionTest {
 	
-	private Option opt;
+	private MethodOption opt;
 	
 	private String str;
 	
 	@Before
 	public void setUp() {
 		this.str = "";
-		this.opt = new Option("n", "d", v -> this.str = v);
+		this.opt = new MethodOption("n", "d", v -> this.str = v);
 	}
 	
 	@Test

@@ -4,12 +4,14 @@ import java.util.function.BiConsumer;
 
 import org.apache.commons.cli.Options;
 
+import fr.cril.rubens.options.IAppOption;
+
 /**
  * An enumeration of all the supported command line interface options.
  *   
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public enum ECheckerOption {
+public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 
 	/** display help and exit */
 	DISPLAY_HELP("h", "help", false, "display help and exit", printHelpAndExit()),
@@ -75,20 +77,27 @@ public enum ECheckerOption {
 		return options;
 	}
 
-	/**
-	 * Returns the current option short name.
-	 * 
-	 * @return the current option short name
-	 */
+	@Override
 	public String getOpt() {
 		return this.opt;
 	}
+	
+	@Override
+	public String getLongOpt() {
+		return this.longOpt;
+	}
+	
+	@Override
+	public boolean hasArg() {
+		return this.hasArg;
+	}
+	
+	@Override
+	public String getDescription() {
+		return this.description;
+	}
 
-	/**
-	 * Returns the current option consumer.
-	 * 
-	 * @return the current option consumer.
-	 */
+	@Override
 	public BiConsumer<CheckerOptionsReader, String> getOptionConsumer() {
 		return this.optionConsumer;
 	}

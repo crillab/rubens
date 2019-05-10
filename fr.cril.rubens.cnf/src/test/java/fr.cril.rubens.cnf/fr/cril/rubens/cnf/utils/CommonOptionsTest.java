@@ -15,7 +15,7 @@ import org.junit.Test;
 import fr.cril.rubens.cnf.core.ASatCheckerFactory;
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
@@ -34,7 +34,7 @@ public class CommonOptionsTest {
 	@Test
 	public void testIgnUnsatTrue() {
 		final LocalFactory factory = new LocalFactory();
-		final Map<String, Option> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("ignoreUnsat").apply("on");
 		assertTrue(factory.getIgnUnsat());
 	}
@@ -42,7 +42,7 @@ public class CommonOptionsTest {
 	@Test
 	public void testIgnUnsatFalse() {
 		final LocalFactory factory = new LocalFactory();
-		final Map<String, Option> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("ignoreUnsat").apply("off");
 		assertFalse(factory.getIgnUnsat());
 	}
@@ -50,7 +50,7 @@ public class CommonOptionsTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testIgnUnsatWrongVal() {
 		final LocalFactory factory = new LocalFactory();
-		final Map<String, Option> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(Option::getName, o -> o));
+		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("ignoreUnsat").apply("foo");
 	}
 	

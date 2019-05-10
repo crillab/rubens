@@ -14,7 +14,7 @@ import fr.cril.rubens.arg.testgen.DynamicSemTestGeneratorFactoryDecorator;
 import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
 import fr.cril.rubens.arg.utils.CommonOptions;
 import fr.cril.rubens.core.CheckResult;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
@@ -100,7 +100,7 @@ public abstract class ADynamicElementaryCheckerFactoryDecorator implements Argum
 	}
 	
 	@Override
-	public List<Option> getOptions() {
+	public List<MethodOption> getOptions() {
 		return CommonOptions.getInstance().getOptions(this);
 	}
 

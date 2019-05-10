@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import fr.cril.rubens.cnf.core.ASatCheckerFactory;
-import fr.cril.rubens.core.Option;
+import fr.cril.rubens.options.MethodOption;
 
 /**
  * A class used to generate SAT based checkers common options.
@@ -40,7 +40,7 @@ public class CommonOptions {
 	 * @param checkerFactory the checker factory
 	 * @return the common options for the factory
 	 */
-	public List<Option> getOptions(final ASatCheckerFactory<?> checkerFactory) {
+	public List<MethodOption> getOptions(final ASatCheckerFactory<?> checkerFactory) {
 		return Arrays.stream(LocalOption.values()).map(o -> o.toOption(checkerFactory)).collect(Collectors.toUnmodifiableList());
 	}
 
@@ -61,8 +61,8 @@ public class CommonOptions {
 			this.applier = applier;
 		}
 
-		private Option toOption(final ASatCheckerFactory<?> factory) {
-			return new Option(this.name, this.description, value -> this.applier.accept(value, factory));
+		private MethodOption toOption(final ASatCheckerFactory<?> factory) {
+			return new MethodOption(this.name, this.description, value -> this.applier.accept(value, factory));
 		}
 		
 	}
