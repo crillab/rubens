@@ -50,19 +50,19 @@ You can access the list of builtin test generators with the command `java -jar r
 At this time, there are two families of builtin generators:
 
 * CNF family:
-* * CNF: generates DIMACS formatted CNF formulas and their set of models (SAT instances),
-* * MCCNF: generates DIMACS formatted CNF formulas and number of models (model counting instances),
-* * WMCNF: generates DIMACS formatted CNF formulas, literal weights, and their set of weighted models (weighted SAT instances),
-* * WMCCNF: generates DIMACS formatted CNF formulas, literal weights, and the weighted number of models (weighted model counting instances);
+  * CNF: generates DIMACS formatted CNF formulas and their set of models (SAT instances),
+  * MCCNF: generates DIMACS formatted CNF formulas and number of models (model counting instances),
+  * WMCNF: generates DIMACS formatted CNF formulas, literal weights, and their set of weighted models (weighted SAT instances),
+  * WMCCNF: generates DIMACS formatted CNF formulas, literal weights, and the weighted number of models (weighted model counting instances);
 * Argument framework family:
-* * ARG-CO: argumentation frameworks and their set of complete extensions,
-* * ARG-GR: argumentation frameworks and their set of grounded extensions,
-* * ARG-PR: argumentation frameworks and their set of preferred extensions,
-* * ARG-ST: argumentation frameworks and their set of stable extensions,
-* * ARG-SST: argumentation frameworks and their set of semistable extensions,
-* * ARG-STG: argumentation frameworks and their set of stage extensions,
-* * ARG-ID: argumentation frameworks and their set of ideal extensions,
-* * D3: argumentation frameworks and their Dung's Triathlon result (see ICCMA 2017 competition).
+  * ARG-CO: argumentation frameworks and their set of complete extensions,
+  * ARG-GR: argumentation frameworks and their set of grounded extensions,
+  * ARG-PR: argumentation frameworks and their set of preferred extensions,
+  * ARG-ST: argumentation frameworks and their set of stable extensions,
+  * ARG-SST: argumentation frameworks and their set of semistable extensions,
+  * ARG-STG: argumentation frameworks and their set of stage extensions,
+  * ARG-ID: argumentation frameworks and their set of ideal extensions,
+  * D3: argumentation frameworks and their Dung's Triathlon result (see ICCMA 2017 competition).
 
 
 ## Builtin checkers
@@ -72,14 +72,14 @@ You can access the list of builtin test generators with the command `java -jar r
 At this time, there are two families of builtin checkers:
 
 * CNF family:
-* * SAT: checks a SAT solver fitting SAT competitions rules,
-* * sharpSAT: checks a CNF model counter using same I/O conventions than SAT solvers except that the `s` line gives the number of models and there is no `v` line,
-* * DDNNF: checks a d-DNNF compiler taking as input a DIMACS formatted CNF formula and outputting a d-DNNF following the format of the `c2d` compiler;
+  * SAT: checks a SAT solver fitting SAT competitions rules,
+  * sharpSAT: checks a CNF model counter using same I/O conventions than SAT solvers except that the `s` line gives the number of models and there is no `v` line,
+  * DDNNF: checks a d-DNNF compiler taking as input a DIMACS formatted CNF formula and outputting a d-DNNF following the format of the `c2d` compiler;
 * Argumentation Framework family:
-* * XX-YY, where XX in {SE, EE, DC, DS} and YY in {CO, GR, PR, ST, SST, STG, ID}: computes a task for a semantics on an AF following ICCMA competition rules,
-* * D3: computes the D3 task (see ICCMA 2017),
-* * XX-YY-D, where XX in {SE, EE, DC, DS} and YY in {CO, GR, PR, ST}: computes a task with dynamics for a semantics on an AF following ICCMA competition rules,
-* * ICCMA2019, ICCMA2019: performs all computations involved in ICCMA 2017 and 2019 competitions.
+  * XX-YY, where XX in {SE, EE, DC, DS} and YY in {CO, GR, PR, ST, SST, STG, ID}: computes a task for a semantics on an AF following ICCMA competition rules,
+  * D3: computes the D3 task (see ICCMA 2017),
+  * XX-YY-D, where XX in {SE, EE, DC, DS} and YY in {CO, GR, PR, ST}: computes a task with dynamics for a semantics on an AF following ICCMA competition rules,
+  * ICCMA2019, ICCMA2019: performs all computations involved in ICCMA 2017 and 2019 competitions.
 
 Argumentation framework checker are able to handle both ICCMA 2017 and 2019 (default) output formats. The format can be changed by adding `-c outputFormat=ICCMA17` to the command line.
 
