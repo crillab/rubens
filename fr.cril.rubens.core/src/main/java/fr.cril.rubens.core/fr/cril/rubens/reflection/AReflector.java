@@ -36,8 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import fr.cril.rubens.utils.LoggerHelper;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 /**
@@ -56,7 +56,7 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 public abstract class AReflector<F> {
 	
 	/** the logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(AReflector.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	/** the mapping from implementor names to the implementing classes */
 	private final Map<String, Class<?>> classes = new HashMap<>();

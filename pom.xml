@@ -35,7 +35,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
-		<dependency.slf4j.version>1.8.0-beta1</dependency.slf4j.version>
+		<dependency.slf4j.version>1.8.0-beta4</dependency.slf4j.version>
 	</properties>
 
 	<modules>

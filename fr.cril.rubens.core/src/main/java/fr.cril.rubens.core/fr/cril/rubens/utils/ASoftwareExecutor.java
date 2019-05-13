@@ -41,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.specs.Instance;
 
@@ -57,7 +56,7 @@ import fr.cril.rubens.specs.Instance;
 public abstract class ASoftwareExecutor<T extends Instance> {
 	
 	/** the logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ASoftwareExecutor.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	/** the path to the software to launch */
 	private final Path execPath;

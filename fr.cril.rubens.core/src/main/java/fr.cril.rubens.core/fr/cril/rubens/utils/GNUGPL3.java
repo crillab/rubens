@@ -606,7 +606,9 @@ public class GNUGPL3 {
 	 * @param logger the logger
 	 */
 	public static void logWelcomeMessage(final Logger logger) {
+		logger.info("");
 		logMessage(logger, WELCOME_MESSAGE);
+		logger.info("");
 	}
 	
 	/**

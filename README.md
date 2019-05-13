@@ -283,7 +283,7 @@ Then, register our module in `fr.cril.rubens.generator/pom.xml` for it to be see
 
 Now, run `mvn package` to run the compilation process, then `java -jar fr.cril.rubens.generator/target/rubens-generator-0.1-SNAPSHOT.jar -l`, which displays the available instance generators. The output should contain the line 
 
-```[main] INFO fr.cril.rubens.generator.GeneratorOptionsReader - available methods (no family): WCW```
+```[INFO ] RUBENS-GEN: available methods (no family): WCW```
 
 indicating our new instance generator can be used.
 
@@ -364,7 +364,7 @@ public class WCWCheckerFactory implements CheckerFactory<WCWInstance> {
 
 Just like we did for the instance generator, we need to reference our WCW module in `fr.cril.rubens.checker/pom.xml` (with a `dependency` tag) and recompile all the modules (`mvn package`). Now, executing `java -jar fr.cril.rubens.checker/target/rubens-checker-0.1-SNAPSHOT.jar -l` should output the line
 
-```[main] INFO fr.cril.rubens.checker.CheckerOptionsReader - available methods (no family): WCW-checker```
+```[INFO ] RUBENS-CHK: available methods (no family): WCW-checker```
 
 This line indicates our checker is available. Let's use it on a software named `wcw.sh` located in the current directory, writing the test cases for which answers were incorrect in the `err/` directory.
 
@@ -375,21 +375,21 @@ java -jar fr.cril.rubens.checker/target/rubens-checker-0.1-SNAPSHOT.jar -m WCW-c
 In case no errors are found, the output should look like this (and the `err/` directory is empty).
 
 ```
-[main] INFO fr.cril.rubens.checker.Checker - checking WCW-checker
-[main] INFO fr.cril.rubens.checker.Checker - checked 231 instances in 0,240s
-[main] INFO fr.cril.rubens.checker.Checker - found 0 errors.
-[main] INFO fr.cril.rubens.checker.Checker - ignored 0 instances.
+[INFO ] RUBENS-CHK: checking WCW-checker
+[INFO ] RUBENS-CHK: checked 231 instances in 0,240s
+[INFO ] RUBENS-CHK: found 0 errors.
+[INFO ] RUBENS-CHK: ignored 0 instances.
 ```
 
 In case some errors are detected, the output should looks like this one (and the `err/` directory should contain the instances and their expected results for which the software failed).
 
 ```
-[main] INFO fr.cril.rubens.checker.Checker - checking WCW-checker
-[pool-1-thread-4] ERROR fr.cril.rubens.checker.Checker - WCW-checker error (1) for instance fr.cril.rubens.wcw.WCWInstance@2669b199: expected 5, found 4.
-[pool-1-thread-2] ERROR fr.cril.rubens.checker.Checker - WCW-checker error (2) for instance fr.cril.rubens.wcw.WCWInstance@6fb554cc: expected a number, found "foo".
-[main] INFO fr.cril.rubens.checker.Checker - checked 231 instances in 0,272s
-[main] INFO fr.cril.rubens.checker.Checker - found 2 errors.
-[main] INFO fr.cril.rubens.checker.Checker - ignored 0 instances.
+[INFO ] RUBENS-CHK: checking WCW-checker
+[ERROR] RUBENS-CHK: WCW-checker error (1) for instance fr.cril.rubens.wcw.WCWInstance@2669b199: expected 5, found 4.
+[ERROR] RUBENS-CHK: WCW-checker error (2) for instance fr.cril.rubens.wcw.WCWInstance@6fb554cc: expected a number, found "foo".
+[INFO ] RUBENS-CHK: checked 231 instances in 0,272s
+[INFO ] RUBENS-CHK: found 2 errors.
+[INFO ] RUBENS-CHK: ignored 0 instances.
 ```
 
 Note that successive calls to RUBENS will erase from `err/` the files which extensions correspond to the ones of the current call (except if no errors are detected). Note also that the instance description in the log (e.g. `fr.cril.rubens.wcw.WCWInstance@2669b199`) may be changed by overridden the `toString` method of the instance class.

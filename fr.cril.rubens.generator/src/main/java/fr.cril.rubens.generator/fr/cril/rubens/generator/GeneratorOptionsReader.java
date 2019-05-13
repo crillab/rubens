@@ -34,12 +34,12 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.options.AppOptions;
 import fr.cril.rubens.reflection.TranslatorGeneratorReflector;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.LoggerHelper;
 
 /**
  * This class is used to parse the options of the command line interface and translate them into a configuration for the instance generator.
@@ -55,7 +55,7 @@ public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	
 	private static GeneratorOptionsReader instance = null; 
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(GeneratorOptionsReader.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	private TestGeneratorFactory<Instance> factory;
 	

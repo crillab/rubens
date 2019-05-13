@@ -36,11 +36,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.utils.GNUGPL3;
+import fr.cril.rubens.utils.LoggerHelper;
 
 /**
  * Application entry-point for RUBENS instance generator.
@@ -51,7 +51,7 @@ public class Generator {
 	
 	public static final int STATUS_IO_EXCEPTION_DURING_GENERATION = 3;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().switchLogger("RUBENS-GEN");
 
 	private int instanceCount = 0;
 	

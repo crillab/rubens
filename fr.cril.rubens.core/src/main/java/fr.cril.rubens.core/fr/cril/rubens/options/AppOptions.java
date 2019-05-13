@@ -35,9 +35,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.utils.GNUGPL3;
+import fr.cril.rubens.utils.LoggerHelper;
 
 /**
  * Common code used by RUBENS applications to handle their command line options (instances of {@link IAppOption}).
@@ -56,7 +56,7 @@ public abstract class AppOptions<T> {
 	/** the status returned when the program exits after encountering an error while checking CLI the options */
 	public static final int STATUS_OPTIONS_EXIT_ERROR = 1;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppOptions.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	private static final int HELP_FORMATTER_MAX_WIDTH = 80;
 	

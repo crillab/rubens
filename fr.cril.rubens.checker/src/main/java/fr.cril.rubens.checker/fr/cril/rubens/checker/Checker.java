@@ -41,7 +41,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.core.TestGenerator;
@@ -50,6 +49,7 @@ import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 import fr.cril.rubens.utils.GNUGPL3;
+import fr.cril.rubens.utils.LoggerHelper;
 import fr.cril.rubens.utils.SoftwareExecutorResult;
 
 /**
@@ -61,7 +61,7 @@ import fr.cril.rubens.utils.SoftwareExecutorResult;
  */
 public class Checker {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Checker.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().switchLogger("RUBENS-CHK");
 	
 	private int statusCode;
 	

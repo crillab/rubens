@@ -33,11 +33,11 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.InstanceTranslator;
 import fr.cril.rubens.specs.TestGeneratorFactory;
+import fr.cril.rubens.utils.LoggerHelper;
 
 /**
  * Launches a test generation process according to a provided {@link TestGeneratorFactory} instance.
@@ -57,7 +57,7 @@ public class TestGenerator<T extends Instance> {
 	
 	private final TestGeneratorFactory<T> factory;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestGenerator.class);
+	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 
 	/**
 	 * Builds a test generator given a factory.

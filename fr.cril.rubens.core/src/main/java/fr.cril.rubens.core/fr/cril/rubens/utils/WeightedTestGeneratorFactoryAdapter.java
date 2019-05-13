@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.Instance;
@@ -50,7 +49,7 @@ import fr.cril.rubens.specs.TestGeneratorFactory;
 @ReflectorParam(enabled=false)
 public abstract class WeightedTestGeneratorFactoryAdapter<T extends Instance> implements TestGeneratorFactory<T> {
 	
-	protected final Logger logger = LoggerFactory.getLogger(WeightedTestGeneratorFactoryAdapter.class);
+	protected final Logger logger = LoggerHelper.getInstance().getLogger();
 	
 	@Override
 	public List<InstanceTranslator<T>> translators() {
