@@ -10,9 +10,12 @@
 	<description>root of RUBENS multimodule architecture</description>
 
 	<organization>
-		<name>Centre de Recherche en Informatique de Lens (CRIL)</name>
+		<name>Centre de Recherche en Informatique de Lens (CRIL) &mdash; Artois University and CNRS</name>
 		<url>http://www.cril.univ-artois.fr/</url>
 	</organization>
+
+	<inceptionYear>2019</inceptionYear>
+
 	<developers>
 		<developer>
 			<id>lonca</id>
@@ -146,6 +149,29 @@
 						</sourceFileIncludes>
 						<additionalOptions>-html5</additionalOptions>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.20</version>
+					<configuration>
+						<licenseName>gpl_v3</licenseName>
+					</configuration>
+					<executions>
+						<execution>
+							<id>first</id>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+							<phase>process-sources</phase>
+							<configuration>
+								<roots>
+									<root>src/main/java</root>
+									<root>src/test</root>
+								</roots>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
