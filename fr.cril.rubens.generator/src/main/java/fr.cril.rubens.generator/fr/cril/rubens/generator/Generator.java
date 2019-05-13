@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.utils.GNUGPL3;
 
 /**
  * Application entry-point for RUBENS instance generator.
@@ -42,6 +43,7 @@ public class Generator {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
+		GNUGPL3.logWelcomeMessage(LOGGER);
 		final Generator generator = new Generator(args);
 		generator.generate();
 		System.exit(generator.statusCode);

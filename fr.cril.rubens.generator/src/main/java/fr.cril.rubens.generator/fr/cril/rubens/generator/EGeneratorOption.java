@@ -26,7 +26,10 @@ public enum EGeneratorOption implements IAppOption<GeneratorOptionsReader> {
 	SET_OUTPUT("o", "output", true, "set the generation output directory", setOutputDirectory()),
 	
 	/** set the generation tree max depth */
-	SET_DEPTH("d", "depth", true, "set the computation tree max depth", setMaxDepth());
+	SET_DEPTH("d", "depth", true, "set the computation tree max depth", setMaxDepth()),
+	
+	/** display the license and exit */
+	DISPLAY_LICENCE("g", "license", false, "display the license and exit", displayLicense());
 
 	private final String opt;
 
@@ -114,6 +117,10 @@ public enum EGeneratorOption implements IAppOption<GeneratorOptionsReader> {
 	
 	private static BiConsumer<GeneratorOptionsReader, String> setMaxDepth() {
 		return (o, s) -> o.setMaxDepth(s);
+	}
+	
+	private static BiConsumer<GeneratorOptionsReader, String> displayLicense() {
+		return (o, s) -> o.printLicenseAndExit();
 	}
 
 }

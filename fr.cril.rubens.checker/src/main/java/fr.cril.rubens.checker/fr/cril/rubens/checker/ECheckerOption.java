@@ -32,7 +32,10 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	SET_EXEC("e", "exec", true, "set the software location", setExecLocation()),
 	
 	/** set the options dedicated to the checker */
-	SET_CHECKER_OPTS("c", "checker-options", true, "set the checker options", setCheckerOptions());
+	SET_CHECKER_OPTS("c", "checker-options", true, "set the checker options", setCheckerOptions()),
+	
+	/** display the license and exit */
+	DISPLAY_LICENCE("g", "license", false, "display the license and exit", displayLicense());
 
 	private final String opt;
 
@@ -128,6 +131,10 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	
 	private static BiConsumer<CheckerOptionsReader, String> setCheckerOptions() {
 		return (o, s) -> o.setCheckerOptions(s);
+	}
+	
+	private static BiConsumer<CheckerOptionsReader, String> displayLicense() {
+		return (o, s) -> o.printLicenseAndExit();
 	}
 
 }

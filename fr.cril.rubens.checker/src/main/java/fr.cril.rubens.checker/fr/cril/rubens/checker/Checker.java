@@ -25,6 +25,7 @@ import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.specs.CheckerFactory;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.utils.ASoftwareExecutor;
+import fr.cril.rubens.utils.GNUGPL3;
 import fr.cril.rubens.utils.SoftwareExecutorResult;
 
 /**
@@ -64,6 +65,7 @@ public class Checker {
 	 * @param args the command line arguments
 	 */
 	public static void main(final String[] args) {
+		GNUGPL3.logWelcomeMessage(LOGGER);
 		final Checker checker = new Checker(args);
 		checker.check();
 		System.exit(checker.statusCode);

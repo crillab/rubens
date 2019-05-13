@@ -11,6 +11,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import fr.cril.rubens.utils.GNUGPL3;
 
 /**
  * Common code used by RUBENS applications to handle their command line options (instances of {@link IAppOption}).
@@ -28,6 +31,8 @@ public abstract class AppOptions<T> {
 	
 	/** the status returned when the program exits after encountering an error while checking CLI the options */
 	public static final int STATUS_OPTIONS_EXIT_ERROR = 1;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppOptions.class);
 	
 	private static final int HELP_FORMATTER_MAX_WIDTH = 80;
 	
@@ -134,10 +139,15 @@ public abstract class AppOptions<T> {
 		final PrintWriter writer = new PrintWriter(outputStream);
 		final HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(writer, HELP_FORMATTER_MAX_WIDTH, mandatoryOptionsToString(),
-				"RUBENS - CRIL - Univ. Artois & CNRS", buildCliOptions(), 4, 4, "");
+				"RUBENS - CRIL - Artois University & CNRS", buildCliOptions(), 4, 4, "");
 		writer.flush();
 		final String msg = new String(outputStream.toByteArray());
 		getLogger().info(msg);
+		setMustExit(STATUS_OPTION_EXIT_OK);
+	}
+	
+	public void printLicenseAndExit() {
+		GNUGPL3.logTermsAndConditions(LOGGER);
 		setMustExit(STATUS_OPTION_EXIT_OK);
 	}
 	
