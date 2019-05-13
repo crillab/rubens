@@ -10,7 +10,7 @@
 	<description>root of RUBENS multimodule architecture</description>
 
 	<organization>
-		<name>Centre de Recherche en Informatique de Lens (CRIL) &mdash; Artois University and CNRS</name>
+		<name>Artois University and CNRS</name>
 		<url>http://www.cril.univ-artois.fr/</url>
 	</organization>
 
@@ -155,7 +155,9 @@
 					<artifactId>license-maven-plugin</artifactId>
 					<version>1.20</version>
 					<configuration>
-						<licenseName>gpl_v3</licenseName>
+						<licenseName>rubens</licenseName>
+						<licenseResolver>${project.baseUri}/license</licenseResolver>
+						<projectName>RUBENS</projectName>
 					</configuration>
 					<executions>
 						<execution>
