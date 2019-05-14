@@ -38,6 +38,14 @@ import java.util.stream.Stream;
  */
 public class DeterministicOrNode extends AbstractNode {
 	
+	private final int conflictingVar;
+	
+	private final INode child1;
+	
+	private final INode child2;
+	
+	private final int hash;
+
 	/**
 	 * Builds a deterministic OR node given its node index, a variable which different truth values are implies by its two children, and its two children.
 	 * 
@@ -50,10 +58,21 @@ public class DeterministicOrNode extends AbstractNode {
 	 * @throws DDNNFException if the two child nodes are not conflicting
 	 */
 	public DeterministicOrNode(final int nodeIndex, final int conflictingVar, final INode child1, final INode child2) throws DDNNFException {
-		super(nodeIndex, computeModels(nodeIndex, conflictingVar, child1, child2));
+		super(computeModels(nodeIndex, conflictingVar, child1, child2));
+		this.conflictingVar = conflictingVar;
+		this.child1 = child1;
+		this.child2 = child2;
+		this.hash = computeHash();
+	}
+
+	private int computeHash() {
+		return (31 + (this.child1.hashCode() | this.child2.hashCode())) * 31 + this.conflictingVar;
 	}
 
 	private static List<Map<Integer, Boolean>> computeModels(final int nodeIndex, final int conflictingVar, final INode child1, final INode child2) throws DDNNFException {
+		if(conflictingVar < 1 || child1 == null || child2 == null) {
+			throw new IllegalArgumentException();
+		}
 		checkDeterminism(nodeIndex, conflictingVar, child1, child2);
 		return Stream.concat(child1.models().stream(), child2.models().stream()).collect(Collectors.toUnmodifiableList());
 	}
@@ -72,6 +91,23 @@ public class DeterministicOrNode extends AbstractNode {
 		if(models1.stream().anyMatch(m -> !value1.equals(m.get(conflictingVar))) || models2.stream().anyMatch(m -> !value2.equals(m.get(conflictingVar)))) {
 			throw DDNNFException.newNotDeterministOrNode(nodeIndex);
 		}
+	}
+
+	@Override
+	public final boolean equals(final Object obj) {
+		if(!(obj instanceof DeterministicOrNode)) {
+			return false;
+		}
+		final DeterministicOrNode other = (DeterministicOrNode) obj;
+		if(this.conflictingVar != other.conflictingVar) {
+			return false;
+		}
+		return (this.child1.equals(other.child1) && this.child2.equals(other.child2)) || (this.child1.equals(other.child2) && this.child2.equals(other.child1));
+	}
+
+	@Override
+	public final int hashCode() {
+		return this.hash;
 	}
 
 }

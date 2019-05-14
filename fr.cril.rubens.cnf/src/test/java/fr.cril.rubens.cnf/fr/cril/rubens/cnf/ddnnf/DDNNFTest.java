@@ -37,6 +37,8 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 public class DDNNFTest {
 	
 	@Before
@@ -58,8 +60,8 @@ public class DDNNFTest {
 	
 	@Test
 	public void testModelsWithFreeVars2() throws DDNNFException {
-		final INode trueNode = new TrueNode(1);
-		final INode litNode = new LiteralNode(2, -1);
+		final INode trueNode = TrueNode.getInstance();
+		final INode litNode = new LiteralNode(-1);
 		final INode andNode = new DecomposableAndNode(3, Stream.of(litNode, trueNode).collect(Collectors.toList()));
 		final DDNNF ddnnf = new DDNNF(3, andNode);
 		final Set<Set<Integer>> actual = new HashSet<>(Utils.models(ddnnf));
@@ -83,8 +85,12 @@ public class DDNNFTest {
 	
 	@Test
 	public void testNoVars() {
-		final DDNNF ddnnf = new DDNNF(0, new TrueNode(0));
+		final DDNNF ddnnf = new DDNNF(0, TrueNode.getInstance());
 		assertEquals(Collections.singletonList(Collections.emptySet()), Utils.models(ddnnf));
 	}
 	
+	@Test
+	public void testEquals() {
+		EqualsVerifier.forClass(DDNNF.class).verify();
+	}
 }

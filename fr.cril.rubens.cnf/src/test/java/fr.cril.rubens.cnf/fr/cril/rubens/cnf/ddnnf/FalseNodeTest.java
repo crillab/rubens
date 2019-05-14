@@ -25,6 +25,7 @@ package fr.cril.rubens.cnf.ddnnf;
  */
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.Collections;
 
@@ -34,7 +35,18 @@ public class FalseNodeTest {
 	
 	@Test
 	public void testModels() {
-		assertEquals(Collections.emptyList(), new FalseNode(1).models());
+		assertEquals(Collections.emptyList(), FalseNode.getInstance().models());
+	}
+	
+	@Test
+	public void testEquals() {
+		assertEquals(FalseNode.getInstance(), FalseNode.getInstance());
+		assertNotEquals(TrueNode.getInstance(), FalseNode.getInstance());
+	}
+	
+	@Test
+	public void testHashCode() {
+		assertEquals(Integer.MIN_VALUE, FalseNode.getInstance().hashCode());
 	}
 
 }

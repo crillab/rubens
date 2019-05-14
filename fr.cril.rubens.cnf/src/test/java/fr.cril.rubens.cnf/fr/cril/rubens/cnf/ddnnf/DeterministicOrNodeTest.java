@@ -26,12 +26,15 @@ package fr.cril.rubens.cnf.ddnnf;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class DeterministicOrNodeTest {
 	
@@ -40,24 +43,39 @@ public class DeterministicOrNodeTest {
 		Utils.resetNextIndex();
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullChild1() throws DDNNFException {
+		new DeterministicOrNode(0, 1, null, new LiteralNode(1));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullChild2() throws DDNNFException {
+		new DeterministicOrNode(0, 1, new LiteralNode(1), null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNegCflVar() throws DDNNFException {
+		new DeterministicOrNode(0, -1, new LiteralNode(1), new LiteralNode(-1));
+	}
+	
 	@Test(expected=DDNNFException.class)
 	public void testNotDeterministic1() throws DDNNFException {
-		new DeterministicOrNode(1, 1, new LiteralNode(2, 1), new LiteralNode(3, 1));
+		new DeterministicOrNode(1, 1, new LiteralNode(1), new LiteralNode(1));
 	}
 	
 	@Test(expected=DDNNFException.class)
 	public void testNotDeterministic2() throws DDNNFException {
-		new DeterministicOrNode(Utils.nextIndex(), 2, new LiteralNode(Utils.nextIndex(), 1), Utils.buildXor(1, 2));
+		new DeterministicOrNode(Utils.nextIndex(), 2, new LiteralNode(1), Utils.buildXor(1, 2));
 	}
 	
 	@Test(expected=DDNNFException.class)
 	public void testNotDeterministic3() throws DDNNFException {
-		new DeterministicOrNode(Utils.nextIndex(), 2, Utils.buildXor(1, 2), new LiteralNode(Utils.nextIndex(), 1));
+		new DeterministicOrNode(Utils.nextIndex(), 2, Utils.buildXor(1, 2), new LiteralNode(1));
 	}
 	
 	@Test(expected=DDNNFException.class)
 	public void testNotDeterministic4() throws DDNNFException {
-		new DeterministicOrNode(1, 1, new LiteralNode(2, 1), new LiteralNode(3, 2));
+		new DeterministicOrNode(1, 1, new LiteralNode(1), new LiteralNode(2));
 	}
 	
 	@Test
@@ -67,12 +85,40 @@ public class DeterministicOrNodeTest {
 	
 	@Test
 	public void testOrNodeHasFalseAsChild() throws DDNNFException {
-		final INode falseNode = new FalseNode(0);
-		final INode trueNode = new TrueNode(1);
-		final INode litNode2 = new LiteralNode(2, -1);
+		final INode falseNode = FalseNode.getInstance();
+		final INode trueNode = TrueNode.getInstance();
+		final INode litNode2 = new LiteralNode(-1);
 		final INode andNode3 = new DecomposableAndNode(3, Stream.of(litNode2, trueNode).collect(Collectors.toList()));
 		final INode andNode4 = new DecomposableAndNode(4, Stream.of(falseNode).collect(Collectors.toList()));
 		new DeterministicOrNode(5, 1, andNode4, andNode3);
+	}
+	
+	@Test
+	public void testDisjWithFalse1() throws DDNNFException {
+		final DeterministicOrNode orNode = new DeterministicOrNode(0, 1, FalseNode.getInstance(), new LiteralNode(1));
+		assertEquals(Collections.singletonList(Collections.singletonMap(1, true)), orNode.models());
+	}
+	
+	@Test
+	public void testDisjWithFalse2() throws DDNNFException {
+		final DeterministicOrNode orNode = new DeterministicOrNode(0, 1, new LiteralNode(1), FalseNode.getInstance());
+		assertEquals(Collections.singletonList(Collections.singletonMap(1, true)), orNode.models());
+	}
+	
+	@Test
+	public void testEquals() throws DDNNFException {
+		EqualsVerifier.forClass(DeterministicOrNode.class)
+			.withNonnullFields("child1", "child2")
+			.withIgnoredFields("models")
+			.withCachedHashCode("hash", "computeHash", new DeterministicOrNode(0, 1, new LiteralNode(1), new LiteralNode(-1)))
+			.verify();
+	}
+	
+	@Test
+	public void testRevEquals() throws DDNNFException {
+		final LiteralNode posNode = new LiteralNode(1);
+		final LiteralNode negNode = new LiteralNode(-1);
+		assertEquals(new DeterministicOrNode(0, 1, posNode, negNode), new DeterministicOrNode(0, 1, negNode, posNode));
 	}
 	
 }

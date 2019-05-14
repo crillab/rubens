@@ -26,8 +26,10 @@ package fr.cril.rubens.cnf.ddnnf;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -41,6 +43,10 @@ import java.util.stream.Collectors;
  */
 public class DecomposableAndNode extends AbstractNode {
 	
+	private final List<INode> children;
+	
+	private final int hash;
+
 	/**
 	 * Builds a decomposable AND nodes given its node index and its children.
 	 * 
@@ -53,11 +59,17 @@ public class DecomposableAndNode extends AbstractNode {
 	 * @throws DDNNFException if the node is not decomposable
 	 */
 	public DecomposableAndNode(final int nodeIndex, final List<INode> children) throws DDNNFException {
-		super(nodeIndex, computeModels(nodeIndex, children));
+		super(computeModels(nodeIndex, children));
+		this.children = children;
+		this.hash = computeHash();
+	}
+
+	private int computeHash() {
+		return this.children.stream().mapToInt(Object::hashCode).reduce(0, (a,b) -> a|b);
 	}
 
 	private static List<Map<Integer, Boolean>> computeModels(final int nodeIndex, final List<INode> children) throws DDNNFException {
-		if(children.isEmpty()) {
+		if(children == null || children.isEmpty() || children.stream().anyMatch(Objects::isNull)) {
 			throw new IllegalArgumentException();
 		}
 		checkDecomposability(nodeIndex, children);
@@ -96,6 +108,20 @@ public class DecomposableAndNode extends AbstractNode {
 		mod1.entrySet().stream().forEach(e -> result.put(e.getKey(), e.getValue()));
 		mod2.entrySet().stream().forEach(e -> result.put(e.getKey(), e.getValue()));
 		return result;
+	}
+	
+	@Override
+	public final boolean equals(final Object obj) {
+		if(!(obj instanceof DecomposableAndNode)) {
+			return false;
+		}
+		final DecomposableAndNode other = (DecomposableAndNode) obj;
+		return new HashSet<>(this.children).equals(new HashSet<>(other.children));
+	}
+
+	@Override
+	public final int hashCode() {
+		return this.hash;
 	}
 
 }

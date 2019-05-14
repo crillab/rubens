@@ -29,17 +29,38 @@ import java.util.Collections;
 /**
  * The node corresponding to the <code>true</code> truth value.
  * 
+ * This class implements the singleton design pattern; call {@link TrueNode#getInstance()} to get its instance.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 public class TrueNode extends AbstractNode {
 	
+	private static TrueNode instance = null;
+	
 	/**
-	 * Builds a <code>true</code> node with its node index.
+	 * Returns the <code>true</code> node.
 	 * 
-	 * @param nodeIndex the node index
+	 * @return the <code>true</code> node
 	 */
-	public TrueNode(final int nodeIndex) {
-		super(nodeIndex, Collections.singletonList(Collections.emptyMap()));
+	public static synchronized TrueNode getInstance() {
+		if(instance == null) {
+			instance = new TrueNode();
+		}
+		return instance;
+	}
+	
+	private TrueNode() {
+		super(Collections.singletonList(Collections.emptyMap()));
+	}
+
+	@Override
+	public final boolean equals(final Object obj) {
+		return this == obj;
+	}
+
+	@Override
+	public final int hashCode() {
+		return Integer.MAX_VALUE;
 	}
 
 }

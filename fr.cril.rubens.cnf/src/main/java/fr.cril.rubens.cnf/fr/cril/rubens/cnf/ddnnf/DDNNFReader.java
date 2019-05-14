@@ -155,7 +155,7 @@ public class DDNNFReader {
 			throw DDNNFException.newErrorAtNode(nodeIndex, "wrong param count for AND node");
 		}
 		if(nArgs == 0) {
-			this.nodes[nodeIndex] = new TrueNode(nodeIndex);
+			this.nodes[nodeIndex] = TrueNode.getInstance();
 		} else {
 			final List<INode> children = new ArrayList<>();
 			for(int i=2; i<words.length; ++i) {
@@ -179,7 +179,7 @@ public class DDNNFReader {
 			if(cflVar != 0) {
 				throw DDNNFException.newErrorAtNode(nodeIndex, "a var index is given although OR node has no child");
 			}
-			this.nodes[nodeIndex] = new FalseNode(nodeIndex);
+			this.nodes[nodeIndex] = FalseNode.getInstance();
 		} else if(nArgs == 2) {
 			if(cflVar < 1 || cflVar > this.nDeclaredVars) {
 				throw DDNNFException.newErrorAtNode(nodeIndex, "an undefined var index is given for OR node");
@@ -207,7 +207,7 @@ public class DDNNFReader {
 				}
 			}
 		}
-		this.nodes[nodeIndex] = new LiteralNode(nodeIndex, lit);
+		this.nodes[nodeIndex] = new LiteralNode(lit);
 	}
 	
 	private int readChildNodeIndex(final int nodeIndex, final String[] words, int wordIndex) throws DDNNFException {

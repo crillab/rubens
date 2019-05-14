@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -53,7 +54,7 @@ public class DDNNF {
 	 * @param nVars the number of variables
 	 */
 	public DDNNF(final int nVars) {
-		this(nVars, new TrueNode(0));
+		this(nVars, TrueNode.getInstance());
 	}
 
 	/**
@@ -111,6 +112,26 @@ public class DDNNF {
 		final Set<Integer> cp2 = new TreeSet<>(currentFulfilled);
 		cp2.add(missing.get(nextMissing));
 		iterateOverFulfilledModels(model, modelConsumer, missing, nextMissing + 1, cp2);
+	}
+
+	@Override
+	public final int hashCode() {
+		return Objects.hash(nVars, root);
+	}
+
+	@Override
+	public final boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DDNNF)) {
+			return false;
+		}
+		DDNNF other = (DDNNF) obj;
+		return nVars == other.nVars && Objects.equals(root, other.root);
 	}
 
 }

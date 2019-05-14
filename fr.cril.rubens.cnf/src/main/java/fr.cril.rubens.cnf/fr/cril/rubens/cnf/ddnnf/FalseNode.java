@@ -29,17 +29,38 @@ import java.util.Collections;
 /**
  * The node corresponding to the <code>false</code> truth value.
  * 
+ * This class implements the singleton design pattern; call {@link FalseNode#getInstance()} to get its instance.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 public class FalseNode extends AbstractNode {
-
+	
+	private static FalseNode instance = null;
+	
 	/**
-	 * Builds a <code>false</code> node with its node index.
+	 * Returns the <code>false</code> node.
 	 * 
-	 * @param nodeIndex the node index
+	 * @return the <code>false</code> node
 	 */
-	public FalseNode(final int nodeIndex) {
-		super(nodeIndex, Collections.emptyList());
+	public static synchronized FalseNode getInstance() {
+		if(instance == null) {
+			instance = new FalseNode();
+		}
+		return instance;
+	}
+
+	private FalseNode() {
+		super(Collections.emptyList());
+	}
+	
+	@Override
+	public final boolean equals(final Object obj) {
+		return this == obj;
+	}
+
+	@Override
+	public final int hashCode() {
+		return Integer.MIN_VALUE;
 	}
 
 }

@@ -51,13 +51,11 @@ public class Utils {
 	
 	public static INode buildXor(final int v1, final int v2) {
 		try {
-			return new DeterministicOrNode(nextIndex++, v1,
-					new DecomposableAndNode(nextIndex++,
-							Stream.of(new LiteralNode(nextIndex++, v1), new LiteralNode(nextIndex++, -v2))
-									.collect(Collectors.toList())),
-					new DecomposableAndNode(nextIndex++,
-							Stream.of(new LiteralNode(nextIndex++, -v1), new LiteralNode(nextIndex++, v2))
-									.collect(Collectors.toList())));
+			final DecomposableAndNode and1 = new DecomposableAndNode(nextIndex++, Stream.of(new LiteralNode(v1), new LiteralNode(-v2)).collect(Collectors.toList()));
+			nextIndex += 2;
+			final DecomposableAndNode and2 = new DecomposableAndNode(nextIndex++, Stream.of(new LiteralNode(-v1), new LiteralNode(v2)).collect(Collectors.toList()));
+			nextIndex += 2;
+			return new DeterministicOrNode(nextIndex++, v1, and1, and2);
 		} catch (DDNNFException e) {
 			throw new IllegalArgumentException(e);
 		}

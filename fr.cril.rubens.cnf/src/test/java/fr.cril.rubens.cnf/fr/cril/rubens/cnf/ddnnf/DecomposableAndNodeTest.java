@@ -34,6 +34,8 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 public class DecomposableAndNodeTest {
 	
 	@Before
@@ -46,9 +48,19 @@ public class DecomposableAndNodeTest {
 		new DecomposableAndNode(1, Collections.emptyList());
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullChildren() throws DDNNFException {
+		new DecomposableAndNode(1, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullChild() throws DDNNFException {
+		new DecomposableAndNode(1, Collections.singletonList(null));
+	}
+	
 	@Test(expected=DDNNFException.class)
 	public void testNotDecomposable() throws DDNNFException {
-		new DecomposableAndNode(1, Stream.of(new LiteralNode(1, 1), new LiteralNode(2, -1)).collect(Collectors.toList()));
+		new DecomposableAndNode(1, Stream.of(new LiteralNode(1), new LiteralNode(-1)).collect(Collectors.toList()));
 	}
 	
 	@Test
@@ -60,6 +72,15 @@ public class DecomposableAndNodeTest {
 				Utils.buildModel(-1, 2, 3, -4),
 				Utils.buildModel(-1, 2, -3, 4)
 		).collect(Collectors.toSet()), new HashSet<>(node.models()));
+	}
+	
+	@Test
+	public void testEquals() throws DDNNFException {
+		EqualsVerifier.forClass(DecomposableAndNode.class)
+			.withNonnullFields("children")
+			.withIgnoredFields("models")
+			.withCachedHashCode("hash", "computeHash", new DecomposableAndNode(0, Stream.of(TrueNode.getInstance(), FalseNode.getInstance()).collect(Collectors.toList())))
+			.verify();
 	}
 	
 }

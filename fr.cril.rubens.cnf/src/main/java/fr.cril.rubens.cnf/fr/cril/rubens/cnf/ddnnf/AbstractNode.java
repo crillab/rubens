@@ -32,9 +32,7 @@ import java.util.Map;
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
-public class AbstractNode implements INode {
-	
-	private final int nodeIndex;
+public abstract class AbstractNode implements INode {
 	
 	private final List<Map<Integer, Boolean>> models;
 
@@ -44,24 +42,13 @@ public class AbstractNode implements INode {
 	 * @param nodeIndex the node's unique identifier
 	 * @param models the set of models of the formula rooted by this node.
 	 */
-	protected AbstractNode(final int nodeIndex, final List<Map<Integer, Boolean>> models) {
-		this.nodeIndex = nodeIndex;
+	protected AbstractNode(final List<Map<Integer, Boolean>> models) {
 		this.models = models;
 	}
 
 	@Override
 	public List<Map<Integer, Boolean>> models() {
 		return this.models;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.nodeIndex;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return (obj instanceof AbstractNode) && this.hashCode() == ((AbstractNode) obj).hashCode();
 	}
 
 }

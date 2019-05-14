@@ -27,20 +27,32 @@ package fr.cril.rubens.cnf.ddnnf;
 import java.util.Collections;
 
 /**
- * A leaf node labelled by a literal.
+ * A leaf node labeled by a literal.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 public class LiteralNode extends AbstractNode {
 
+	private final int dimacsLiteral;
+
 	/**
-	 * Builds a leaf node given its node index and the dimacs literal that labels it.
+	 * Builds a leaf node given the dimacs literal that labels it.
 	 * 
-	 * @param nodeIndex the node index
 	 * @param dimacsLiteral the dimacs literal
 	 */
-	public LiteralNode(final int nodeIndex, final int dimacsLiteral) {
-		super(nodeIndex, Collections.singletonList(Collections.singletonMap(Math.abs(dimacsLiteral), dimacsLiteral > 0)));
+	public LiteralNode(final int dimacsLiteral) {
+		super(Collections.singletonList(Collections.singletonMap(Math.abs(dimacsLiteral), dimacsLiteral > 0)));
+		this.dimacsLiteral = dimacsLiteral;
+	}
+	
+	@Override
+	public final boolean equals(final Object obj) {
+		return (obj instanceof LiteralNode) && (this.dimacsLiteral == ((LiteralNode) obj).dimacsLiteral);
+	}
+
+	@Override
+	public final int hashCode() {
+		return this.dimacsLiteral;
 	}
 
 }
