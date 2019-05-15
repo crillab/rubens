@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,7 +68,7 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 
 	private final List<Integer> objWeightsNegativeLits;
 
-	private final Map<Set<Integer>, BigInteger> modelWeights;
+	private final Map<List<Integer>, BigInteger> modelWeights;
 
 	/**
 	 * Build a new empty instance.
@@ -79,7 +78,7 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 		this.objWeightsPositiveLits = Collections.emptyList();
 		this.objWeightsNegativeLits = Collections.emptyList();
 		this.modelWeights = new HashMap<>();
-		this.modelWeights.put(Collections.emptySet(), BigInteger.ONE);
+		this.modelWeights.put(Collections.emptyList(), BigInteger.ONE);
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 		super(cnfInstance);
 		this.objWeightsPositiveLits = randomObjectiveWeights();
 		this.objWeightsNegativeLits = randomObjectiveWeights();
-		final Set<Set<Integer>> models = super.models();
+		final List<List<Integer>> models = super.models();
 		this.modelWeights = new HashMap<>();
 		models.stream().forEach(m -> this.modelWeights.put(m, modelWeight(m)));
 	}
@@ -105,7 +104,7 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 		return weights;
 	}
 
-	private BigInteger modelWeight(final Set<Integer> model) {
+	private BigInteger modelWeight(final List<Integer> model) {
 		BigInteger weight = BigInteger.ONE;
 		for(final Integer lit : model) {
 			final int intWeight = lit > 0 ? this.objWeightsPositiveLits.get(lit-1) : this.objWeightsNegativeLits.get(-lit-1);
@@ -119,7 +118,7 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 	 * 
 	 * @return the weights associated to the models
 	 */
-	public Map<Set<Integer>, BigInteger> modelWeights() {
+	public Map<List<Integer>, BigInteger> modelWeights() {
 		return Collections.unmodifiableMap(this.modelWeights);
 	}
 
@@ -174,8 +173,8 @@ public class WeightedModelsCnfInstance extends CnfInstance {
 
 	private void writeWeightedModels(final OutputStream os) throws IOException {
 		try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-			Set<Set<Integer>> models = super.models();
-			for(final Set<Integer> model : models) {
+			List<List<Integer>> models = super.models();
+			for(final List<Integer> model : models) {
 				writer.write(this.modelWeights.get(model).toString());
 				writer.write(' ');
 				writeTuple(writer, model);

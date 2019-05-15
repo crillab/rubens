@@ -26,7 +26,6 @@ package fr.cril.rubens.cnf.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,7 +63,7 @@ public class NewClauseTranslator implements InstanceTranslator<CnfInstance> {
 		final List<List<Integer>> newClauses = new ArrayList<>(instance.clauses());
 		newClauses.add(Stream.of(lit).collect(Collectors.toList()));
 		final int finalLit = lit;
-		final Set<Set<Integer>> newModels = instance.models().stream().filter(m -> m.contains(finalLit)).collect(Collectors.toSet());
+		final List<List<Integer>> newModels = instance.models().stream().filter(m -> m.get(Math.abs(finalLit)-1) == finalLit).collect(Collectors.toList());
 		return new CnfInstance(instance.nVars(), newClauses, newModels);
 	}
 

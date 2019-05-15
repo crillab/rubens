@@ -30,7 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,7 +46,7 @@ public class CnfInstanceTest {
 	@Before
 	public void setUp() {
 		this.instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Stream.of(Stream.of(1).collect(Collectors.toSet())).collect(Collectors.toSet()));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 	}
 	
 	@Test
@@ -55,7 +54,7 @@ public class CnfInstanceTest {
 		final CnfInstance cnfInstance = new CnfInstance();
 		assertEquals(0, cnfInstance.nVars());
 		assertTrue(cnfInstance.clauses().isEmpty());
-		final Set<Set<Integer>> models = cnfInstance.models();
+		final List<List<Integer>> models = cnfInstance.models();
 		assertEquals(1, models.size());
 		assertTrue(models.iterator().next().isEmpty());
 	}
@@ -74,9 +73,9 @@ public class CnfInstanceTest {
 	
 	@Test
 	public void testModels() {
-		final Set<Set<Integer>> instanceModels = this.instance.models();
+		final List<List<Integer>> instanceModels = this.instance.models();
 		assertEquals(1, instanceModels.size());
-		assertEquals(Stream.of(1).collect(Collectors.toSet()), instanceModels.iterator().next());
+		assertEquals(Stream.of(1).collect(Collectors.toList()), instanceModels.iterator().next());
 	}
 	
 	@Test

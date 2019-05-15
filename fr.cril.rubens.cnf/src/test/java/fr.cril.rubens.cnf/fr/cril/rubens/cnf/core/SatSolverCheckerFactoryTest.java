@@ -62,13 +62,13 @@ public class SatSolverCheckerFactoryTest {
 	@Test
 	public void testUnsat() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptySet());
+				Collections.emptyList());
 		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns UNSATISFIABLE\n"));
 	}
 	
 	@Test
 	public void testSat() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 1 0\n"));
 	}
 	
@@ -80,13 +80,13 @@ public class SatSolverCheckerFactoryTest {
 	@Test
 	public void testNoStatusLine() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptySet());
+				Collections.emptyList());
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\n"));
 	}
 	
 	@Test
 	public void testMisplacedStatusLine() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\nv 1 0\nSATISFIABLE\n"));
 	}
 	
@@ -112,56 +112,56 @@ public class SatSolverCheckerFactoryTest {
 	
 	@Test
 	public void testSatButNoValues() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\n"));
 	}
 	
 	@Test
 	public void testWrongModel() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv -1 0\n"));
 	}
 	
 	@Test
 	public void testNoFinalZero() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 1\n"));
 	}
 	
 	@Test
 	public void testZeroInTheMiddle() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 0 1\n"));
 	}
 	
 	@Test
 	public void testZeroIsNotFinal() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 0\nv 1 0\n"));
 	}
 	
 	@Test
 	public void testSingleV() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv\nv 1\n"));
 	}
 	
 	@Test
 	public void testVNotFollowedBySpace() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nvv\nv 1\n"));
 	}
 	
 	@Test
 	public void testWrongLiteral() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv v 1\n"));
 	}
 	
 	@Test
 	public void testUnsatButValues() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptySet());
+				Collections.emptyList());
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns UNSATISFIABLE\nv -1 0\n"));
 	}
 	

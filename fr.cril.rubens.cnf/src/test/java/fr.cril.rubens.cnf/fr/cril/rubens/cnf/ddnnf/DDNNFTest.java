@@ -27,10 +27,9 @@ package fr.cril.rubens.cnf.ddnnf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,29 +63,29 @@ public class DDNNFTest {
 		final INode litNode = new LiteralNode(-1);
 		final INode andNode = new DecomposableAndNode(3, Stream.of(litNode, trueNode).collect(Collectors.toList()));
 		final DDNNF ddnnf = new DDNNF(3, andNode);
-		final Set<Set<Integer>> actual = new HashSet<>(Utils.models(ddnnf));
-		final Set<Set<Integer>> expected = Stream.of(
-			Stream.of(-1, -2, -3).collect(Collectors.toSet()),
-			Stream.of(-1, -2, 3).collect(Collectors.toSet()),
-			Stream.of(-1, 2, -3).collect(Collectors.toSet()),
-			Stream.of(-1, 2, 3).collect(Collectors.toSet())
-		).collect(Collectors.toSet());
+		final List<List<Integer>> actual = new ArrayList<>(Utils.models(ddnnf));
+		final List<List<Integer>> expected = Stream.of(
+			Stream.of(-1, -2, -3).collect(Collectors.toList()),
+			Stream.of(-1, -2, 3).collect(Collectors.toList()),
+			Stream.of(-1, 2, -3).collect(Collectors.toList()),
+			Stream.of(-1, 2, 3).collect(Collectors.toList())
+		).collect(Collectors.toList());
 		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void testNoConstraints() {
 		final DDNNF ddnnf = new DDNNF(1);
-		final List<Set<Integer>> models = Utils.models(ddnnf);
+		final List<List<Integer>> models = Utils.models(ddnnf);
 		assertEquals(2, models.size());
-		assertTrue("models should contain [1] (models are "+models+")", models.contains(Collections.singleton(1)));
-		assertTrue("models should contain [-1] (models are "+models+")", models.contains(Collections.singleton(-1)));
+		assertTrue("models should contain [1] (models are "+models+")", models.contains(Collections.singletonList(1)));
+		assertTrue("models should contain [-1] (models are "+models+")", models.contains(Collections.singletonList(-1)));
 	}
 	
 	@Test
 	public void testNoVars() {
 		final DDNNF ddnnf = new DDNNF(0, TrueNode.getInstance());
-		assertEquals(Collections.singletonList(Collections.emptySet()), Utils.models(ddnnf));
+		assertEquals(Collections.singletonList(Collections.emptyList()), Utils.models(ddnnf));
 	}
 	
 	@Test

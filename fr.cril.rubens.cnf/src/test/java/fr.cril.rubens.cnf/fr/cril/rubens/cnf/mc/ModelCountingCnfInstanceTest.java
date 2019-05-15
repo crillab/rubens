@@ -47,7 +47,7 @@ public class ModelCountingCnfInstanceTest {
 	@Before
 	public void setUp() {
 		this.decorated = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Stream.of(Stream.of(1).collect(Collectors.toSet())).collect(Collectors.toSet()));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		this.instance = new ModelCountingCnfInstance(decorated);
 	}
 	

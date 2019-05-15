@@ -28,7 +28,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -108,7 +107,7 @@ public class SatSolverCheckerFactory extends ASatCheckerFactory<CnfInstance> {
 		if(!lastZero) {
 			return CheckResult.newError("no final 0 in values");
 		}
-		final Set<Integer> model = Arrays.stream(arrayModel).boxed().collect(Collectors.toSet());
+		final List<Integer> model = Arrays.stream(arrayModel).boxed().collect(Collectors.toList());
 		return instance.models().contains(model) ? CheckResult.SUCCESS : CheckResult.newError("wrong model provided: "+model);
 	}
 

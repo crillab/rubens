@@ -65,21 +65,21 @@ public class ModelCounterCheckerFactoryTest {
 	public void testUnsat() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptySet()));
+				Collections.emptyList()));
 		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns 0\n"));
 	}
 	
 	@Test
 	public void testSat() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
-				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1))));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1))));
 		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns 1\n"));
 	}
 	
 	@Test
 	public void testWrongCount() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
-				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1))));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1))));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns 0\n"));
 	}
 	
@@ -92,7 +92,7 @@ public class ModelCounterCheckerFactoryTest {
 	public void testNoStatusLine() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptySet()));
+				Collections.emptyList()));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\n"));
 	}
 	

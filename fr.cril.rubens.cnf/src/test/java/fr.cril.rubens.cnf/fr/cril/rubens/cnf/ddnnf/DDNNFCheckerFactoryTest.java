@@ -66,36 +66,36 @@ public class DDNNFCheckerFactoryTest {
 	
 	@Test
 	public void testOk() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 1 0 1\nL 1"));
 	}
 	
 	@Test
 	public void testReadError() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertFalse(factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1").isSuccessful());
 	}
 	
 	@Test
 	public void testWrongDDNNFModel() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertFalse(factory.checkSoftwareOutput(instance, "nnf 1 0 1\nA 0").isSuccessful());
 	}
 	
 	@Test
 	public void testMissingDDNNFModel() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertFalse(factory.checkSoftwareOutput(instance, "nnf 1 0 1\nO 0 0").isSuccessful());
 	}
 	
 	@Test
 	public void testNoConstraints() {
 		final CnfInstance instance = new CnfInstance(2, Collections.emptyList(), Stream.of(
-				Stream.of(-1, -2).collect(Collectors.toSet()),
-				Stream.of(1, -2).collect(Collectors.toSet()),
-				Stream.of(-1, 2).collect(Collectors.toSet()),
-				Stream.of(1, 2).collect(Collectors.toSet())
-		).collect(Collectors.toSet()));
+				Stream.of(-1, -2).collect(Collectors.toList()),
+				Stream.of(-1, 2).collect(Collectors.toList()),
+				Stream.of(1, -2).collect(Collectors.toList()),
+				Stream.of(1, 2).collect(Collectors.toList())
+		).collect(Collectors.toList()));
 		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 2 0 2\nO 0 0\nA 0\n"));
 	}
 	
@@ -111,7 +111,7 @@ public class DDNNFCheckerFactoryTest {
 	public void testDoNotIgnPreamble() {
 		final MethodOption opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
 		opt.apply("off");
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertFalse(factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1").isSuccessful());
 	}
 	
@@ -119,7 +119,7 @@ public class DDNNFCheckerFactoryTest {
 	public void testIgnPreamble() {
 		final MethodOption opt = this.factory.getOptions().stream().filter(o -> o.getName().equals("ignorePreamble")).findFirst().orElseThrow();
 		opt.apply("on");
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singleton(Collections.singleton(1)));
+		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
 		assertEquals(CheckResult.SUCCESS, factory.checkSoftwareOutput(instance, "nnf 0 0 1\nL 1"));
 	}
 	

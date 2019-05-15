@@ -53,7 +53,7 @@ public class CnfTranslatorTest {
 	@Test
 	public void testCanBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Stream.of(Stream.of(1).collect(Collectors.toSet())).collect(Collectors.toSet()));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		assertTrue(this.adapted.canBeAppliedTo(instance));
 		assertTrue(this.adapter.canBeAppliedTo(instance));
 	}
@@ -61,7 +61,7 @@ public class CnfTranslatorTest {
 	@Test
 	public void testCannotBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()),
-				Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.emptySet());
+				Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.emptyList());
 		assertFalse(this.adapted.canBeAppliedTo(instance));
 		assertFalse(this.adapter.canBeAppliedTo(instance));
 	}
@@ -69,7 +69,7 @@ public class CnfTranslatorTest {
 	@Test
 	public void testApply() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Stream.of(Stream.of(1).collect(Collectors.toSet())).collect(Collectors.toSet()));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstanceOfAdapted = this.adapted.translate(instance);
 		final CnfInstance newInstanceOfAdapter = this.adapter.translate(instance);
 		assertEquals(newInstanceOfAdapted, newInstanceOfAdapter);

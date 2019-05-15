@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,7 +38,7 @@ public class Utils {
 	
 	private static int nModels;
 	
-	private static List<Set<Integer>> models = new ArrayList<>();
+	private static List<List<Integer>> models = new ArrayList<>();
 	
 	public static void resetNextIndex() {
 		nextIndex = 0;
@@ -75,17 +74,17 @@ public class Utils {
 		return nModels;
 	}
 	
-	private static void incModelCounter(final Set<Integer> model) {
+	private static void incModelCounter(final List<Integer> model) {
 		nModels++;
 	}
 	
-	public static List<Set<Integer>> models(final DDNNF ddnnf) {
+	public static List<List<Integer>> models(final DDNNF ddnnf) {
 		models.clear();
 		ddnnf.iterateModels(Utils::storeModel);
 		return Collections.unmodifiableList(models);
 	}
 	
-	private static void storeModel(final Set<Integer> model) {
+	private static void storeModel(final List<Integer> model) {
 		models.add(model);
 	}
 

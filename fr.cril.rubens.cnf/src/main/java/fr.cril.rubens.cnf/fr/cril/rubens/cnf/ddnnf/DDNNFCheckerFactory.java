@@ -25,9 +25,8 @@ package fr.cril.rubens.cnf.ddnnf;
  */
 
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,7 +73,7 @@ public class DDNNFCheckerFactory extends ASatCheckerFactory<CnfInstance> {
 		} catch (final DDNNFException e) {
 			return CheckResult.newError(e.getMessage());
 		}
-		final Set<Set<Integer>> models = new HashSet<>(instance.models());
+		final List<List<Integer>> models = new ArrayList<>(instance.models());
 		try {
 			formula.iterateModels(m -> {
 				if(!models.remove(m)) {

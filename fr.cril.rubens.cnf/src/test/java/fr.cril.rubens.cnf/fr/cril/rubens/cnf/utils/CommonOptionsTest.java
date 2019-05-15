@@ -99,7 +99,7 @@ public class CommonOptionsTest {
 		}
 		
 		private boolean getIgnUnsat() {
-			return ignoreInstance(new CnfInstance(1, Stream.of(Collections.singletonList(1), Collections.singletonList(-1)).collect(Collectors.toList()), Collections.emptySet()));
+			return ignoreInstance(new CnfInstance(1, Stream.of(Collections.singletonList(1), Collections.singletonList(-1)).collect(Collectors.toList()), Collections.emptyList()));
 		}
 		
 	}

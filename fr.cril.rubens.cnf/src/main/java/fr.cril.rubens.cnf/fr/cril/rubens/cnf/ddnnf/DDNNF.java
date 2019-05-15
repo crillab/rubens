@@ -77,13 +77,14 @@ public class DDNNF {
 	 * 
 	 * @param modelConsumer the model consumer
 	 */
-	public void iterateModels(final Consumer<Set<Integer>> modelConsumer) {
+	public void iterateModels(final Consumer<List<Integer>> modelConsumer) {
 		if(this.nVars == 0) {
-			modelConsumer.accept(Collections.emptySet());
+			modelConsumer.accept(Collections.emptyList());
 			return;
 		}
 		for(Map<Integer, Boolean> rootModel : this.root.models()) {
-			final Set<Integer> model = rootModel.entrySet().stream().map(e -> e.getValue() ? e.getKey() : -e.getKey()).collect(Collectors.toSet());
+			final List<Integer> model = rootModel.entrySet().stream().map(e -> e.getValue() ? e.getKey() : -e.getKey())
+					.sorted((a,b) -> Integer.compare(Math.abs(a), Math.abs(b))).collect(Collectors.toList());
 			if(model.size() == this.nVars) {
 				modelConsumer.accept(model);
 			} else {
@@ -92,7 +93,7 @@ public class DDNNF {
 		}
 	}
 
-	private void iterateOverFulfilledModels(final Set<Integer> model, final Consumer<Set<Integer>> modelConsumer) {
+	private void iterateOverFulfilledModels(final List<Integer> model, final Consumer<List<Integer>> modelConsumer) {
 		boolean[] missing = new boolean[this.nVars];
 		Arrays.fill(missing, true);
 		model.stream().map(Math::abs).forEach(i -> missing[i-1] = false);
@@ -100,10 +101,10 @@ public class DDNNF {
 		iterateOverFulfilledModels(model, modelConsumer, missingList, 0, new TreeSet<>());
 	}
 
-	private void iterateOverFulfilledModels(final Set<Integer> model, final Consumer<Set<Integer>> modelConsumer, final List<Integer> missing, final int nextMissing, Set<Integer> currentFulfilled) {
+	private void iterateOverFulfilledModels(final List<Integer> model, final Consumer<List<Integer>> modelConsumer, final List<Integer> missing, final int nextMissing, Set<Integer> currentFulfilled) {
 		if(nextMissing == missing.size()) {
 			currentFulfilled.addAll(model);
-			modelConsumer.accept(currentFulfilled);
+			modelConsumer.accept(currentFulfilled.stream().sorted((a,b) -> Integer.compare(Math.abs(a), Math.abs(b))).collect(Collectors.toList()));
 			return;
 		}
 		final Set<Integer> cp1 = new TreeSet<>(currentFulfilled);

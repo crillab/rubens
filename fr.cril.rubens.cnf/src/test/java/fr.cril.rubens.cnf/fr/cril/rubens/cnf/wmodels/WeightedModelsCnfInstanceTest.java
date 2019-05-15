@@ -50,7 +50,7 @@ public class WeightedModelsCnfInstanceTest {
 	@Before
 	public void setUp() {
 		this.decorated = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Stream.of(Stream.of(1).collect(Collectors.toSet())).collect(Collectors.toSet()));
+				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		this.instance = new WeightedModelsCnfInstance(decorated);
 	}
 	
@@ -98,7 +98,7 @@ public class WeightedModelsCnfInstanceTest {
 	public void testWModsOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(WeightedModelsCnfInstance.WMODS_EXT, outputStream);
-		assertEquals(this.instance.modelWeights().get(Stream.of(1).collect(Collectors.toSet()))+" 1 0", new String(outputStream.toByteArray()).trim());
+		assertEquals(this.instance.modelWeights().get(Stream.of(1).collect(Collectors.toList()))+" 1 0", new String(outputStream.toByteArray()).trim());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)

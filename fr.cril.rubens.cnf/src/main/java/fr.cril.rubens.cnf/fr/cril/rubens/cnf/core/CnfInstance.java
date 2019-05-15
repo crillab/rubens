@@ -30,9 +30,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +40,10 @@ import fr.cril.rubens.specs.Instance;
  * An {@link Instance} implementation dedicated to the CNF format.
  * 
  * Stores both the CNF formula and its set of models.
+ * 
+ * Models are stored using a sorted list of models.
+ * Each model is represented by a sorted list of integers.
+ * Both orders are lexicographic.
  * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
@@ -57,7 +59,7 @@ public class CnfInstance implements Instance {
 
 	private final List<List<Integer>> clauses;
 
-	private final Set<Set<Integer>> models;
+	private final List<List<Integer>> models;
 	
 	/**
 	 * Builds a new (trivial) CNF instance containing no variables and no clauses.
@@ -67,7 +69,7 @@ public class CnfInstance implements Instance {
 	public CnfInstance() {
 		this.nVars = 0;
 		this.clauses = Collections.emptyList();
-		this.models = Stream.of(Collections.unmodifiableSet(new HashSet<Integer>())).collect(Collectors.toSet());
+		this.models = Collections.singletonList(Collections.emptyList());
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class CnfInstance implements Instance {
 		this.models = instance.models();
 	}
 	
-	public CnfInstance(final int nVars, final List<List<Integer>> clauses, final Set<Set<Integer>> models) {
+	public CnfInstance(final int nVars, final List<List<Integer>> clauses, final List<List<Integer>> models) {
 		this.nVars = nVars;
 		this.clauses = clauses;
 		this.models = models;
@@ -118,8 +120,8 @@ public class CnfInstance implements Instance {
 	 * type
 	 * @return the set of models the CNF instance contains
 	 */
-	public Set<Set<Integer>> models() {
-		return this.models.stream().map(Collections::unmodifiableSet).collect(Collectors.toUnmodifiableSet());
+	public List<List<Integer>> models() {
+		return this.models.stream().map(Collections::unmodifiableList).collect(Collectors.toUnmodifiableList());
 	}
 
 	@Override
@@ -140,7 +142,7 @@ public class CnfInstance implements Instance {
 
 	private void writeModels(final OutputStream os) throws IOException {
 		try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-			for(final Set<Integer> cl : this.models) {
+			for(final List<Integer> cl : this.models) {
 				writeTuple(writer, cl);
 			}
 			writer.flush();

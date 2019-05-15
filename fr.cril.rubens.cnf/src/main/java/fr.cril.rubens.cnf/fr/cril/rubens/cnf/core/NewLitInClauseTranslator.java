@@ -27,13 +27,11 @@ package fr.cril.rubens.cnf.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
@@ -78,7 +76,7 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 		IntStream.range(0, clauseIndex).boxed().map(clauses::get).forEach(newClauses::add);
 		clauses.add(newClause);
 		IntStream.range(1+clauseIndex, clauses.size()).boxed().map(clauses::get).forEach(newClauses::add);
-		final Set<Set<Integer>> models = computeModels(nVars, newClauses);
+		final List<List<Integer>> models = computeModels(nVars, newClauses);
 		return new CnfInstance(instance.nVars(), newClauses, models);
 	}
 
@@ -114,7 +112,7 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 		return LiteralUtils.selectRandomLiteral(litCandidates);
 	}
 
-	private Set<Set<Integer>> computeModels(final int nVars, final List<List<Integer>> clauses) {
+	private List<List<Integer>> computeModels(final int nVars, final List<List<Integer>> clauses) {
 		final ISolver solver = SolverFactory.newDefault();
 		solver.setTimeoutOnConflicts(Integer.MAX_VALUE);
 		solver.newVar(nVars);
@@ -126,15 +124,15 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 			try {
 				solver.addClause(new VecInt(clArray));
 			} catch (ContradictionException e) {
-				return Collections.emptySet();
+				return Collections.emptyList();
 			}
 		}
-		final Set<Set<Integer>> models = new HashSet<>();
+		final List<List<Integer>> models = new ArrayList<>();
 		final ModelIterator iterator = new ModelIterator(solver);
 		try {
 			while(iterator.isSatisfiable()) {
 				final Set<Integer> model = Arrays.stream(iterator.model()).boxed().collect(Collectors.toSet());
-				final Set<Set<Integer>> fullModels = addFreeVars(model, nVars);
+				final List<List<Integer>> fullModels = addFreeVars(model, nVars);
 				models.addAll(fullModels);
 			}
 		} catch (final TimeoutException e) {
@@ -143,7 +141,7 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 		return models;
 	}
 
-	private Set<Set<Integer>> addFreeVars(final Set<Integer> model, final int nVars) {
+	private List<List<Integer>> addFreeVars(final Set<Integer> model, final int nVars) {
 		final List<Integer> freeVars = IntStream.range(1, nVars+1).boxed().collect(Collectors.toList());
 		model.stream().map(Math::abs).forEach(i -> freeVars.set(i-1, 0));
 		int i=0;
@@ -155,18 +153,29 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 				++i;
 			}
 		}
-		return addFreeVars(model, freeVars, 0);
+		final List<List<Integer>> models = addFreeVars(new ArrayList<>(model), freeVars, 0);
+		Collections.sort(models, (l1,l2) -> {
+			assert l1.size() == l2.size();
+			for(int j=0; j<l1.size(); ++j) {
+				final int cmp = Integer.compare(l1.get(j), l2.get(j));
+				if(cmp != 0) {
+					return cmp;
+				}
+			}
+			return 0;
+		});
+		return models;
 	}
 
-	private Set<Set<Integer>> addFreeVars(final Set<Integer> model, final List<Integer> freeVars, final int freeVarIndex) {
+	private List<List<Integer>> addFreeVars(final List<Integer> model, final List<Integer> freeVars, final int freeVarIndex) {
 		if(freeVarIndex == freeVars.size()) {
-			return Stream.of(model).collect(Collectors.toSet());
+			return Collections.singletonList(model.stream().sorted((a,b) -> Integer.compare(Math.abs(a), Math.abs(b))).collect(Collectors.toList()));
 		}
-		final Set<Set<Integer>> result = new HashSet<>();
-		final Set<Integer> model1 = new HashSet<>(model);
+		final List<List<Integer>> result = new ArrayList<>();
+		final List<Integer> model1 = new ArrayList<>(model);
 		model1.add(-freeVars.get(freeVarIndex));
 		result.addAll(addFreeVars(model1, freeVars, 1+freeVarIndex));
-		final Set<Integer> model2 = new HashSet<>(model);
+		final List<Integer> model2 = new ArrayList<>(model);
 		model2.add(freeVars.get(freeVarIndex));
 		result.addAll(addFreeVars(model2, freeVars, 1+freeVarIndex));
 		return result;
