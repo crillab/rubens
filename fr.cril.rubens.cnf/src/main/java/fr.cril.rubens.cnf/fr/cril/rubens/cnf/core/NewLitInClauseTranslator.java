@@ -155,7 +155,6 @@ public class NewLitInClauseTranslator implements InstanceTranslator<CnfInstance>
 		}
 		final List<List<Integer>> models = addFreeVars(new ArrayList<>(model), freeVars, 0);
 		Collections.sort(models, (l1,l2) -> {
-			assert l1.size() == l2.size();
 			for(int j=0; j<l1.size(); ++j) {
 				final int cmp = Integer.compare(l1.get(j), l2.get(j));
 				if(cmp != 0) {
