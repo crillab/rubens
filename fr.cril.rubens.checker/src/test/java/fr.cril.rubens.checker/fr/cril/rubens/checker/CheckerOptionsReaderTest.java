@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,12 +56,16 @@ import fr.cril.rubens.utils.ASoftwareExecutor;
 public class CheckerOptionsReaderTest {
 	
 	private CheckerOptionsReader optReader;
+
+	private Path exec;
 	
 	private static List<Path> tempFiles = new ArrayList<>();
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
 		this.optReader = CheckerOptionsReader.getInstance();
+		this.exec = Files.createTempFile("junit-rubens-", "", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+		tempFiles.add(this.exec);
 	}
 	
 	@Test
@@ -129,7 +134,7 @@ public class CheckerOptionsReaderTest {
 	
 	@Test
 	public void testDefaultMaxDepth() throws IOException {
-		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO"});
+		this.optReader.loadOptions(new String[] {"-e", this.exec.toAbsolutePath().toString(), "-m", "EE-CO"});
 		assertFalse(this.optReader.mustExit());
 		final Map<String, CheckerFactory<Instance>> factories = this.optReader.getFactories();
 		assertEquals(1, factories.size());
@@ -139,7 +144,7 @@ public class CheckerOptionsReaderTest {
 	
 	@Test
 	public void testSetMaxDepth() throws IOException {
-		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-d", "3"});
+		this.optReader.loadOptions(new String[] {"-e", this.exec.toAbsolutePath().toString(), "-m", "EE-CO", "-d", "3"});
 		assertFalse(this.optReader.mustExit());
 		final Map<String, CheckerFactory<Instance>> factories = this.optReader.getFactories();
 		assertEquals(1, factories.size());
@@ -191,6 +196,17 @@ public class CheckerOptionsReaderTest {
 	}
 	
 	@Test
+	public void testExecIsADirectory() throws IOException {
+		final Path file = Files.createTempDirectory("junit-rubens-");
+		tempFiles.add(file);
+		final Path dir = Files.createTempDirectory("junit-rubens-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+		tempFiles.add(dir);
+		this.optReader.loadOptions(new String[] {"-e", "dir", "-m", "CNF", "-o", file.toString()});
+		assertTrue(this.optReader.mustExit());
+		assertEquals(CheckerOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
+	}
+	
+	@Test
 	public void testNameIsBothAFactoryAndAFactoryCollection() {
 		final CheckerFactoryReflector instance = CheckerFactoryReflector.getInstance();
 		instance.addClass("ICCMA2019", ACheckerFactory.class);
@@ -204,7 +220,7 @@ public class CheckerOptionsReaderTest {
 	public void testMethodIsACollection() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
-		this.optReader.loadOptions(new String[] {"-e", "foo", "-m", "EE-CO", "-o", file.toString()});
+		this.optReader.loadOptions(new String[] {"-e", this.exec.toAbsolutePath().toString(), "-m", "EE-CO", "-o", file.toString()});
 		assertFalse(this.optReader.mustExit());
 		this.optReader.setMethod("ICCMA2019");
 		assertFalse(this.optReader.mustExit());

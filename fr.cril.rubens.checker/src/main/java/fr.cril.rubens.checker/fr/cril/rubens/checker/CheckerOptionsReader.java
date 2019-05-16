@@ -25,6 +25,9 @@ package fr.cril.rubens.checker;
  */
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +43,7 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 
+import fr.cril.rubens.checker.utils.PathComparator;
 import fr.cril.rubens.options.AppOptions;
 import fr.cril.rubens.reflection.CheckerFactoryCollectionReflector;
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
@@ -120,7 +124,7 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 		if(LOGGER.isInfoEnabled()) {
 			final CheckerFactoryReflector chkRefl = CheckerFactoryReflector.getInstance();
 			final CheckerFactoryCollectionReflector colChkRefl = CheckerFactoryCollectionReflector.getInstance();
-			final SortedMap<String, SortedSet<String>> families = new TreeMap<>(this::pathSort);
+			final SortedMap<String, SortedSet<String>> families = new TreeMap<>(new PathComparator());
 			chkRefl.familiesNames().stream().forEach(f -> families.computeIfAbsent(f, k -> new TreeSet<>()).addAll(chkRefl.family(f)));
 			colChkRefl.familiesNames().stream().forEach(f -> families.computeIfAbsent(f, k -> new TreeSet<>()).addAll(colChkRefl.family(f)));
 			for(final Entry<String, SortedSet<String>> entry: families.entrySet()) {
@@ -134,19 +138,6 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 		setMustExit(STATUS_OPTION_EXIT_OK);
 	}
 	
-	private int pathSort(final String str1, final String str2) {
-		final String[] s1 = str1.split("/");
-		final String[] s2 = str2.split("/");
-		int i=0;
-		while(i < s1.length && i < s2.length) {
-			final int cmp = s1[i].compareTo(s2[i]);
-			if(cmp != 0) {
-				return cmp;
-			}
-			i++;
-		}
-		return s1.length - s2.length;
-	}
 	
 	/**
 	 * Selects the generation methods, setting the one which name is provided.
@@ -225,6 +216,11 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 	 * @param location the location
 	 */
 	public void setExecLocation(final String location) {
+		final Path path = Paths.get(location);
+		if(!Files.isRegularFile(path) || !Files.isExecutable(path)) {
+			LOGGER.error("expected a path to an executable regular file, got \"{}\"", location);
+			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+		}
 		this.execLocation = location;
 	}
 	

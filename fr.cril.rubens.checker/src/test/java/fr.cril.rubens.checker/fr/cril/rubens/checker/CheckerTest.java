@@ -78,17 +78,6 @@ public class CheckerTest {
 		return p.waitFor() == 0;
 	}
 	
-	private boolean checkNoFooBar() throws IOException, InterruptedException {
-		final ProcessBuilder pBuilder = new ProcessBuilder(Stream.of("/foo/bar", "--help").collect(Collectors.toList()));
-		pBuilder.directory(new File("/foo"));
-		try {
-			pBuilder.start();
-		} catch(IOException e) {
-			return true;
-		}
-		return false;
-	}
-	
 	@Test
 	public void testOk() throws IOException, InterruptedException {
 		if(!checkCat()) {
@@ -119,6 +108,15 @@ public class CheckerTest {
 		assertEquals(7, checker.getCheckCount());
 		assertEquals(7, checker.getErrorCount());
 		assertEquals(7, Files.list(this.tmpDir).count());
+	}
+	
+	@Test
+	public void testHasErrorsWithoutOutputDir() throws IOException {
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-d", "3"});
+		EchoCheckerFactory.setAlwaysReturnFalse(true);
+		checker.check();
+		assertEquals(7, checker.getCheckCount());
+		assertEquals(7, checker.getErrorCount());
 	}
 	
 	@Test
@@ -155,11 +153,9 @@ public class CheckerTest {
 	
 	@Test
 	public void testExceptionDuringExec() throws IOException, InterruptedException {
-		if(!checkNoFooBar()) {
-			System.out.println("found \"/foo/bar\" command; aborting test");
-			return;
-		}
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/foo/bar", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+		final Path path = Files.createTempFile("junit-rubens-", "", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", path.toAbsolutePath().toString(), "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+		Files.delete(path);
 		checker.check();
 		assertNotEquals(0, checker.getCheckCount());
 		assertEquals(checker.getCheckCount(), checker.getErrorCount());
@@ -202,5 +198,12 @@ public class CheckerTest {
 		assertEquals(7, checker.getCheckCount());
 		assertEquals(0, checker.getErrorCount());
 		assertEquals(0, checker.getIgnoredCount());
+	}
+	
+	@Test
+	public void testHelp() throws IOException, InterruptedException {
+		final Checker checker = new Checker(new String[] {"-h"});
+		checker.check();
+		assertEquals(0, checker.getCheckCount());
 	}
 }
