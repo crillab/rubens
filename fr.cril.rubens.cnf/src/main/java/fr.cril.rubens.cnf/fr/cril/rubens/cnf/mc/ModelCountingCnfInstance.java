@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
+import fr.cril.rubens.cnf.utils.WriteUtils;
 import fr.cril.rubens.specs.Instance;
 
 /**
@@ -69,7 +70,7 @@ public class ModelCountingCnfInstance extends CnfInstance {
 	@Override
 	public void write(final String extension, final OutputStream os) throws IOException {
 		if(CNF_EXT.equals(extension)) {
-			super.writeCNF(os);
+			WriteUtils.writeCNF(this, os);
 		} else if(MC_EXT.equals(extension)) {
 			os.write(Integer.toString(super.models().size()).getBytes());
 			os.write('\n');

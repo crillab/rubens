@@ -76,5 +76,16 @@ public class LiteralUtils {
 		final int abs = lit > 0 ? lit : -lit;
 		return ((abs-1) << 1) + (lit < 0 ? 1 : 0);
 	}
+	
+	/**
+	 * Reverse operation of {@link LiteralUtils.dimacsToInternal(int)}: returns the DIMACS representation of a literal in an internal representation.
+	 * 
+	 * @return the DIMACS representation of the internal literal
+	 */
+	public static int internalToDimacs(final int lit) {
+		final boolean signed = (lit&1) == 1;
+		final int var = 1 + (lit >> 1);
+		return signed ? -var : var;
+	}
 
 }

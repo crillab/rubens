@@ -24,16 +24,15 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import fr.cril.rubens.cnf.utils.WriteUtils;
 import fr.cril.rubens.specs.Instance;
 
 /**
@@ -83,6 +82,17 @@ public class CnfInstance implements Instance {
 		this.models = instance.models();
 	}
 	
+	/**
+	 * Builds a CNF instance given its number of variables, its clauses, and its models.
+	 * 
+	 * The models must be given in the lexicographic order.
+	 * No check will be executed on the order of the provided models;
+	 * Provided them not in a lexicographic order may result in undefined behavior.
+	 * 
+	 * @param nVars the number of variables
+	 * @param clauses the clauses
+	 * @param models the (ordered) models
+	 */
 	public CnfInstance(final int nVars, final List<List<Integer>> clauses, final List<List<Integer>> models) {
 		this.nVars = nVars;
 		this.clauses = clauses;
@@ -132,61 +142,12 @@ public class CnfInstance implements Instance {
 	@Override
 	public void write(final String extension, final OutputStream os) throws IOException {
 		if(CNF_EXT.equals(extension)) {
-			writeCNF(os);
+			WriteUtils.writeCNF(this, os);
 		} else if(MODS_EXT.equals(extension)) {
-			writeModels(os);
+			WriteUtils.writeModels(this.models, os);
 		} else {
 			throw new IllegalArgumentException("unknown extension "+extension);
 		}
-	}
-
-	private void writeModels(final OutputStream os) throws IOException {
-		try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-			for(final List<Integer> cl : this.models) {
-				writeTuple(writer, cl);
-			}
-			writer.flush();
-		}
-	}
-
-	/**
-	 * Writes the CNF into the specified output stream.
-	 * 
-	 * The CNF is written using the DIMACS format.
-	 * 
-	 * @param os the output stream
-	 * @throws IOException if an {@link IOException} occurs while writing the CNF
-	 */
-	protected void writeCNF(final OutputStream os) throws IOException {
-		try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-			writePreamble(writer);
-			for(final List<Integer> cl : this.clauses) {
-				writeTuple(writer, cl);
-			}
-			writer.flush();
-		}
-	}
-
-	private void writePreamble(final BufferedWriter writer) throws IOException {
-		writer.write("p cnf ");
-		writer.write(Integer.toString(this.nVars));
-		writer.write(" ");
-		writer.write(Integer.toString(this.clauses.size()));
-		writer.write("\n");
-	}
-
-	/**
-	 * Writes into the specified buffered writer a list of literals, split by space characters, followed by a trailing 0.
-	 * 
-	 * @param writer the writer
-	 * @param tuple the list of literals
-	 * @throws IOException if an {@link IOException} occurs while writing the CNF
-	 */
-	protected void writeTuple(final BufferedWriter writer, final Collection<Integer> tuple) throws IOException {
-		final StringBuilder builder = new StringBuilder();
-		tuple.stream().forEach(l -> builder.append(l).append(' '));
-		builder.append("0\n");
-		writer.write(builder.toString());
 	}
 
 	@Override

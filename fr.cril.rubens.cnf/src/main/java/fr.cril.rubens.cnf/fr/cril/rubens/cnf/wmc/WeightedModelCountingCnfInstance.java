@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
+import fr.cril.rubens.cnf.utils.WriteUtils;
 import fr.cril.rubens.cnf.wmodels.WeightedModelsCnfInstance;
 import fr.cril.rubens.specs.Instance;
 
@@ -71,7 +72,7 @@ public class WeightedModelCountingCnfInstance extends WeightedModelsCnfInstance 
 	@Override
 	public void write(final String extension, final OutputStream os) throws IOException {
 		if(CNF_EXT.equals(extension)) {
-			super.writeCNF(os);
+			WriteUtils.writeCNF(this, os);
 		} else if(W_EXT.equals(extension)) {
 			super.writeWeights(os);
 		} else if(WMC_EXT.equals(extension)) {

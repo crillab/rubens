@@ -26,34 +26,22 @@ package fr.cril.rubens.cnf.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
 
-public class LiteralUtilsTest {
-
-	@Test
-	public void testDimacsToInternal() {
-		assertEquals(0, LiteralUtils.dimacsToInternal(1));
-		assertEquals(1, LiteralUtils.dimacsToInternal(-1));
-		assertEquals(2, LiteralUtils.dimacsToInternal(2));
-		assertEquals(3, LiteralUtils.dimacsToInternal(-2));
-	}
-
-	@Test
-	public void testSelectRandomLiteral() {
-		for(int i=0; i<10; ++i) {
-			assertEquals(1, LiteralUtils.selectRandomLiteral(Stream.of(0, 1, 0).collect(Collectors.toList())));
-		}
-
-	}
+public class ModelUtilsTest {
 	
 	@Test
-	public void testInternalToDimacs() {
-		assertEquals(1, LiteralUtils.internalToDimacs(0));
-		assertEquals(-1, LiteralUtils.internalToDimacs(1));
-		assertEquals(2, LiteralUtils.internalToDimacs(2));
-		assertEquals(-2, LiteralUtils.internalToDimacs(3));
+	public void testAddFreeVarsToModels() {
+		final List<List<Integer>> models = ModelUtils.addFreeVarsToModels(1, Collections.singletonList(Collections.singletonList(1)));
+		assertEquals(Stream.of(
+				Stream.of(1, -2).collect(Collectors.toList()),
+				Stream.of(1, 2).collect(Collectors.toList()))
+				.collect(Collectors.toList()), models);
 	}
+
 }
