@@ -22,6 +22,8 @@
  * #L%
  */
 /**
+ * Module for CNF-related problems.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 module fr.cril.rubens.cnf {

@@ -22,6 +22,8 @@
  * #L%
  */
 /**
+ * Module for the RUBENS generator tool.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 module fr.cril.rubens.generator {

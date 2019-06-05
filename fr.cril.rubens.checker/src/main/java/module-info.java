@@ -22,6 +22,8 @@
  * #L%
  */
 /**
+ * Module for the RUBENS checker tool.
+ * 
  * @author Emmanuel Lonca - lonca@cril.fr
  */
 module fr.cril.rubens.checker {
