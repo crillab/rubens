@@ -39,7 +39,6 @@ public abstract class AbstractNode implements INode {
 	/**
 	 * Builds an abstract node given its unique identifier and its set of models.
 	 * 
-	 * @param nodeIndex the node's unique identifier
 	 * @param models the set of models of the formula rooted by this node.
 	 */
 	protected AbstractNode(final List<Map<Integer, Boolean>> models) {

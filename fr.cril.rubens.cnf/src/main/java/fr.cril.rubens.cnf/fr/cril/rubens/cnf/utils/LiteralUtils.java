@@ -78,8 +78,9 @@ public class LiteralUtils {
 	}
 	
 	/**
-	 * Reverse operation of {@link LiteralUtils.dimacsToInternal(int)}: returns the DIMACS representation of a literal in an internal representation.
+	 * Reverse operation of {@link LiteralUtils#dimacsToInternal(int)}: returns the DIMACS representation of a literal in an internal representation.
 	 * 
+	 * @param lit the literal in internal representation
 	 * @return the DIMACS representation of the internal literal
 	 */
 	public static int internalToDimacs(final int lit) {

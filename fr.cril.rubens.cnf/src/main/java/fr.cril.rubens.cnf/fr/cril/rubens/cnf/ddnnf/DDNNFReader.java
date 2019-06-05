@@ -77,9 +77,10 @@ public class DDNNFReader {
 
 	/**
 	 * Reads a dDNNF from a string containing a dDNNF in the output format of c2d.
-	 * @param content
-	 * @return
-	 * @throws DDNNFException
+	 * 
+	 * @param content the string containing the dDNNF
+	 * @return the corresponding {@link DDNNF} instance
+	 * @throws DDNNFException if the provided string is incorrect
 	 */
 	public DDNNF read(final String content) throws DDNNFException {
 		this.lines = Arrays.stream(content.split("\n")).collect(Collectors.toList());

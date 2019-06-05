@@ -44,9 +44,10 @@ public class MethodOption {
 
 	/**
 	 * Builds a specific option given its name, its description, and the action to take when the option is present.
-	 * @param name
-	 * @param description
-	 * @param applier
+	 * 
+	 * @param name the option name
+	 * @param description the option description
+	 * @param applier the action to take if the option is present
 	 */
 	public MethodOption(final String name, final String description, final Consumer<String> applier) {
 		this.name = name;

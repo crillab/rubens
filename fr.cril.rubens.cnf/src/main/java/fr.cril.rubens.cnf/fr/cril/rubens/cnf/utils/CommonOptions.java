@@ -92,7 +92,7 @@ public class CommonOptions {
 	}
 	
 	/**
-	 * Converts a string value given by <code>on</code> or <code>off<code> into the corresponding Boolean value.
+	 * Converts a string value given by <code>on</code> or <code>off</code> into the corresponding Boolean value.
 	 * 
 	 *  If another value is given, an {@link IllegalArgumentException} is thrown.
 	 *  
