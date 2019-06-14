@@ -22,7 +22,9 @@ This software (the RUBENS checker) then generates test cases, and executes the s
 
 ## Software requirements
 
-RUBENS requires `java` (with version at least 10) and `maven` to be installed. The additional dependencies will then be automatically installed by `maven`.
+RUBENS requires `java` (with version at least 11) and `maven` to be installed. The additional dependencies will then be automatically installed by `maven`.
+
+Note that a bug in the javadoc tool provided with jdk-11 prevents the documentation to be generated (see [this ticket](https://bugs.openjdk.java.net/browse/JDK-8208269) for more information). You need jdk-12 to generate the javadoc.
 
 
 ## Usage
@@ -34,7 +36,7 @@ Common usages:
 
 Generator usage:
 
-`java -jar rubens-generator.jar -m <method> -o <dir> [-d <depth>]` applies the generation method `<method>`, output directory is `<dir>`, the tree generation depth is `<depth>` (a positive integer).
+* `java -jar rubens-generator.jar -m <method> -o <dir> [-d <depth>]` applies the generation method `<method>`, output directory is `<dir>`, the tree generation depth is `<depth>` (a positive integer).
 
 Checker usage:
 
@@ -404,3 +406,7 @@ RUBENS uses reflection to seek test generator and checker factories. It first lo
 * each name must be unique for a given interface.
 
 Some other capabilities are provided (family names, collection of checkers, ...). See javadoc for more information.
+
+## License
+
+RUBENS is developed at CRIL (Centre de Recherche en Informatique de Lens) as a part of other projects. It is made available under the terms of the GNU GPLv3 license.
