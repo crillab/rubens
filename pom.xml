@@ -4,10 +4,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.cril.rubens</groupId>
 	<artifactId>fr.cril.rubens.pom</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>RUBENS project POM</name>
 	<description>root of RUBENS multimodule architecture</description>
+	<url>https://github.com/crillab/rubens</url>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL) version 3.0</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:https://github.com/crillab/rubens.git</connection>
+		<developerConnection>scm:git:https://github.com/crillab/rubens.git</developerConnection>
+		<url>https://github.com/crillab/rubens</url>
+	</scm>
 
 	<organization>
 		<name>Artois University and CNRS</name>
@@ -34,7 +49,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>10</java.version>
+		<java.version>11</java.version>
 		<dependency.slf4j.version>1.8.0-beta4</dependency.slf4j.version>
 	</properties>
 
@@ -61,7 +76,7 @@
 			<dependency>
 				<groupId>nl.jqno.equalsverifier</groupId>
 				<artifactId>equalsverifier</artifactId>
-				<version>3.1.5</version>
+				<version>3.1.9</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -72,17 +87,10 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.1</version>
 					<configuration>
-						<release>10</release>
+						<release>${java.version}</release>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.ow2.asm</groupId>
-							<artifactId>asm</artifactId>
-							<version>6.2.1</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -106,7 +114,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.0</version>
+					<version>2.22.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -143,12 +151,18 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.1.0</version>
 					<configuration>
+						<source>${java.version}</source>
 						<failOnWarnings>true</failOnWarnings>
--                                               <sourceFileIncludes>
--                                                       <sourceFileInclude>**/*.java</sourceFileInclude>
--                                               </sourceFileIncludes>
 						<additionalOptions>-html5</additionalOptions>
 					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -172,6 +186,33 @@
 									<root>src/test</root>
 								</roots>
 							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.1.0</version>
+					<executions>
+						<execution>
+							<id>attach-source</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
 						</execution>
 					</executions>
 				</plugin>
