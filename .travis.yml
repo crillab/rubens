@@ -1,0 +1,13 @@
+language: java
+
+addons:
+  sonarcloud:
+    organization: "crillab"
+    token:
+      secure: "RF3tK1gzk/voMOo4ZU9LQ+hjNVsbohpolC+7Xbc6sSbspbbMEosAR3f1iIcSgS3KVjOOizouGzRg2L+jjBlW6ziDaHsn30BdPC9/5ZDJsNKSXy5OJwq5KEAt2Me9haM+cG6dUKBQkwWShhWMh5GzLyGRxNXY0ApoGxlmxdSsrAxaIvn4/UA0CWvqdQ7Xu2VGyyHxc50z1g9VQ4GIsnymfZu0PKwazZ70ve54e00npvO4byQM2jP2VUBeZvmorJXQUEABIPU8peYyRL1FBy4Tkvd0srBaW34M4lmQptaz4rfUiuxT/BrVHAU4G480Ib56fLLKYTbW/Y8kgUVwo/28CV56bPvt5XtTjHWAN3iQqT/rY4dJF8iK7Ra0L8cOAMpew5xLGMJRVcxT0jg0GLVdGfmoJnhF1wDYfsFv3dqX8pHJj6yFimfmLVV6YDif5N2v7DiCD35iQawMIe5aPB6BMgKk1dnESamvd0H1u49FBKamffU5ENrOnyCRxdSwezSIebsM9G9y6KUyClWZ5LY/Or0UoYNtw86CfdUhxttcpKPyjjiaNaLQnMD9PPM5kbCB7eWsXdSObd4OTq7pSVoX4NGQMTgpFRI4EyFZSudojAP6R986ljkAPOU4+vkAk82oUgE74srsDArDhJGwaJT69B7Rz6P6DXkB0Qu9eUigjbY="
+
+jdk:
+  - oraclejdk11
+
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
