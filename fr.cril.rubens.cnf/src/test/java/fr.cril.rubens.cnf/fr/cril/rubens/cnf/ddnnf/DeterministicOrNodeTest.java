@@ -90,7 +90,8 @@ public class DeterministicOrNodeTest {
 		final INode litNode2 = new LiteralNode(-1);
 		final INode andNode3 = new DecomposableAndNode(3, Stream.of(litNode2, trueNode).collect(Collectors.toList()));
 		final INode andNode4 = new DecomposableAndNode(4, Stream.of(falseNode).collect(Collectors.toList()));
-		new DeterministicOrNode(5, 1, andNode4, andNode3);
+		final DeterministicOrNode orNode = new DeterministicOrNode(5, 1, andNode4, andNode3);
+		assertEquals(1, orNode.models().size());
 	}
 	
 	@Test

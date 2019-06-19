@@ -24,18 +24,20 @@ package fr.cril.rubens.arg.checking.checkers;
  * #L%
  */
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class ICCMACheckersTest {
 	
 	@Test
 	public void test17() {
-		new ICCMA2017Checker();
+		assertEquals(29, new ICCMA2017Checker().getNames().size());
 	}
 	
 	@Test
 	public void test19() {
-		new ICCMA2019Checker();
+		assertEquals(44, new ICCMA2019Checker().getNames().size());
 	}
 
 }

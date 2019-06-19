@@ -24,18 +24,25 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
+import org.slf4j.Logger;
 
 public class GNUGPL3Test {
 	
 	@Test
 	public void testWelcomeMessage() {
-		GNUGPL3.logWelcomeMessage(LoggerHelper.getInstance().getLogger());
+		final Logger logger = LoggerHelper.getInstance().getLogger();
+		assertNotNull(logger);
+		GNUGPL3.logWelcomeMessage(logger);
 	}
 	
 	@Test
 	public void testLicense() {
-		GNUGPL3.logTermsAndConditions(LoggerHelper.getInstance().getLogger());
+		final Logger logger = LoggerHelper.getInstance().getLogger();
+		assertNotNull(logger);
+		GNUGPL3.logTermsAndConditions(logger);
 	}
 
 }

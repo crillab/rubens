@@ -25,6 +25,7 @@ package fr.cril.rubens.arg.testgen;
  */
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ public class D3TestGeneratorFactoryTest {
 			final List<D3ArgumentationFramework> newAFs = generated.stream().filter(i -> translator.canBeAppliedTo(i)).map(translator::translate).collect(Collectors.toList());
 			generated.addAll(newAFs);
 		}
+		assertTrue(generated.size() > 1);
 	}
 
 }
