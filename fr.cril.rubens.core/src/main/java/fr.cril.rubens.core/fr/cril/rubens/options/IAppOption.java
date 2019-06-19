@@ -42,32 +42,11 @@ import java.util.function.BiConsumer;
 public interface IAppOption<T> {
 	
 	/**
-	 * Returns the current option short name.
+	 * Returns the option specs.
 	 * 
-	 * @return the current option short name
+	 * @return the option specs
 	 */
-	public String getOpt();
-	
-	/**
-	 * Returns the current option long name.
-	 * 
-	 * @return the current option long name
-	 */
-	public String getLongOpt();
-	
-	/**
-	 * Returns <code>true</code> iff the options has an argument.
-	 * 
-	 * @return <code>true</code> iff the options has an argument
-	 */
-	public boolean hasArg();
-	
-	/**
-	 * Returns the current option description.
-	 * 
-	 * @return the current option description
-	 */
-	public String getDescription();
+	OptionSpecs getSpecs();
 	
 	/**
 	 * Returns the current option consumer.

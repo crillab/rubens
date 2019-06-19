@@ -24,7 +24,6 @@ package fr.cril.rubens.checker;
  * #L%
  */
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,18 +60,11 @@ import fr.cril.rubens.utils.LoggerHelper;
  */
 public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 	
-	/** the default maximal depth for the generation tree */
-	public static final int DEFAULT_MAX_DEPTH = 10;
-	
 	private static CheckerOptionsReader instance = null; 
 	
 	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	private final Map<String, CheckerFactory<Instance>> factories = new LinkedHashMap<>();
-	
-	private File outputDirectory;
-	
-	private int maxDepth = DEFAULT_MAX_DEPTH;
 	
 	private String execLocation;
 	
@@ -94,9 +86,10 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 		return instance;
 	}
 	
+	@Override
 	protected void reset() {
+		super.reset();
 		this.factories.clear();
-		this.maxDepth = DEFAULT_MAX_DEPTH;
 	}
 	
 	protected void checkOptionsRequirements() {
@@ -170,47 +163,6 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 	}
 	
 	/**
-	 * Sets the output directory as the one described by the provided path.
-	 * 
-	 * If such path cannot be used as a directory to store instances,
-	 * the application exits with a status of {@link CheckerOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
-	 * 
-	 * @param path the path of the output directory to set
-	 */
-	public void setOutputDirectory(final String path) {
-		try {
-			this.outputDirectory = getOrCreateOutputDirectory(path);
-		} catch(IllegalArgumentException e) {
-			LOGGER.error(e.getMessage());
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-	}
-	
-	/**
-	 * Sets the maximal depth of the generation tree using the provided value.
-	 * 
-	 * The value is passed as a string; if it does not correspond to a valid depth (a strictly positive integer),
-	 * the application exits with a status of {@link CheckerOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
-	 * 
-	 * @param value the maximal depth value
-	 */
-	public void setMaxDepth(final String value) {
-		int depth = -1;
-		final String errorMsg = "wrong value for argument depth: expected a strictly positive integer, got {}";
-		try {
-			depth = Integer.valueOf(value);
-		} catch(NumberFormatException e) {
-			LOGGER.error(errorMsg, value);
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-		if(depth < 1) {
-			LOGGER.error(errorMsg, value);
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-		this.maxDepth = depth;
-	}
-	
-	/**
 	 * Sets the location of the software under test.
 	 * 
 	 * @param location the location
@@ -266,28 +218,6 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 		return new LinkedHashMap<>(this.factories);
 	}
 	
-	/**
-	 * Returns the output directory in which the failed instances must be stored.
-	 * 
-	 * If it has not been set by the appropriate option, the value is <code>null</code>.
-	 * 
-	 * @return the output directory in which the failed instances must be stored
-	 */
-	public File getOutputDirectory() {
-		return this.outputDirectory;
-	}
-	
-	/**
-	 * Returns the maximal depth for the generation tree.
-	 * 
-	 * If it has not been set by the appropriate option, the value is {@link CheckerOptionsReader#DEFAULT_MAX_DEPTH}.
-	 * 
-	 * @return the maximal depth for the generation tree
-	 */
-	public int getMaxDepth() {
-		return this.maxDepth;
-	}
-
 	@Override
 	protected CheckerOptionsReader getThis() {
 		return this;

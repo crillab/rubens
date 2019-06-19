@@ -1,4 +1,4 @@
-package fr.cril.rubens.checker;
+package fr.cril.rubens.options;
 
 /*-
  * #%L
@@ -27,26 +27,36 @@ package fr.cril.rubens.checker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.cli.Option;
+import org.junit.Before;
 import org.junit.Test;
 
-public class ECheckerOptionTest {
+public class OptionSpecsTest {
 	
-	@Test
-	public void testOptionsNames() {
-		final Set<String> genOptNames = Arrays.stream(ECheckerOption.values()).map(o -> o.getSpecs().getOpt()).collect(Collectors.toSet());
-		final Set<String> apacheOptNames = ECheckerOption.buildCliOptions().getOptions().stream().map(Option::getOpt).collect(Collectors.toSet());
-		assertEquals(apacheOptNames, genOptNames);
+	private OptionSpecs specs;
+	
+	@Before
+	public void setUp() {
+		this.specs = new OptionSpecs("opt", "longOpt", true, "description");
 	}
 	
 	@Test
-	public void testNoNullConsumer() {
-		assertTrue(Arrays.stream(ECheckerOption.values()).map(ECheckerOption::getOptionConsumer).noneMatch(Objects::isNull));
+	public void testOpt() {
+		assertEquals("opt", this.specs.getOpt());
+	}
+	
+	@Test
+	public void testLongOpt() {
+		assertEquals("longOpt", this.specs.getLongOpt());
+	}
+	
+	@Test
+	public void testHasArg() {
+		assertTrue(this.specs.hasArg());
+	}
+	
+	@Test
+	public void testDescription() {
+		assertEquals("description", this.specs.getDescription());
 	}
 
 }

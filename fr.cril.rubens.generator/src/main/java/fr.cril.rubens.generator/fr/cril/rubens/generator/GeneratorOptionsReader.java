@@ -24,7 +24,6 @@ package fr.cril.rubens.generator;
  * #L%
  */
 
-import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -50,19 +49,12 @@ import fr.cril.rubens.utils.LoggerHelper;
  */
 public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	
-	/** the default maximal depth for the generation tree */
-	public static final int DEFAULT_MAX_DEPTH = 10;
-	
 	private static GeneratorOptionsReader instance = null; 
 	
 	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
 	
 	private TestGeneratorFactory<Instance> factory;
 	
-	private File outputDirectory;
-	
-	private int maxDepth = DEFAULT_MAX_DEPTH;
-
 	private GeneratorOptionsReader() {
 		super(EGeneratorOption.values());
 	}
@@ -81,9 +73,9 @@ public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	
 	@Override
 	protected void reset() {
+		super.reset();
 		this.factory = null;
 		this.outputDirectory = null;
-		this.maxDepth = DEFAULT_MAX_DEPTH;
 	}
 	
 	@Override
@@ -155,47 +147,6 @@ public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	}
 	
 	/**
-	 * Sets the output directory as the one described by the provided path.
-	 * 
-	 * If such path cannot be used as a directory to store instances,
-	 * the application exits with a status of {@link GeneratorOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
-	 * 
-	 * @param path the path of the output directory to set
-	 */
-	public void setOutputDirectory(final String path) {
-		try {
-			this.outputDirectory = getOrCreateOutputDirectory(path);
-		} catch(IllegalArgumentException e) {
-			LOGGER.error(e.getMessage());
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-	}
-
-	/**
-	 * Sets the maximal depth of the generation tree using the provided value.
-	 * 
-	 * The value is passed as a string; if it does not correspond to a valid depth (a strictly positive integer),
-	 * the application exits with a status of {@link GeneratorOptionsReader#STATUS_OPTIONS_EXIT_ERROR}.
-	 * 
-	 * @param value the maximal depth value
-	 */
-	public void setMaxDepth(final String value) {
-		int depth = -1;
-		final String errorMsg = "wrong value for argument depth: expected a strictly positive integer, got {}";
-		try {
-			depth = Integer.valueOf(value);
-		} catch(NumberFormatException e) {
-			LOGGER.error(errorMsg, value);
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-		if(depth < 1) {
-			LOGGER.error(errorMsg, value);
-			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
-		}
-		this.maxDepth = depth;
-	}
-	
-	/**
 	 * Returns the {@link TestGeneratorFactory} instance to use as a generation method.
 	 * 
 	 * If it has not been set by the appropriate option, the value is <code>null</code>.
@@ -206,28 +157,6 @@ public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 		return this.factory;
 	}
 	
-	/**
-	 * Returns the output directory in which the generated instances must be stored.
-	 * 
-	 * If it has not been set by the appropriate option, the value is <code>null</code>.
-	 * 
-	 * @return the output directory in which the generated instances must be stored
-	 */
-	public File getOutputDirectory() {
-		return this.outputDirectory;
-	}
-	
-	/**
-	 * Returns the maximal depth for the generation tree.
-	 * 
-	 * If it has not been set by the appropriate option, the value is {@link GeneratorOptionsReader#DEFAULT_MAX_DEPTH}.
-	 * 
-	 * @return the maximal depth for the generation tree
-	 */
-	public int getMaxDepth() {
-		return this.maxDepth;
-	}
-
 	@Override
 	protected GeneratorOptionsReader getThis() {
 		return this;

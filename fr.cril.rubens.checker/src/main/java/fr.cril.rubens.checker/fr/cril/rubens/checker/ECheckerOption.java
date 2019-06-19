@@ -29,6 +29,7 @@ import java.util.function.BiConsumer;
 import org.apache.commons.cli.Options;
 
 import fr.cril.rubens.options.IAppOption;
+import fr.cril.rubens.options.OptionSpecs;
 
 /**
  * An enumeration of all the supported command line interface options.
@@ -61,13 +62,7 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	/** display the license and exit */
 	DISPLAY_LICENCE("g", "license", false, "display the license and exit", displayLicense());
 
-	private final String opt;
-
-	private final String longOpt;
-
-	private final boolean hasArg;
-
-	private final String description;
+	private final OptionSpecs specs;
 
 	private final BiConsumer<CheckerOptionsReader, String> optionConsumer;
 
@@ -84,10 +79,7 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	 * @param consumer the consumer to call when the option is read
 	 */
 	private ECheckerOption(final String opt, final String longOpt, final boolean hasArg, final String description, final BiConsumer<CheckerOptionsReader, String> consumer) {
-		this.opt = opt;
-		this.longOpt = longOpt;
-		this.hasArg = hasArg;
-		this.description = description;
+		this.specs = new OptionSpecs(opt, longOpt, hasArg, description);
 		this.optionConsumer = consumer;
 	}
 	
@@ -99,29 +91,9 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	public static Options buildCliOptions() {
 		final Options options = new Options();
 		for(final ECheckerOption option : ECheckerOption.values()) {
-			options.addOption(option.opt, option.longOpt, option.hasArg, option.description);
+			options.addOption(option.specs.getOpt(), option.specs.getLongOpt(), option.specs.hasArg(), option.specs.getDescription());
 		}
 		return options;
-	}
-
-	@Override
-	public String getOpt() {
-		return this.opt;
-	}
-	
-	@Override
-	public String getLongOpt() {
-		return this.longOpt;
-	}
-	
-	@Override
-	public boolean hasArg() {
-		return this.hasArg;
-	}
-	
-	@Override
-	public String getDescription() {
-		return this.description;
 	}
 
 	@Override
@@ -159,6 +131,11 @@ public enum ECheckerOption implements IAppOption<CheckerOptionsReader> {
 	
 	private static BiConsumer<CheckerOptionsReader, String> displayLicense() {
 		return (o, s) -> o.printLicenseAndExit();
+	}
+	
+	@Override
+	public OptionSpecs getSpecs() {
+		return this.specs;
 	}
 
 }

@@ -1,4 +1,4 @@
-package fr.cril.rubens.checker;
+package fr.cril.rubens.utils;
 
 /*-
  * #%L
@@ -25,28 +25,22 @@ package fr.cril.rubens.checker;
  */
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.cli.Option;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
-public class ECheckerOptionTest {
+public class LoggerHelperTest {
 	
 	@Test
-	public void testOptionsNames() {
-		final Set<String> genOptNames = Arrays.stream(ECheckerOption.values()).map(o -> o.getSpecs().getOpt()).collect(Collectors.toSet());
-		final Set<String> apacheOptNames = ECheckerOption.buildCliOptions().getOptions().stream().map(Option::getOpt).collect(Collectors.toSet());
-		assertEquals(apacheOptNames, genOptNames);
+	public void testDefaultLogger() {
+		assertEquals(LoggerFactory.getLogger("RUBENS"), LoggerHelper.getInstance().getLogger());
 	}
 	
 	@Test
-	public void testNoNullConsumer() {
-		assertTrue(Arrays.stream(ECheckerOption.values()).map(ECheckerOption::getOptionConsumer).noneMatch(Objects::isNull));
+	public void testSwitchLogger() {
+		final LoggerHelper helper = LoggerHelper.getInstance();
+		helper.switchLogger("foo");
+		assertEquals(LoggerFactory.getLogger("foo"), helper.getLogger());
 	}
 
 }

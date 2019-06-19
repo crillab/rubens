@@ -27,18 +27,14 @@ package fr.cril.rubens.generator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.specs.Instance;
+import fr.cril.rubens.utils.FileUtils;
 import fr.cril.rubens.utils.GNUGPL3;
 import fr.cril.rubens.utils.LoggerHelper;
 
@@ -121,7 +117,10 @@ public class Generator {
 		}
 		final Collection<String> extensions = instance.getFileExtensions();
 		final File outputDirectory = this.generatorOptions.getOutputDirectory();
-		cleanOldFiles(outputDirectory, extensions);
+		if(!this.cleanedOldFiles) {
+			this.cleanedOldFiles = true;
+			FileUtils.cleanOldFiles(outputDirectory, extensions, LOGGER);
+		}
 		try {
 			for(final String ext : extensions) {
 				instance.write(ext, new FileOutputStream(new File(outputDirectory, instanceCount+ext)));
@@ -132,26 +131,6 @@ public class Generator {
 		}
 	}
 
-	private void cleanOldFiles(final File outputDirectory, final Collection<String> extensions) {
-		if(!this.cleanedOldFiles) {
-			this.cleanedOldFiles = true;
-			final File[] folderFiles = outputDirectory.listFiles(File::isFile);
-			if(folderFiles == null) {
-				LOGGER.warn("cannot access directory {} for cleaning", outputDirectory);
-				return;
-			}
-			for(final Path path : Arrays.stream(folderFiles).map(File::toURI).map(Paths::get).collect(Collectors.toList())) {
-				if(extensions.stream().anyMatch(path.toString()::endsWith)) {
-					try {
-						Files.delete(path);
-					} catch (IOException e) {
-						LOGGER.warn("cannot clean existing file {}; reason is \"{}\"", path.toAbsolutePath(), e.getMessage());
-					}
-				}
-			}
-		}
-	}
-	
 	/**
 	 * Returns the status code of the generation process after {@link Generator#generate()} has been called.
 	 * 

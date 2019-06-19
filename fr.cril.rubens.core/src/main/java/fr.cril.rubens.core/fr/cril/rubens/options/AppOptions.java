@@ -60,6 +60,13 @@ public abstract class AppOptions<T> {
 	
 	private static final int HELP_FORMATTER_MAX_WIDTH = 80;
 	
+	protected File outputDirectory;
+	
+	/** the default maximal depth for the generation tree */
+	public static final int DEFAULT_MAX_DEPTH = 10;
+	
+	private int maxDepth = DEFAULT_MAX_DEPTH;
+	
 	private final IAppOption<T>[] appOpts;
 	
 	private boolean mustExit = false;
@@ -110,15 +117,15 @@ public abstract class AppOptions<T> {
 	private Options buildCliOptions() {
 		final Options options = new Options();
 		for(final IAppOption<T> option : this.appOpts) {
-			options.addOption(option.getOpt(), option.getLongOpt(), option.hasArg(), option.getDescription());
+			options.addOption(option.getSpecs().getOpt(), option.getSpecs().getLongOpt(), option.getSpecs().hasArg(), option.getSpecs().getDescription());
 		}
 		return options;
 	}
 	
 	private void applyOptions(final CommandLine cmdl) {
 		for(final IAppOption<T> option : this.appOpts) {
-			if(cmdl.hasOption(option.getOpt())) {
-				final String value = cmdl.getOptionValue(option.getOpt());
+			if(cmdl.hasOption(option.getSpecs().getOpt())) {
+				final String value = cmdl.getOptionValue(option.getSpecs().getOpt());
 				option.getOptionConsumer().accept(getThis(), value);
 			}
 			if(this.mustExit) {
@@ -208,7 +215,9 @@ public abstract class AppOptions<T> {
 	/**
 	 * Resets the options of the implementor.
 	 */
-	protected abstract void reset();
+	protected void reset() {
+		this.maxDepth = DEFAULT_MAX_DEPTH;
+	}
 	
 	/**
 	 * Returns the logger to use.
@@ -245,6 +254,69 @@ public abstract class AppOptions<T> {
 			throw new IllegalArgumentException(path+" must be a directory with read and write access");
 		}
 		return file;
+	}
+	
+	/**
+	 * Sets the output directory as the one described by the provided path.
+	 * 
+	 * If such path cannot be used as a directory to store instances,
+	 * the application exits with a status of {@link AppOptions#STATUS_OPTIONS_EXIT_ERROR}.
+	 * 
+	 * @param path the path of the output directory to set
+	 */
+	public void setOutputDirectory(final String path) {
+		try {
+			this.outputDirectory = getOrCreateOutputDirectory(path);
+		} catch(IllegalArgumentException e) {
+			LOGGER.error(e.getMessage());
+			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+		}
+	}
+
+	/**
+	 * Sets the maximal depth of the generation tree using the provided value.
+	 * 
+	 * The value is passed as a string; if it does not correspond to a valid depth (a strictly positive integer),
+	 * the application exits with a status of {@link AppOptions#STATUS_OPTIONS_EXIT_ERROR}.
+	 * 
+	 * @param value the maximal depth value
+	 */
+	public void setMaxDepth(final String value) {
+		int depth = -1;
+		final String errorMsg = "wrong value for argument depth: expected a strictly positive integer, got {}";
+		try {
+			depth = Integer.valueOf(value);
+		} catch(NumberFormatException e) {
+			LOGGER.error(errorMsg, value);
+			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+		}
+		if(depth < 1) {
+			LOGGER.error(errorMsg, value);
+			setMustExit(STATUS_OPTIONS_EXIT_ERROR);
+		}
+		this.maxDepth = depth;
+	}
+	
+	/**
+	 * Returns the output directory in which the generated instances must be stored.
+	 * 
+	 * If it has not been set by the appropriate option, the value is <code>null</code>.
+	 * 
+	 * @return the output directory in which the generated instances must be stored
+	 */
+	public File getOutputDirectory() {
+		return this.outputDirectory;
+	}
+	
+	/**
+	 * Returns the maximal depth for the generation tree.
+	 * 
+	 * If it has not been set by the appropriate option, the value is {@link AppOptions#DEFAULT_MAX_DEPTH}.
+	 * 
+	 * @return the maximal depth for the generation tree
+	 */
+	public int getMaxDepth() {
+		return this.maxDepth;
 	}
 
 }

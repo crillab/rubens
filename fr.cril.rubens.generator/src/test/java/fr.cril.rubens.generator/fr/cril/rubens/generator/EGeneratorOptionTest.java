@@ -38,7 +38,7 @@ public class EGeneratorOptionTest {
 	
 	@Test
 	public void testOptionsNames() {
-		final Set<String> genOptNames = Arrays.stream(EGeneratorOption.values()).map(EGeneratorOption::getOpt).collect(Collectors.toSet());
+		final Set<String> genOptNames = Arrays.stream(EGeneratorOption.values()).map(o -> o.getSpecs().getOpt()).collect(Collectors.toSet());
 		final Set<String> apacheOptNames = EGeneratorOption.buildCliOptions().getOptions().stream().map(Option::getOpt).collect(Collectors.toSet());
 		assertEquals(apacheOptNames, genOptNames);
 	}
