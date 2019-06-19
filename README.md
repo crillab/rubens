@@ -1,5 +1,10 @@
 # RUBENS: RUle-Based Experiment generation for Never-failing Softwares
 
+[![Build Status](https://travis-ci.org/crillab/rubens.svg?branch=master)](https://travis-ci.org/crillab/rubens)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=fr.cril.rubens%3Afr.cril.rubens.pom&metric=alert_status)](https://sonarcloud.io/dashboard?id=fr.cril.rubens%3Afr.cril.rubens.pom)
+[![License](https://img.shields.io/github/license/crillab/rubens.svg)](https://github.com/crillab/rubens/blob/master/LICENSE)
+
+
 
 ## What is RUBENS ?
 
