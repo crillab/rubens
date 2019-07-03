@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>fr.cril.rubens.pom</artifactId>
 		<groupId>fr.cril.rubens</groupId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.cril.rubens.cnf</artifactId>
 	<name>RUBENS module for CNF handling</name>
