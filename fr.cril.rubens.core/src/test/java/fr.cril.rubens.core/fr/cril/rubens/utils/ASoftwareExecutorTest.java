@@ -46,27 +46,30 @@ import fr.cril.rubens.testutils.StringInstance;
 public class ASoftwareExecutorTest {
 	
 	private boolean checkCat() throws IOException, InterruptedException {
-		final ProcessBuilder pBuilder = new ProcessBuilder(Stream.of("/bin/cat", "--version").collect(Collectors.toList()));
-		pBuilder.directory(new File("/bin"));
-		final Process p = pBuilder.start();
-		p.getOutputStream().close();
-		return p.waitFor() == 0;
+		return checkExec(Stream.of("/bin/cat", "--version").collect(Collectors.toList()), "/bin");
 	}
 	
 	private boolean checkTest() throws IOException, InterruptedException {
-		final ProcessBuilder pBuilder = new ProcessBuilder(Stream.of("/usr/bin/test", "0", "-eq", "0").collect(Collectors.toList()));
-		pBuilder.directory(new File("/usr/bin"));
-		final Process p = pBuilder.start();
-		p.getOutputStream().close();
-		return p.waitFor() == 0;
+		return checkExec(Stream.of("/usr/bin/test", "0", "-eq", "0").collect(Collectors.toList()), "/usr/bin");
 	}
 	
 	private boolean checkSleep() throws IOException, InterruptedException {
-		final ProcessBuilder pBuilder = new ProcessBuilder(Stream.of("/bin/sleep", "1").collect(Collectors.toList()));
-		pBuilder.directory(new File("/bin"));
-		final Process p = pBuilder.start();
-		p.getOutputStream().close();
-		return p.waitFor() == 0;
+		return checkExec(Stream.of("/bin/sleep", "1").collect(Collectors.toList()), "/bin");
+	}
+
+	private boolean checkExec(final List<String> args, final String pwd) {
+		try {
+			final ProcessBuilder pBuilder = new ProcessBuilder(args);
+			pBuilder.directory(new File(pwd));
+			final Process p = pBuilder.start();
+			p.getOutputStream().close();
+			return p.waitFor() == 0;
+		} catch(InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		} catch(IOException e) {
+			return false;
+		}
 	}
 	
 	@Test
