@@ -169,7 +169,7 @@
 					<version>1.20</version>
 					<configuration>
 						<licenseName>rubens</licenseName>
-						<licenseResolver>${project.baseUri}/license</licenseResolver>
+						<licenseResolver>${project.baseUri}/license-files</licenseResolver>
 						<projectName>RUBENS</projectName>
 					</configuration>
 					<executions>
