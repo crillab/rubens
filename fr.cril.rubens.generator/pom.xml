@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>fr.cril.rubens.pom</artifactId>
 		<groupId>fr.cril.rubens</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>fr.cril.rubens.generator</artifactId>
 	<name>RUBENS instance generator</name>
