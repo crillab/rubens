@@ -261,6 +261,30 @@ public class SoftwareOutputCheckerTest {
 		assertTrue(noHistory.getExplanation().length() < withHistory.getExplanation().length());
 	}
 	
+	@Test
+	public void testCE() {
+		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
+		assertSuccess(SoftwareOutputChecker.CE.check(af, "2", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+	}
+	
+	@Test
+	public void testCEWrongNum() {
+		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
+		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "1", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+	}
+	
+	@Test
+	public void testCENaN() {
+		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
+		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "abc", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+	}
+	
+	@Test
+	public void testCEFloat() {
+		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
+		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "2.0", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+	}
+	
 	private void assertSuccess(final CheckResult result) {
 		assertTrue(result.isSuccessful());
 	}

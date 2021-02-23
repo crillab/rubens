@@ -53,6 +53,24 @@ public class ElementaryCheckers {
 
 	}
 	
+	@ReflectorParam(name="CE-GR", family="AF/Base")
+	public static class CEGRChecker extends AbstractElementaryCheckerFactory {
+		
+		public CEGRChecker() {
+			super(() -> new GroundedSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-GR");
+		}
+
+	}
+	
+	@ReflectorParam(name="CE-ID", family="AF/Base")
+	public static class CEIDChecker extends AbstractElementaryCheckerFactory {
+		
+		public CEIDChecker() {
+			super(() -> new IdealSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-ID");
+		}
+
+	}
+	
 	@ReflectorParam(name="CE-PR", family="AF/Base")
 	public static class CEPRChecker extends AbstractElementaryCheckerFactory {
 		

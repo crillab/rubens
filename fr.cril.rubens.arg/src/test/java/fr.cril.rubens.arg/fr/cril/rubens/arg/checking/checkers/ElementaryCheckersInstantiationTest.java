@@ -34,7 +34,7 @@ public class ElementaryCheckersInstantiationTest {
 	
 	@Test
 	public void testAll() {
-		Stream.of("DC", "DS", "EE", "SE").forEach(this::test);
+		Stream.of("DC", "DS", "EE", "CE", "SE").forEach(this::test);
 	}
 	
 	private void test(final String query) {
