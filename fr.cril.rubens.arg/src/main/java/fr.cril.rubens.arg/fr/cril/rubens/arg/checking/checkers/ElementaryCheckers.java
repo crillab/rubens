@@ -44,6 +44,51 @@ import fr.cril.rubens.specs.CheckerFactory;
  */
 public class ElementaryCheckers {
 	
+	@ReflectorParam(name="CE-CO", family="AF/Base")
+	public static class CECOChecker extends AbstractElementaryCheckerFactory {
+		
+		public CECOChecker() {
+			super(() -> new CompleteSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-CO");
+		}
+
+	}
+	
+	@ReflectorParam(name="CE-PR", family="AF/Base")
+	public static class CEPRChecker extends AbstractElementaryCheckerFactory {
+		
+		public CEPRChecker() {
+			super(() -> new PreferredSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-PR");
+		}
+
+	}
+	
+	@ReflectorParam(name="CE-SST", family="AF/Base")
+	public static class CESSTChecker extends AbstractElementaryCheckerFactory {
+		
+		public CESSTChecker() {
+			super(() -> new SemistableSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-SST");
+		}
+
+	}
+	
+	@ReflectorParam(name="CE-ST", family="AF/Base")
+	public static class CESTChecker extends AbstractElementaryCheckerFactory {
+		
+		public CESTChecker() {
+			super(() -> new StableSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-ST");
+		}
+
+	}
+	
+	@ReflectorParam(name="CE-STG", family="AF/Base")
+	public static class CESTGChecker extends AbstractElementaryCheckerFactory {
+		
+		public CESTGChecker() {
+			super(() -> new StageSemTestGeneratorFactory(false), SoftwareOutputChecker.CE::check, "CE-STG");
+		}
+
+	}
+	
 	@ReflectorParam(name="DC-CO", family="AF/Base")
 	public static class DCCOChecker extends AbstractElementaryCheckerFactory {
 		

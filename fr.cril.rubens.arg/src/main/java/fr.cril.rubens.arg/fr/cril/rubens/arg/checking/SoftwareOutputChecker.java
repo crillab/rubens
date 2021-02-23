@@ -44,6 +44,9 @@ public enum SoftwareOutputChecker {
 
 	/** algorithm for the EE query */
 	EE(SoftwareOutputChecker::checkEE),
+	
+	/** algorithm for the CE query */
+	CE(SoftwareOutputChecker::checkCE),
 
 	/** algorithm for the SE query */
 	SE(SoftwareOutputChecker::checkSE),
@@ -80,6 +83,15 @@ public enum SoftwareOutputChecker {
 			final ExtensionSet ext = outputDecoder.readExtensionSet(result);
 			return expected.getExtensions().equals(ext) ? CheckResult.SUCCESS : newError(expected, "got "+result+"; expected "+expected.getExtensions());
 		} catch (SyntaxErrorException e) {
+			return newError(expected, e.getMessage());
+		}
+	}
+	
+	private static CheckResult checkCE(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
+		try {
+			final int extCount = Integer.parseInt(result.trim());
+			return expected.getExtensions().size() == extCount ? CheckResult.SUCCESS : newError(expected, "got "+result.trim()+"; expected "+expected.getExtensions().size());
+		} catch (final NumberFormatException e) {
 			return newError(expected, e.getMessage());
 		}
 	}
