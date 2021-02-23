@@ -32,6 +32,30 @@ RUBENS requires `java` (with version at least 11) and `maven` to be installed. T
 Note that a bug in the javadoc tool provided with jdk-11 prevents the documentation to be generated (see [this ticket](https://bugs.openjdk.java.net/browse/JDK-8208269) for more information). You need jdk-12 to generate the javadoc.
 
 
+## How to build
+
+First, download the latest release (which is available from [Github](https://github.com/crillab/rubens/releases)), and unzip it. Run the `maven package` command with the unzipped directory as the current working one.
+
+On a terminal, it should consist of typing the following sequence of commands:
+
+```bash
+me@machine:~$ unzip rubens-fr.cril.rubens.pom-X.zip
+[...]
+me@machine:~$ cd rubens-fr.cril.rubens.pom-X
+me@machine:~/rubens-fr.cril.rubens.pom-X$ mvn package
+[...]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  [...]
+[INFO] Finished at: [...]
+[INFO] ------------------------------------------------------------------------
+
+```
+
+The RUBENS generator should be located in the `fr.cril.rubens.generator/target` directory, and the checker should be in `fr.cril.rubens.checker/target`.
+
+
 ## Usage
 
 Common usages:
