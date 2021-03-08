@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>fr.cril.rubens.pom</artifactId>
 		<groupId>fr.cril.rubens</groupId>
-		<version>1.1.1-SNAPSHOT</version>
+		<version>1.1.1</version>
 	</parent>
 	<artifactId>fr.cril.rubens.core</artifactId>
 	<name>RUBENS core API</name>
