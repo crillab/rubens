@@ -24,9 +24,9 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,12 +38,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.testutils.StringInstance;
 
-public class ASoftwareExecutorTest {
+class ASoftwareExecutorTest {
 	
 	private boolean checkCat() throws IOException, InterruptedException {
 		return checkExec(Stream.of("/bin/cat", "--version").collect(Collectors.toList()), "/bin");
@@ -73,7 +73,7 @@ public class ASoftwareExecutorTest {
 	}
 	
 	@Test
-	public void testOk() throws IOException, InterruptedException {
+	void testOk() throws IOException, InterruptedException {
 		if(!checkCat()) {
 			return;
 		}
@@ -86,7 +86,7 @@ public class ASoftwareExecutorTest {
 	}
 	
 	@Test
-	public void testStatus() throws IOException, InterruptedException {
+	void testStatus() throws IOException, InterruptedException {
 		if(!checkTest()) {
 			return;
 		}
@@ -99,7 +99,7 @@ public class ASoftwareExecutorTest {
 	}
 	
 	@Test
-	public void testTimeout() throws IOException, InterruptedException {
+	void testTimeout() throws IOException, InterruptedException {
 		if(!checkSleep()) {
 			return;
 		}

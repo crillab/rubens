@@ -24,25 +24,25 @@ package fr.cril.rubens.cnf.mc;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.core.TestGenerator;
 
-public class ModelCounterTestGeneratorTest {
+class ModelCounterTestGeneratorTest {
 	
 	@Test
-	public void testMoreThanOneTest0() {
+	void testMoreThanOneTest0() {
 		final TestGenerator<ModelCountingCnfInstance> generator = new TestGenerator<>(new ModelCountingCnfTestGeneratorFactory());
 		final List<ModelCountingCnfInstance> instances = generator.computeToDepth(2);
 		assertEquals(2, instances.size());
 	}
 	
 	@Test
-	public void testMoreThanOneTest1() {
+	void testMoreThanOneTest1() {
 		final TestGenerator<ModelCountingCnfInstance> generator = new TestGenerator<>(new ModelCountingCnfTestGeneratorFactory());
 		this.counter = 0;
 		generator.computeToDepth(2, i -> incCounter());

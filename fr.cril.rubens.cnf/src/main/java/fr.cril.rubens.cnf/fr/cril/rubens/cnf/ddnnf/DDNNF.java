@@ -83,7 +83,7 @@ public class DDNNF {
 			return;
 		}
 		for(Map<Integer, Boolean> rootModel : this.root.models()) {
-			final List<Integer> model = rootModel.entrySet().stream().map(e -> e.getValue() ? e.getKey() : -e.getKey())
+			final List<Integer> model = rootModel.entrySet().stream().map(e -> Boolean.TRUE.equals(e.getValue()) ? e.getKey() : -e.getKey())
 					.sorted((a,b) -> Integer.compare(Math.abs(a), Math.abs(b))).collect(Collectors.toList());
 			if(model.size() == this.nVars) {
 				modelConsumer.accept(model);

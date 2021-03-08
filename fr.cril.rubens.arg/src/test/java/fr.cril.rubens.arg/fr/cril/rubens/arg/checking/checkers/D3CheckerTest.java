@@ -24,16 +24,18 @@ package fr.cril.rubens.arg.checking.checkers;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
@@ -48,15 +50,15 @@ import fr.cril.rubens.arg.testgen.D3TestGeneratorFactory;
 import fr.cril.rubens.arg.utils.Forget;
 import fr.cril.rubens.core.CheckResult;
 
-public class D3CheckerTest {
+class D3CheckerTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
 	
 	@Test
-	public void testCheckSoftwareOutputEmptyGR() {
+	void testCheckSoftwareOutputEmptyGR() {
 		final D3ArgumentationFramework d3af = emptyGrAF();
 		final D3Checker checker = new D3Checker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
@@ -75,53 +77,27 @@ public class D3CheckerTest {
 	}
 	
 	@Test
-	public void testNewTestGenerator() {
+	void testNewTestGenerator() {
 		assertTrue(new D3Checker().newTestGenerator() instanceof D3TestGeneratorFactory);
 	}
 	
 	@Test
-	public void testNewExecutor() {
+	void testNewExecutor() {
 		assertTrue(new D3Checker().newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
 	}
 	
-	@Test
-	public void testSyntaxError() {
+	@ParameterizedTest
+	@ValueSource(strings = {"[]], [], [[]]", "[[a0]], [], [[]]", "[[]], [[a0]], [[]]", "[[]], [], [[a0]]"})
+	void testErrors(final String arg) {
 		final D3ArgumentationFramework d3af = emptyGrAF();
 		final D3Checker checker = new D3Checker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
-		final CheckResult result = checker.checkSoftwareOutput(d3af, "[]], [], [[]]");
+		final CheckResult result = checker.checkSoftwareOutput(d3af, arg);
 		assertFalse(result.isSuccessful());
 	}
 	
 	@Test
-	public void testGrError() {
-		final D3ArgumentationFramework d3af = emptyGrAF();
-		final D3Checker checker = new D3Checker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
-		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[a0]], [], [[]]");
-		assertFalse(result.isSuccessful());
-	}
-	
-	@Test
-	public void testStError() {
-		final D3ArgumentationFramework d3af = emptyGrAF();
-		final D3Checker checker = new D3Checker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
-		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[]], [[a0]], [[]]");
-		assertFalse(result.isSuccessful());
-	}
-	
-	@Test
-	public void testPrError() {
-		final D3ArgumentationFramework d3af = emptyGrAF();
-		final D3Checker checker = new D3Checker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
-		final CheckResult result = checker.checkSoftwareOutput(d3af, "[[]], [], [[a0]]");
-		assertFalse(result.isSuccessful());
-	}
-	
-	@Test
-	public void testOptions() {
+	void testOptions() {
 		assertEquals(1, new D3Checker().getOptions().size());
 	}
 

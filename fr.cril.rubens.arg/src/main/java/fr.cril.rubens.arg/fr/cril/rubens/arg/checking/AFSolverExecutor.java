@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.cril.rubens.arg.core.AArgumentationFrameworkGraph;
-import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.DynamicArgumentationFramework;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
@@ -62,7 +61,7 @@ public class AFSolverExecutor<T extends AArgumentationFrameworkGraph> extends AS
 	@Override
 	protected List<String> cliArgs(final Path execLocation, final Map<String, Path> instanceFiles, final T instance) {
 		final String execLoc = execLocation.toAbsolutePath().toString();
-		final String apxLoc = instanceFiles.get(ArgumentationFramework.APX_EXT).toAbsolutePath().toString();
+		final String apxLoc = instanceFiles.get(AArgumentationFrameworkGraph.APX_EXT).toAbsolutePath().toString();
 		final List<String> cliArgs = Stream.of(execLoc, "-fo", "apx", "-f", apxLoc, "-p", problem).collect(Collectors.toList());
 		final Path apxmPath = instanceFiles.get(DynamicArgumentationFramework.APXM_EXT);
 		if(apxmPath != null) {

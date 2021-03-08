@@ -24,8 +24,9 @@ package fr.cril.rubens.cnf.wmc;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,19 +37,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.wmodels.WeightedModelsCnfInstance;
 
-public class WeightedModelCountingCnfInstanceTest {
+class WeightedModelCountingCnfInstanceTest {
 	
 	private CnfInstance decorated;
 	
 	private WeightedModelCountingCnfInstance instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.decorated = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
@@ -56,14 +57,14 @@ public class WeightedModelCountingCnfInstanceTest {
 	}
 	
 	@Test
-	public void testInheritance() {
+	void testInheritance() {
 		assertEquals(this.decorated.nVars(), this.instance.nVars());
 		assertEquals(this.decorated.clauses(), this.instance.clauses());
 		assertEquals(this.decorated.models(), this.instance.models());
 	}
 	
 	@Test
-	public void testInheritanceOfEmpty() {
+	void testInheritanceOfEmpty() {
 		this.decorated = new CnfInstance();
 		this.instance = new WeightedModelCountingCnfInstance();
 		assertEquals(this.decorated.nVars(), this.instance.nVars());
@@ -72,20 +73,20 @@ public class WeightedModelCountingCnfInstanceTest {
 	}
 	
 	@Test
-	public void testExtensions() {
+	void testExtensions() {
 		assertEquals(Arrays.stream(new String[]{CnfInstance.CNF_EXT, WeightedModelCountingCnfInstance.W_EXT, WeightedModelCountingCnfInstance.WMC_EXT}).collect(Collectors.toSet()),
 				new HashSet<>(this.instance.getFileExtensions()));
 	}
 	
 	@Test
-	public void testCnfOutput() throws IOException {
+	void testCnfOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(CnfInstance.CNF_EXT, outputStream);
 		assertEquals("p cnf 1 1\n1 0", new String(outputStream.toByteArray()).trim());
 	}
 	
 	@Test
-	public void testWOutput() throws IOException {
+	void testWOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(WeightedModelsCnfInstance.W_EXT, outputStream);
 		final Map<Integer, Integer> weights = Arrays.stream(new String(outputStream.toByteArray()).trim().split("\n")).filter(Objects::nonNull).filter(s -> !s.isEmpty())
@@ -96,15 +97,15 @@ public class WeightedModelCountingCnfInstanceTest {
 	}
 	
 	@Test
-	public void testMCOutput() throws IOException {
+	void testMCOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(WeightedModelCountingCnfInstance.WMC_EXT, outputStream);
 		assertEquals(this.instance.modelWeights().get(Stream.of(1).collect(Collectors.toList())).toString(), new String(outputStream.toByteArray()).trim());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testWrongOutputExt() throws IOException {
-		this.instance.write("toto", null);
+	@Test
+	void testWrongOutputExt() {
+		assertThrows(IllegalArgumentException.class, () -> this.instance.write("toto", null));
 	}
 
 }

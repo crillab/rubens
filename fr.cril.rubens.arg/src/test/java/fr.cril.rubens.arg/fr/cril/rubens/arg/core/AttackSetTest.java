@@ -24,10 +24,12 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Set;
@@ -35,10 +37,10 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class AttackSetTest {
+class AttackSetTest {
 	
 	private Attack att1;
 	
@@ -48,7 +50,7 @@ public class AttackSetTest {
 
 	private AttackSet set2;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
@@ -59,65 +61,65 @@ public class AttackSetTest {
 	}
 	
 	@Test
-	public void testGetInstance() {
-		assertTrue(AttackSet.getInstance(Collections.singleton(this.att1)) == this.set1);
-		assertFalse(AttackSet.getInstance(Collections.singleton(this.att1)) == this.set2);
+	void testGetInstance() {
+		assertSame(AttackSet.getInstance(Collections.singleton(this.att1)), this.set1);
+		assertNotSame(AttackSet.getInstance(Collections.singleton(this.att1)), this.set2);
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		assertEquals(this.set1, AttackSet.getInstance(Collections.singleton(this.att1)));
 		assertNotEquals(this.set2, AttackSet.getInstance(Collections.singleton(this.att1)));
 	}
 	
 	@Test
-	public void testHashcode() {
+	void testHashcode() {
 		assertEquals(this.set1.hashCode(), AttackSet.getInstance(Collections.singleton(this.att1)).hashCode());
 		assertNotEquals(this.set2.hashCode(), AttackSet.getInstance(Collections.singleton(this.att1)).hashCode());
 	}
 	
 	@Test
-	public void testStream() {
+	void testStream() {
 		assertEquals(Collections.singleton(this.att1), this.set1.stream().collect(Collectors.toSet()));
 	}
 	
 	@Test
-	public void testContains() {
+	void testContains() {
 		assertTrue(this.set1.contains(this.att1));
 		assertFalse(this.set1.contains(this.att2));
 	}
 	
 	@Test
-	public void testSize() {
+	void testSize() {
 		assertEquals(0, ArgumentSet.getInstance(Collections.emptySet()).size());
 		assertEquals(1, this.set1.size());
 	}
 	
 	@Test
-	public void testCollector() {
+	void testCollector() {
 		assertEquals(this.set1, this.set1.stream().collect(AttackSet.collector()));
 		assertEquals(AttackSet.getInstance(Stream.of(this.att1, this.att2).collect(Collectors.toSet())), Stream.of(this.att1, this.att2).parallel().collect(AttackSet.collector()));
 	}
 	
 	@Test
-	public void testCollectorCombiner() {
+	void testCollectorCombiner() {
 		final BinaryOperator<Set<Attack>> combiner = AttackSet.collector().combiner();
 		assertEquals(Stream.of(this.att1, this.att2).collect(Collectors.toSet()), combiner.apply(Stream.of(this.att1).collect(Collectors.toSet()), Stream.of(this.att2).collect(Collectors.toSet())));
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals(Collections.singleton(this.att1).toString(), this.set1.toString());
 	}
 	
 	@Test
-	public void testRangeOfEmptyAF() {
+	void testRangeOfEmptyAF() {
 		final ArgumentSet emptyArgSet = ArgumentSet.getInstance(Collections.emptySet());
 		assertEquals(emptyArgSet, AttackSet.getInstance(Collections.emptySet()).rangeOf(emptyArgSet));
 	}
 	
 	@Test
-	public void testRange() {
+	void testRange() {
 		final ArgumentSet args = Stream.of(Argument.getInstance("a1"), Argument.getInstance("a2")).collect(ArgumentSet.collector());
 		assertEquals(args, this.set1.rangeOf(args));
 	}

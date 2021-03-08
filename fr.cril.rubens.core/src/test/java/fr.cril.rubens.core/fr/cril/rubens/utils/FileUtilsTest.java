@@ -24,8 +24,8 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,12 +36,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class FileUtilsTest {
+class FileUtilsTest {
 	
 	@Test
-	public void testCleanOldFiles() throws IOException {
+	void testCleanOldFiles() throws IOException {
 		final Path tempDirectory = Files.createTempDirectory("rubens-test-");
 		final Path f1 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.a"));
 		final Path f2 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.b"));
@@ -55,7 +55,7 @@ public class FileUtilsTest {
 	}
 	
 	@Test
-	public void testNotADir() throws IOException {
+	void testNotADir() throws IOException {
 		final Path tempDirectory = Files.createTempDirectory("rubens-test-");
 		final Path f1 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.a"));
 		final Path f2 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.b"));
@@ -68,7 +68,7 @@ public class FileUtilsTest {
 	}
 	
 	@Test
-	public void testCannotReadNorDelete() throws IOException {
+	void testCannotReadNorDelete() throws IOException {
 		final Path tempDirectory = Files.createTempDirectory("rubens-test-");
 		final Path f1 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.a"));
 		final Path f2 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.b"));
@@ -83,7 +83,7 @@ public class FileUtilsTest {
 	}
 	
 	@Test
-	public void testCannotDelete() throws IOException {
+	void testCannotDelete() throws IOException {
 		final Path tempDirectory = Files.createTempDirectory("rubens-test-");
 		final Path f1 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.a"));
 		final Path f2 = Files.createFile(Paths.get(tempDirectory.toAbsolutePath().toString(), "foo.b"));

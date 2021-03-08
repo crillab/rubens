@@ -24,7 +24,7 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,20 +34,20 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.utils.Forget;
 
-public class D3ArgumentationFrameworkTest {
+class D3ArgumentationFrameworkTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
 	
 	@Test
-	public void testExtensions() {
+	void testExtensions() {
 		final List<Argument> argl = IntStream.range(0, 4).mapToObj(i -> "a"+i).map(Argument::getInstance).collect(Collectors.toList());
 		final ArgumentSet args = argl.stream().collect(ArgumentSet.collector());
 		final AttackSet attacks = AttackSet.getInstance(Stream.of(
@@ -68,7 +68,7 @@ public class D3ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		final List<Argument> argl = IntStream.range(0, 4).mapToObj(i -> "a"+i).map(Argument::getInstance).collect(Collectors.toList());
 		final ArgumentSet args = argl.stream().collect(ArgumentSet.collector());
 		final AttackSet attacks = AttackSet.getInstance(Stream.of(
@@ -83,7 +83,7 @@ public class D3ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteExtensions() throws IOException {
+	void testWriteExtensions() throws IOException {
 		final List<Argument> argl = IntStream.range(0, 4).mapToObj(i -> "a"+i).map(Argument::getInstance).collect(Collectors.toList());
 		final ArgumentSet args = argl.stream().collect(ArgumentSet.collector());
 		final AttackSet attacks = AttackSet.getInstance(Stream.of(

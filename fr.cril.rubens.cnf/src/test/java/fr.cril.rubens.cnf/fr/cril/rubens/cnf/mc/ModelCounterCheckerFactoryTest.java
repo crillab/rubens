@@ -24,9 +24,9 @@ package fr.cril.rubens.cnf.mc;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,35 +34,35 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.CnfSolverExecutor;
 import fr.cril.rubens.core.CheckResult;
 
-public class ModelCounterCheckerFactoryTest {
+class ModelCounterCheckerFactoryTest {
 	
 	private ModelCounterCheckerFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.factory = new ModelCounterCheckerFactory();
 	}
 	
 	@Test
-	public void testNewGenerator() {
+	void testNewGenerator() {
 		assertTrue(this.factory.newTestGenerator() instanceof ModelCountingCnfTestGeneratorFactory);
 	}
 	
 	@Test
-	public void testNewExecutor() {
+	void testNewExecutor() {
 		final Path path = Paths.get("foo", "bar");
 		assertTrue(this.factory.newExecutor(path) instanceof CnfSolverExecutor);
 	}
 	
 	@Test
-	public void testUnsat() {
+	void testUnsat() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Collections.emptyList()));
@@ -70,26 +70,26 @@ public class ModelCounterCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testSat() {
+	void testSat() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1))));
 		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns 1\n"));
 	}
 	
 	@Test
-	public void testWrongCount() {
+	void testWrongCount() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1))));
 		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns 0\n"));
 	}
 	
 	@Test
-	public void testMultipleStatusLine() {
+	void testMultipleStatusLine() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns 1\ns 1\n"));
 	}
 	
 	@Test
-	public void testNoStatusLine() {
+	void testNoStatusLine() {
 		final ModelCountingCnfInstance instance = new ModelCountingCnfInstance(new CnfInstance(1,
 				Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Collections.emptyList()));
@@ -97,22 +97,22 @@ public class ModelCounterCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testUnexpectedLine() {
+	void testUnexpectedLine() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\nthis is unexpected\ns UNSATISFIABLE\n"));
 	}
 	
 	@Test
-	public void testUnexpectedStatusLine() {
+	void testUnexpectedStatusLine() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns FOO\n"));
 	}
 	
 	@Test
-	public void testStatusLineOfLength1() {
+	void testStatusLineOfLength1() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns\n"));
 	}
 	
 	@Test
-	public void testStatusLineOfNoSpace() {
+	void testStatusLineOfNoSpace() {
 		assertError(this.factory.checkSoftwareOutput(new ModelCountingCnfInstance(), "c this is a comment\ns123\n"));
 	}
 	

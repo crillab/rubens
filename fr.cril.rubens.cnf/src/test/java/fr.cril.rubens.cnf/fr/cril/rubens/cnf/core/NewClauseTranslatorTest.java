@@ -24,41 +24,41 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class NewClauseTranslatorTest {
+class NewClauseTranslatorTest {
 	
 	private NewClauseTranslator translator;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.translator = new NewClauseTranslator();
 	}
 	
 	@Test
-	public void testCanBeAppliedTo() {
+	void testCanBeAppliedTo() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		assertTrue(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testCannotBeAppliedTo() {
+	void testCannotBeAppliedTo() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList()))
 				.collect(Collectors.toList()), Collections.emptyList());
 		assertFalse(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testApply() {
+	void testApply() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstance = this.translator.translate(instance);
@@ -68,7 +68,7 @@ public class NewClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testApplyFreeVar() {
+	void testApplyFreeVar() {
 		final CnfInstance instance = new CnfInstance(1, new ArrayList<>(),
 				Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstance = this.translator.translate(instance);
@@ -83,7 +83,7 @@ public class NewClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testEmptyInstance() {
+	void testEmptyInstance() {
 		assertFalse(this.translator.canBeAppliedTo(new CnfInstance()));
 	}
 

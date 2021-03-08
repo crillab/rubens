@@ -24,20 +24,20 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
-public class LoggerHelperTest {
+class LoggerHelperTest {
 	
 	@Test
-	public void testDefaultLogger() {
+	void testDefaultLogger() {
 		assertEquals(LoggerFactory.getLogger("RUBENS"), LoggerHelper.getInstance().getLogger());
 	}
 	
 	@Test
-	public void testSwitchLogger() {
+	void testSwitchLogger() {
 		final LoggerHelper helper = LoggerHelper.getInstance();
 		helper.switchLogger("foo");
 		assertEquals(LoggerFactory.getLogger("foo"), helper.getLogger());

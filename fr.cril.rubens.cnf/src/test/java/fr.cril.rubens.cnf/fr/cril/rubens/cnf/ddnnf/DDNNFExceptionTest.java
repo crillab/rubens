@@ -24,39 +24,39 @@ package fr.cril.rubens.cnf.ddnnf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DDNNFExceptionTest {
+class DDNNFExceptionTest {
 	
 	@Test
-	public void testNewSyntaxErrorInPreamble() {
+	void testNewSyntaxErrorInPreamble() {
 		assertEquals("syntax error in preamble", DDNNFException.newSyntaxErrorInPreamble().getMessage());
 	}
 	
 	@Test
-	public void testNewErrorAtNode() {
+	void testNewErrorAtNode() {
 		assertEquals("an error was detected at node which index is 1 (foo)", DDNNFException.newErrorAtNode(1, "foo").getMessage());
 	}
 	
 	@Test
-	public void testNewWrongNumberOfNodesInPreamble() {
+	void testNewWrongNumberOfNodesInPreamble() {
 		assertEquals("wrong number of declared nodes (declared: 1; effective: 2)", DDNNFException.newWrongNumberOfNodesInPreamble(1, 2).getMessage());
 	}
 	
 	@Test
-	public void testNewWrongNumberOfEdgesInPreamble() {
+	void testNewWrongNumberOfEdgesInPreamble() {
 		assertEquals("wrong number of declared edges (declared: 1; effective: 2)", DDNNFException.newWrongNumberOfEdgesInPreamble(1, 2).getMessage());
 	}
 	
 	@Test
-	public void testNewNotDecomposableAndNode() {
+	void testNewNotDecomposableAndNode() {
 		assertEquals("AND node at index 1 is not decomposable", DDNNFException.newNotDecomposableAndNode(1).getMessage());
 	}
 	
 	@Test
-	public void testNewNotDeterministOrNode() {
+	void testNewNotDeterministOrNode() {
 		assertEquals("OR node at index 1 is not determinist", DDNNFException.newNotDeterministOrNode(1).getMessage());
 	}
 

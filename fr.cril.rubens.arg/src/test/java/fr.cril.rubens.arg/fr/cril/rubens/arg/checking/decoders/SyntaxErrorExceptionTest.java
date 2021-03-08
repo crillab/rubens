@@ -24,16 +24,14 @@ package fr.cril.rubens.arg.checking.decoders;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
-
-public class SyntaxErrorExceptionTest {
+class SyntaxErrorExceptionTest {
 	
 	@Test
-	public void testMsg() {
+	void testMsg() {
 		final SyntaxErrorException e = new SyntaxErrorException("foo");
 		assertEquals("foo", e.getMessage());
 	}

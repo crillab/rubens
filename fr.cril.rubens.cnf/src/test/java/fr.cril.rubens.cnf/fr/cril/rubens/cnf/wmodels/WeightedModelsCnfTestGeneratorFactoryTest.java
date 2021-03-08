@@ -24,7 +24,7 @@ package fr.cril.rubens.cnf.wmodels;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
@@ -32,28 +32,28 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.specs.InstanceTranslator;
 
-public class WeightedModelsCnfTestGeneratorFactoryTest {
+class WeightedModelsCnfTestGeneratorFactoryTest {
 	
 	private WeightedModelsCnfTestGeneratorFactory generator;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.generator = new WeightedModelsCnfTestGeneratorFactory();
 	}
 	
 	@Test
-	public void testInitInstance() {
+	void testInitInstance() {
 		assertEquals(new CnfInstance(), this.generator.initInstance());
 	}
 	
 	@Test
-	public void testTranslators() {
+	void testTranslators() {
 		final List<InstanceTranslator<WeightedModelsCnfInstance>> initTranslators = this.generator.initTranslators();
 		final Set<InstanceTranslator<WeightedModelsCnfInstance>> initTranslatorsSet = initTranslators.stream().distinct().collect(Collectors.toSet());
 		final List<InstanceTranslator<WeightedModelsCnfInstance>> translators = this.generator.translators();
@@ -61,7 +61,7 @@ public class WeightedModelsCnfTestGeneratorFactoryTest {
 	}
 	
 	@Test
-	public void testTranslatorsWeights() {
+	void testTranslatorsWeights() {
 		final Map<InstanceTranslator<WeightedModelsCnfInstance>, Integer> weights = this.generator.translatorWeights();
 		final List<InstanceTranslator<WeightedModelsCnfInstance>> translators = this.generator.translators();
 		for(final Entry<InstanceTranslator<WeightedModelsCnfInstance>, Integer> weightEntry : weights.entrySet()) {

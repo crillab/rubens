@@ -24,15 +24,15 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
@@ -42,7 +42,7 @@ import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class AttackRemovalTranslatorTest {
+class AttackRemovalTranslatorTest {
 	
 	private AttackRemovalTranslator translator;
 	
@@ -54,7 +54,7 @@ public class AttackRemovalTranslatorTest {
 	
 	private ArgumentationFramework translated1;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.translator = new AttackRemovalTranslator(EExtensionSetComputer.COMPLETE_SEM);
@@ -71,33 +71,33 @@ public class AttackRemovalTranslatorTest {
 	}
 	
 	@Test
-	public void testCannotBeApplied() {
+	void testCannotBeApplied() {
 		assertFalse(this.translator.canBeAppliedTo(new ArgumentationFramework()));
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		assertTrue(this.translator.canBeAppliedTo(this.af1));
 	}
 	
 	@Test
-	public void testSelectAttackToRemove() {
+	void testSelectAttackToRemove() {
 		assertEquals(this.attack1, this.translator.selectAttackToRemove(this.af1));
 	}
 	
 	@Test
-	public void testTranslate1() {
+	void testTranslate1() {
 		final Attack att = this.translator.selectAttackToRemove(this.af1);
 		assertEquals(this.translated1, this.translator.translate(this.af1, att));
 	}
 	
 	@Test
-	public void testTranslate2() {
+	void testTranslate2() {
 		assertEquals(this.translated1, this.translator.translate(this.af1));
 	}
 	
 	@Test
-	public void testTranslate3() {
+	void testTranslate3() {
 		assertEquals(1, this.translator.translate(this.af2).getExtensions().size());
 	}
 

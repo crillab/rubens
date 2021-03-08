@@ -24,12 +24,12 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.file.Path;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.core.CheckResult;
@@ -38,10 +38,10 @@ import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
-public class ArgumentationFrameworkCheckerFactoryTest {
+class ArgumentationFrameworkCheckerFactoryTest {
 	
 	@Test
-	public void testIgnFilters() {
+	void testIgnFilters() {
 		assertFalse(new LocalFactory().ignoreInstance(new ArgumentationFramework()));
 	}
 	

@@ -24,9 +24,10 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,20 +39,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.utils.Forget;
 
-public class ArgumentationFrameworkTest {
+class ArgumentationFrameworkTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
 	
 	@Test
-	public void testEmptyAF() {
+	void testEmptyAF() {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		assertEquals(ArgumentSet.getInstance(Collections.emptySet()), af.getArguments());
 		assertEquals(AttackSet.getInstance(Collections.emptySet()), af.getAttacks());
@@ -59,7 +60,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testAf() {
+	void testAf() {
 		final Argument argA = Argument.getInstance("a");
 		final Argument argB = Argument.getInstance("b");
 		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());
@@ -72,7 +73,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testFileExtensions() {
+	void testFileExtensions() {
 		final Collection<String> fileExtensions = new ArgumentationFramework().getFileExtensions();
 		assertEquals(2, fileExtensions.size());
 		assertTrue(fileExtensions.contains(".apx"));
@@ -80,7 +81,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteInstanceEmptyAf() throws IOException {
+	void testWriteInstanceEmptyAf() throws IOException {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		af.write(".apx", os);
@@ -89,7 +90,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteExtensionEmptyAf() throws IOException {
+	void testWriteExtensionEmptyAf() throws IOException {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		af.write(".exts", os);
@@ -101,7 +102,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteInstance() throws IOException {
+	void testWriteInstance() throws IOException {
 		final Argument argA = Argument.getInstance("a");
 		final Argument argB = Argument.getInstance("b");
 		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());
@@ -118,7 +119,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteExtension() throws IOException {
+	void testWriteExtension() throws IOException {
 		final Argument argA = Argument.getInstance("a");
 		final Argument argB = Argument.getInstance("b");
 		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());
@@ -134,23 +135,32 @@ public class ArgumentationFrameworkTest {
 		assertEquals("]", lines.get(2));
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullArgs() {
-		new ArgumentationFramework(null, AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.emptySet()));
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullAttacks() {
-		new ArgumentationFramework(ArgumentSet.getInstance(Collections.emptySet()), null, ExtensionSet.getInstance(Collections.emptySet()));
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullExtSet() {
-		new ArgumentationFramework(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()), null);
+	@Test
+	void testNullArgs() {
+		final ArgumentSet argSet = null;
+		final AttackSet attSet = AttackSet.getInstance(Collections.emptySet());
+		final ExtensionSet extSet = ExtensionSet.getInstance(Collections.emptySet());
+		assertThrows(IllegalArgumentException.class, () -> new ArgumentationFramework(argSet, attSet, extSet));
 	}
 	
 	@Test
-	public void testHashcode() {
+	void testNullAttacks() {
+		final ArgumentSet argSet = ArgumentSet.getInstance(Collections.emptySet());
+		final AttackSet attSet = null;
+		final ExtensionSet extSet = ExtensionSet.getInstance(Collections.emptySet());
+		assertThrows(IllegalArgumentException.class, () -> new ArgumentationFramework(argSet, attSet, extSet));
+	}
+	
+	@Test
+	void testNullExtSet() {
+		final ArgumentSet argSet = ArgumentSet.getInstance(Collections.emptySet());
+		final AttackSet attSet = AttackSet.getInstance(Collections.emptySet());
+		final ExtensionSet extSet = null;
+		assertThrows(IllegalArgumentException.class, () -> new ArgumentationFramework(argSet, attSet, extSet));
+	}
+	
+	@Test
+	void testHashcode() {
 		final ArgumentationFramework af = new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.emptySet()),
@@ -159,81 +169,87 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		final ArgumentationFramework af = new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.emptySet()),
 				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))));
-		assertTrue(new ArgumentationFramework().equals(af));
+		assertEquals(new ArgumentationFramework(), af);
 	}
 	
 	@Test
-	public void testEquals2() {
+	void testEquals2() {
 		final ArgumentationFramework af = new ArgumentationFramework();
-		assertTrue(af.equals(af));
+		assertEquals(af, af);
 	}
 	
 	@Test
-	public void testNotEqualsNull() {
-		assertFalse(new ArgumentationFramework().equals(null));
+	void testNotEqualsNull() {
+		assertNotEquals(null, new ArgumentationFramework());
 	}
 	
 	@Test
-	public void testNotEqualsNotAF() {
-		assertFalse(new ArgumentationFramework().equals(new Object()));
+	void testNotEqualsNotAF() {
+		assertNotEquals(new ArgumentationFramework(), new Object());
 	}
 	
 	@Test
-	public void testNotEqualsArgs() {
-		assertFalse(new ArgumentationFramework().equals(new ArgumentationFramework(
+	void testNotEqualsArgs() {
+		assertNotEquals(new ArgumentationFramework(), new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.singleton(Argument.getInstance("a"))),
 				AttackSet.getInstance(Collections.emptySet()),
-				ExtensionSet.getInstance(Collections.emptySet()))));
+				ExtensionSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testNotEqualsExtAtts() {
-		assertFalse(new ArgumentationFramework().equals(new ArgumentationFramework(
+	void testNotEqualsExtAtts() {
+		assertNotEquals(new ArgumentationFramework(), new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.singleton(Attack.getInstance(Argument.getInstance("a1"), Argument.getInstance("a2")))),
-				ExtensionSet.getInstance(Collections.emptySet()))));
+				ExtensionSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testNotEqualsExtSets() {
-		assertFalse(new ArgumentationFramework().equals(new ArgumentationFramework(
+	void testNotEqualsExtSets() {
+		assertNotEquals(new ArgumentationFramework(), new ArgumentationFramework(
 				ArgumentSet.getInstance(Collections.emptySet()),
 				AttackSet.getInstance(Collections.emptySet()),
-				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.singleton(Argument.getInstance("a"))))))));
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testWriteNullOS() throws IOException {
-		new ArgumentationFramework().write(".apx", null);
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testWrongExt() throws IOException {
-		new ArgumentationFramework().write(".foo", new ByteArrayOutputStream());
+				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.singleton(Argument.getInstance("a")))))));
 	}
 	
 	@Test
-	public void testToString() {
+	void testWriteNullOS() throws IOException {
+		final ArgumentationFramework af = new ArgumentationFramework();
+		assertThrows(IllegalArgumentException.class, () -> af.write(".apx", null));
+	}
+	
+	@Test
+	void testWrongExt() throws IOException {
+		final ArgumentationFramework af = new ArgumentationFramework();
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		assertThrows(IllegalArgumentException.class, () -> af.write(".foo", baos));
+	}
+	
+	@Test
+	void testToString() {
 		assertEquals("[[], [], [[]]]", new ArgumentationFramework().toString());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullArgUnderDecision() {
-		new ArgumentationFramework().setArgUnderDecision(null);
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testUnknownArgUnderDecision() {
-		new ArgumentationFramework().setArgUnderDecision(Argument.getInstance("a"));
+	@Test
+	void testNullArgUnderDecision() {
+		final ArgumentationFramework af = new ArgumentationFramework();
+		assertThrows(IllegalArgumentException.class, () -> af.setArgUnderDecision(null));
 	}
 	
 	@Test
-	public void testArgUnderDecision() {
+	void testUnknownArgUnderDecision() {
+		final ArgumentationFramework af = new ArgumentationFramework();
+		final Argument arg = Argument.getInstance("a");
+		assertThrows(IllegalArgumentException.class, () -> af.setArgUnderDecision(arg));
+	}
+	
+	@Test
+	void testArgUnderDecision() {
 		final Argument argA = Argument.getInstance("a");
 		final Argument argB = Argument.getInstance("b");
 		final Set<Argument> args = Stream.of(argA, argB).collect(Collectors.toSet());
@@ -245,7 +261,7 @@ public class ArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteNoExtensions() throws IOException {
+	void testWriteNoExtensions() throws IOException {
 		final ArgumentationFramework af = new ArgumentationFramework(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()),
 				ExtensionSet.getInstance(Collections.emptySet()));
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();

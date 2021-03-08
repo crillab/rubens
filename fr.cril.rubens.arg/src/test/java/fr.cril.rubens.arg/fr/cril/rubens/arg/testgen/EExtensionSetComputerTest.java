@@ -24,14 +24,14 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
@@ -40,22 +40,22 @@ import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class EExtensionSetComputerTest {
+class EExtensionSetComputerTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
 	
 	@Test
-	public void testEmptyInstanceCO() {
+	void testEmptyInstanceCO() {
 		final ExtensionSet exts = EExtensionSetComputer.COMPLETE_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(1, exts.size());
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testCO() {
+	void testCO() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -68,7 +68,7 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testDualCO() {
+	void testDualCO() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Argument arg3 = Argument.getInstance("a3");
@@ -82,14 +82,14 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstancePR() {
+	void testEmptyInstancePR() {
 		final ExtensionSet exts = EExtensionSetComputer.PREFERRED_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(1, exts.size());
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testPR() {
+	void testPR() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -101,13 +101,13 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstanceST() {
+	void testEmptyInstanceST() {
 		final ExtensionSet exts = EExtensionSetComputer.STABLE_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), exts);
 	}
 	
 	@Test
-	public void testST() {
+	void testST() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -119,13 +119,13 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstanceGR() {
+	void testEmptyInstanceGR() {
 		final ExtensionSet exts = EExtensionSetComputer.GROUNDED_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), exts);
 	}
 	
 	@Test
-	public void testEmptyGR() {
+	void testEmptyGR() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -135,7 +135,7 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testGR() {
+	void testGR() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -144,13 +144,13 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstanceSST() {
+	void testEmptyInstanceSST() {
 		final ExtensionSet exts = EExtensionSetComputer.SEMISTABLE_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), exts);
 	}
 	
 	@Test
-	public void testSST() {
+	void testSST() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -162,13 +162,13 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstanceSTG() {
+	void testEmptyInstanceSTG() {
 		final ExtensionSet exts = EExtensionSetComputer.STAGE_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.emptySet()))), exts);
 	}
 	
 	@Test
-	public void testSTG() {
+	void testSTG() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -180,14 +180,14 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEmptyInstanceID() {
+	void testEmptyInstanceID() {
 		final ExtensionSet exts = EExtensionSetComputer.IDEAL_SEM.compute(ArgumentSet.getInstance(Collections.emptySet()), AttackSet.getInstance(Collections.emptySet()));
 		assertEquals(1, exts.size());
 		assertTrue(exts.contains(ArgumentSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testID() {
+	void testID() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att12 = Attack.getInstance(arg1, arg2);
@@ -198,7 +198,7 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEESTAutoattacks() {
+	void testEESTAutoattacks() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att11 = Attack.getInstance(arg1, arg1);
@@ -207,7 +207,7 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEEGRAutoattack() {
+	void testEEGRAutoattack() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Attack att11 = Attack.getInstance(arg1, arg1);
@@ -217,7 +217,7 @@ public class EExtensionSetComputerTest {
 	}
 	
 	@Test
-	public void testEEGRDefense() {
+	void testEEGRDefense() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
 		final Argument arg3 = Argument.getInstance("a3");

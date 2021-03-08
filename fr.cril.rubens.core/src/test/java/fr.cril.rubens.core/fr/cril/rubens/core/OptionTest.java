@@ -24,37 +24,37 @@ package fr.cril.rubens.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.options.MethodOption;
 
-public class OptionTest {
+class OptionTest {
 	
 	private MethodOption opt;
 	
 	private String str;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.str = "";
 		this.opt = new MethodOption("n", "d", v -> this.str = v);
 	}
 	
 	@Test
-	public void testName() {
+	void testName() {
 		assertEquals("n", this.opt.getName());
 	}
 	
 	@Test
-	public void testDescription() {
+	void testDescription() {
 		assertEquals("d", this.opt.getDescription());
 	}
 	
 	@Test
-	public void testApply() {
+	void testApply() {
 		this.opt.apply("ok");
 		assertEquals("ok", this.str);
 	}

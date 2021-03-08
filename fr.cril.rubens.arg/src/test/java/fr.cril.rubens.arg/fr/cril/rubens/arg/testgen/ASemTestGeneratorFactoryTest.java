@@ -24,22 +24,22 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 
-public class ASemTestGeneratorFactoryTest {
+class ASemTestGeneratorFactoryTest {
 	
 	@Test
-	public void testEmptyAfAllowed() {
+	void testEmptyAfAllowed() {
 		final LocalTGF tgf = new LocalTGF(true);
 		assertEquals(new ArgumentationFramework(), tgf.initInstance());
 	}
 	
 	@Test
-	public void testEmptyAfNotAllowed() {
+	void testEmptyAfNotAllowed() {
 		final LocalTGF tgf = new LocalTGF(false);
 		assertEquals(1, tgf.initInstance().getArguments().size());
 	}

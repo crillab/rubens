@@ -24,19 +24,18 @@ package fr.cril.rubens.arg.checking.checkers;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.SoftwareOutputChecker;
-import fr.cril.rubens.arg.checking.checkers.AbstractElementaryCheckerFactory;
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
@@ -51,7 +50,7 @@ import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 
-public class AbstractElementaryCheckerFactoryTest {
+class AbstractElementaryCheckerFactoryTest {
 	
 	private AbstractElementaryCheckerFactory factory;
 	
@@ -59,7 +58,7 @@ public class AbstractElementaryCheckerFactoryTest {
 	
 	private final TriFunction<ArgumentationFramework, String, ISolverOutputDecoder, CheckResult> resultChecker = SoftwareOutputChecker.EE::check;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.factory = new Factory();
@@ -67,12 +66,12 @@ public class AbstractElementaryCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testNewGenerator() {
+	void testNewGenerator() {
 		assertEquals(SemistableSemTestGeneratorFactory.class, this.factory.newTestGenerator().getClass());
 	}
 	
 	@Test
-	public void testCheckSoftwareOutput() {
+	void testCheckSoftwareOutput() {
 		final Argument arg = Argument.getInstance("a");
 		final ArgumentSet argSet = ArgumentSet.getInstance(Collections.singleton(arg));
 		final ArgumentationFramework af = new ArgumentationFramework(argSet, AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.singleton(argSet)));
@@ -81,12 +80,12 @@ public class AbstractElementaryCheckerFactoryTest {
 	}
 	
 	@Test
-	public void testNewExecutor() {
+	void testNewExecutor() {
 		assertTrue(this.factory.newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
 	}
 	
 	@Test
-	public void testOptions() {
+	void testOptions() {
 		assertEquals(1, this.factory.getOptions().size());
 	}
 	

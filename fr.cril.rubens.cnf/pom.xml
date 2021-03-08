@@ -24,7 +24,13 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>
-						${argLine} --add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.core=ALL-UNNAMED --add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.ddnnf=ALL-UNNAMED
+						${argLine}
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.core=ALL-UNNAMED
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.ddnnf=ALL-UNNAMED
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.mc=ALL-UNNAMED
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.utils=ALL-UNNAMED
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.wmc=ALL-UNNAMED
+						--add-opens fr.cril.rubens.cnf/fr.cril.rubens.cnf.wmodels=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
@@ -92,10 +98,15 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>	
 		<dependency>
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>

@@ -24,7 +24,7 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,24 +33,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import fr.cril.rubens.cnf.core.CnfInstance;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class CnfInstanceTest {
+class CnfInstanceTest {
 	
 	private CnfInstance instance;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 	}
 	
 	@Test
-	public void testEmptyInstance() {
+	void testEmptyInstance() {
 		final CnfInstance cnfInstance = new CnfInstance();
 		assertEquals(0, cnfInstance.nVars());
 		assertTrue(cnfInstance.clauses().isEmpty());
@@ -60,26 +59,26 @@ public class CnfInstanceTest {
 	}
 	
 	@Test
-	public void testNVars() {
+	void testNVars() {
 		assertEquals(1, this.instance.nVars());
 	}
 	
 	@Test
-	public void testClauses() {
+	void testClauses() {
 		final List<List<Integer>> instanceClauses = this.instance.clauses();
 		assertEquals(1, instanceClauses.size());
 		assertEquals(Stream.of(1).collect(Collectors.toList()), instanceClauses.get(0));
 	}
 	
 	@Test
-	public void testModels() {
+	void testModels() {
 		final List<List<Integer>> instanceModels = this.instance.models();
 		assertEquals(1, instanceModels.size());
 		assertEquals(Stream.of(1).collect(Collectors.toList()), instanceModels.iterator().next());
 	}
 	
 	@Test
-	public void testExtensions() {
+	void testExtensions() {
 		final List<String> extensions = new ArrayList<>(this.instance.getFileExtensions());
 		assertEquals(2, extensions.size());
 		assertTrue(extensions.contains(CnfInstance.CNF_EXT));
@@ -87,26 +86,26 @@ public class CnfInstanceTest {
 	}
 	
 	@Test
-	public void testCnfOutput() throws IOException {
+	void testCnfOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(CnfInstance.CNF_EXT, outputStream);
 		assertEquals("p cnf 1 1\n1 0", new String(outputStream.toByteArray()).trim());
 	}
 	
 	@Test
-	public void testModelsOutput() throws IOException {
+	void testModelsOutput() throws IOException {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		this.instance.write(CnfInstance.MODS_EXT, outputStream);
 		assertEquals("1 0", new String(outputStream.toByteArray()).trim());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testWrongOutputExt() throws IOException {
-		this.instance.write("toto", null);
+	@Test
+	void testWrongOutputExt() {
+		assertThrows(IllegalArgumentException.class, () -> this.instance.write("toto", null));
 	}
 	
 	@Test
-	public void testCopyConstructor() {
+	void testCopyConstructor() {
 		final CnfInstance copy = new CnfInstance(this.instance);
 		assertEquals(this.instance.nVars(), copy.nVars());
 		assertEquals(this.instance.clauses(), copy.clauses());
@@ -114,12 +113,12 @@ public class CnfInstanceTest {
 	}
 	
 	@Test
-	public void testHashcodeAndEquals() {
+	void testHashcodeAndEquals() {
 		EqualsVerifier.forClass(CnfInstance.class).verify();
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals("[nVars=1, clauses=[[1]], models=[[1]]]", this.instance.toString());
 	}
 

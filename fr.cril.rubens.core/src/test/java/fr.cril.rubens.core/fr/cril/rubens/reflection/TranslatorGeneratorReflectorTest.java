@@ -24,9 +24,11 @@ package fr.cril.rubens.reflection;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -36,11 +38,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import fr.cril.rubens.reflection.ReflectorParam;
-import fr.cril.rubens.reflection.TranslatorGeneratorReflector;
 import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.specs.InstanceTranslator;
 import fr.cril.rubens.specs.TestGeneratorFactory;
@@ -48,22 +48,22 @@ import fr.cril.rubens.testutils.DynamicReflectorParam;
 import fr.cril.rubens.testutils.StringConcatGeneratorFactory;
 
 
-public class TranslatorGeneratorReflectorTest {
+class TranslatorGeneratorReflectorTest {
 
 	@Test
-	public void testSingleton() {
+	void testSingleton() {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
-		assertTrue(instance == TranslatorGeneratorReflector.getInstance());
+		assertSame(instance, TranslatorGeneratorReflector.getInstance());
 	}
 
 	@Test
-	public void testNoFactory() {
+	void testNoFactory() {
 		final TranslatorGeneratorReflector reflector = TranslatorGeneratorReflector.getInstance();
 		assertTrue(reflector.classesNames().isEmpty());
 	}
 
 	@Test
-	public void testOneFactory() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	void testOneFactory() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
 		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
 		final Collection<String> names = instance.classesNames();
@@ -72,27 +72,28 @@ public class TranslatorGeneratorReflectorTest {
 		assertEquals(StringConcatGeneratorFactory.class, instance.getClassInstance("testFactory").getClass());
 	}
 
-	@Test(expected=IllegalStateException.class)
-	public void testSameName() {
+	@Test
+	void testSameName() {
 		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
 		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
-		instance.addClass("testFactory", StringConcatGeneratorFactory.class);
-	}
-
-	@Test(expected=IllegalArgumentException.class)
-	public void testUnexistingFactory( ) {
-		TranslatorGeneratorReflector.getInstance().getClassInstance("toto");
-	}
-
-	@Test(expected=IllegalArgumentException.class)
-	public void testUnbuildableFactory() {
-		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
-		instance.addClass("testFactory", UnbuildableFactory.class);
-		instance.getClassInstance("testFactory");
+		assertThrows(IllegalStateException.class, () -> instance.addClass("testFactory", StringConcatGeneratorFactory.class));
 	}
 
 	@Test
-	public void testNoAnnotation() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+	void testUnexistingFactory( ) {
+		final TranslatorGeneratorReflector refl = TranslatorGeneratorReflector.getInstance();
+		assertThrows(IllegalArgumentException.class, () -> refl.getClassInstance("toto"));
+	}
+
+	@Test
+	void testUnbuildableFactory() {
+		final TranslatorGeneratorReflector instance = TranslatorGeneratorReflector.getInstance();
+		instance.addClass("testFactory", UnbuildableFactory.class);
+		assertThrows(IllegalArgumentException.class, () -> instance.getClassInstance("testFactory"));
+	}
+
+	@Test
+	void testNoAnnotation() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
 		final Method method = Class.class.getDeclaredMethod("annotationData", (Class<?>[]) null);
 		method.setAccessible(true);
 		final Object annotationData = method.invoke(UnbuildableFactory.class);
@@ -117,7 +118,7 @@ public class TranslatorGeneratorReflectorTest {
 	}
 
 	@Test
-	public void testEnabled() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+	void testEnabled() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
 		final Method method = Class.class.getDeclaredMethod("annotationData", (Class<?>[]) null);
 		method.setAccessible(true);
 		final Object annotationData = method.invoke(UnbuildableFactory.class);
@@ -135,7 +136,7 @@ public class TranslatorGeneratorReflectorTest {
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		TranslatorGeneratorReflector.getInstance().resetClasses();
 	}

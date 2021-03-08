@@ -24,9 +24,9 @@ package fr.cril.rubens.generator;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,13 +37,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfTestGeneratorFactory;
 
-public class GeneratorOptionsReaderTest {
+class GeneratorOptionsReaderTest {
 	
 	private static final String TMPFILE_PREFIX = "junit-rubens-";
 
@@ -51,48 +51,48 @@ public class GeneratorOptionsReaderTest {
 	
 	private static List<Path> tempFiles = new ArrayList<>();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.optReader = GeneratorOptionsReader.getInstance();
 	}
 	
 	@Test
-	public void testDisplayHelp() {
+	void testDisplayHelp() {
 		this.optReader.loadOptions(new String[] {"-h"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTION_EXIT_OK, this.optReader.exitStatus());
 	}
 	
 	@Test
-	public void testDisplayFactories() {
+	void testDisplayFactories() {
 		this.optReader.loadOptions(new String[] {"-l"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTION_EXIT_OK, this.optReader.exitStatus());
 	}
 	
 	@Test
-	public void testParseException() {
+	void testParseException() {
 		this.optReader.loadOptions(new String[] {"-m"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
 	}
 	
 	@Test
-	public void testUnavailableMethod() {
+	void testUnavailableMethod() {
 		this.optReader.loadOptions(new String[] {"-m", "toto"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
 	}
 	
 	@Test
-	public void testOutputToWrongPath() {
+	void testOutputToWrongPath() {
 		this.optReader.loadOptions(new String[] {"-o", "/toto/toto/toto"});
 		assertTrue(this.optReader.mustExit());
 		assertEquals(GeneratorOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
 	}
 	
 	@Test
-	public void testOutputToRegularFile() throws IOException {
+	void testOutputToRegularFile() throws IOException {
 		final Path file = Files.createTempFile(TMPFILE_PREFIX, null);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
@@ -101,7 +101,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testOutputToUnreadableDir() throws IOException {
+	void testOutputToUnreadableDir() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		Files.setPosixFilePermissions(file, Stream.of(PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE).collect(Collectors.toSet()));
@@ -111,7 +111,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testOutputToUnwritableDir() throws IOException {
+	void testOutputToUnwritableDir() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		Files.setPosixFilePermissions(file, Stream.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_EXECUTE).collect(Collectors.toSet()));
@@ -121,29 +121,29 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testDefaultMaxDepth() throws IOException {
+	void testDefaultMaxDepth() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF"});
 		assertFalse(this.optReader.mustExit());
 		assertEquals(file.toString(), this.optReader.getOutputDirectory().getAbsolutePath());
-		assertTrue(this.optReader.getFactory().getClass().equals(CnfTestGeneratorFactory.class));
+		assertEquals(this.optReader.getFactory().getClass(), CnfTestGeneratorFactory.class);
 		assertEquals(GeneratorOptionsReader.DEFAULT_MAX_DEPTH, this.optReader.getMaxDepth());
 	}
 	
 	@Test
-	public void testSetMaxDepth() throws IOException {
+	void testSetMaxDepth() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
 		assertFalse(this.optReader.mustExit());
 		assertEquals(file.toString(), this.optReader.getOutputDirectory().getAbsolutePath());
-		assertTrue(this.optReader.getFactory().getClass().equals(CnfTestGeneratorFactory.class));
+		assertEquals(this.optReader.getFactory().getClass(), CnfTestGeneratorFactory.class);
 		assertEquals(3, this.optReader.getMaxDepth());
 	}
 	
 	@Test
-	public void testSetMaxDepthNotInteger() throws IOException {
+	void testSetMaxDepthNotInteger() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "toto"});
@@ -152,7 +152,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testSetMaxDepthNegativeInteger() throws IOException {
+	void testSetMaxDepthNegativeInteger() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "-1"});
@@ -161,7 +161,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testNoMethod() throws IOException {
+	void testNoMethod() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-o", file.toString()});
@@ -170,7 +170,7 @@ public class GeneratorOptionsReaderTest {
 	}
 	
 	@Test
-	public void testNoOutputDirectory() throws IOException {
+	void testNoOutputDirectory() throws IOException {
 		final Path file = Files.createTempDirectory(TMPFILE_PREFIX);
 		tempFiles.add(file);
 		this.optReader.loadOptions(new String[] {"-m", "CNF"});
@@ -178,7 +178,7 @@ public class GeneratorOptionsReaderTest {
 		assertEquals(GeneratorOptionsReader.STATUS_OPTIONS_EXIT_ERROR, this.optReader.exitStatus());
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() {
 		for(final Path p : tempFiles) {
 			try {

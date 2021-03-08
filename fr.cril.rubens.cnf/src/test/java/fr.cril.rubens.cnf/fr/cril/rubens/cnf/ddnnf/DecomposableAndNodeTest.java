@@ -24,47 +24,52 @@ package fr.cril.rubens.cnf.ddnnf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class DecomposableAndNodeTest {
+class DecomposableAndNodeTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Utils.resetNextIndex();
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNoChildren() throws DDNNFException {
-		new DecomposableAndNode(1, Collections.emptyList());
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullChildren() throws DDNNFException {
-		new DecomposableAndNode(1, null);
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullChild() throws DDNNFException {
-		new DecomposableAndNode(1, Collections.singletonList(null));
-	}
-	
-	@Test(expected=DDNNFException.class)
-	public void testNotDecomposable() throws DDNNFException {
-		new DecomposableAndNode(1, Stream.of(new LiteralNode(1), new LiteralNode(-1)).collect(Collectors.toList()));
+	@Test
+	void testNoChildren() throws DDNNFException {
+		List<INode> empty = Collections.emptyList();
+		assertThrows(IllegalArgumentException.class, () -> new DecomposableAndNode(1, empty));
 	}
 	
 	@Test
-	public void testModels() throws DDNNFException {
+	void testNullChildren() throws DDNNFException {
+		assertThrows(IllegalArgumentException.class, () -> new DecomposableAndNode(1, null));
+	}
+	
+	@Test
+	void testNullChild() throws DDNNFException {
+		List<INode> singleNull = Collections.singletonList(null);
+		assertThrows(IllegalArgumentException.class, () -> new DecomposableAndNode(1, singleNull));
+	}
+	
+	@Test
+	void testNotDecomposable() throws DDNNFException {
+		List<INode> children = Stream.of(new LiteralNode(1), new LiteralNode(-1)).collect(Collectors.toList());
+		assertThrows(DDNNFException.class, () -> new DecomposableAndNode(1, children));
+	}
+	
+	@Test
+	void testModels() throws DDNNFException {
 		final DecomposableAndNode node = new DecomposableAndNode(Utils.nextIndex(), Stream.of(Utils.buildXor(1, 2), Utils.buildXor(3, 4)).collect(Collectors.toList()));
 		assertEquals(Stream.of(
 				Utils.buildModel(1, -2, 3, -4),
@@ -75,7 +80,7 @@ public class DecomposableAndNodeTest {
 	}
 	
 	@Test
-	public void testEquals() throws DDNNFException {
+	void testEquals() throws DDNNFException {
 		EqualsVerifier.forClass(DecomposableAndNode.class)
 			.withNonnullFields("children")
 			.withIgnoredFields("models")

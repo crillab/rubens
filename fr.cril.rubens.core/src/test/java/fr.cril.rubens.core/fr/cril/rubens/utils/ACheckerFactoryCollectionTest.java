@@ -24,8 +24,9 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -36,9 +37,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 import fr.cril.rubens.reflection.ReflectorParam;
@@ -46,11 +47,11 @@ import fr.cril.rubens.specs.Instance;
 import fr.cril.rubens.testutils.DynamicReflectorParam;
 import fr.cril.rubens.testutils.NullCheckerFactory;
 
-public class ACheckerFactoryCollectionTest {
+class ACheckerFactoryCollectionTest {
 	
 	private FactoryCollection1 f1;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
 		buildClass("c1", NullCheckerFactory.class);
 		CheckerFactoryReflector.getInstance().resetClasses();
@@ -58,7 +59,7 @@ public class ACheckerFactoryCollectionTest {
 		buildClass("f1", FactoryCollection1.class);
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() throws NoSuchMethodException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException {
 		killClass(FactoryCollection1.class);
 		killClass(NullCheckerFactory.class);
@@ -93,14 +94,15 @@ public class ACheckerFactoryCollectionTest {
 	}
 	
 	@Test
-	public void testOk() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+	void testOk() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
 		assertEquals(1, f1.getNames().size());
 		assertNotNull(f1.getFactory("c1"));
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testMissingFactory() {
-		new FactoryCollection1(Stream.of("c2").collect(Collectors.toList()));
+	@Test
+	void testMissingFactory() {
+		List<String> c2 = Stream.of("c2").collect(Collectors.toList());
+		assertThrows(IllegalArgumentException.class, () -> new FactoryCollection1(c2));
 	}
 	
 	@ReflectorParam(enabled=false)

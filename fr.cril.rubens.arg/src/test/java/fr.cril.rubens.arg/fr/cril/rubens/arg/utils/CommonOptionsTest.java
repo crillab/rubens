@@ -24,9 +24,9 @@ package fr.cril.rubens.arg.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.checking.decoders.ISolverOutputDecoder;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
@@ -46,22 +46,22 @@ import fr.cril.rubens.reflection.ReflectorParam;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
-public class CommonOptionsTest {
+class CommonOptionsTest {
 	
 	@Test
-	public void testSingleton() {
-		assertTrue(CommonOptions.getInstance() == CommonOptions.getInstance());
+	void testSingleton() {
+		assertSame(CommonOptions.getInstance(), CommonOptions.getInstance());
 	}
 	
 	@Test
-	public void testNames() {
+	void testNames() {
 		final List<String> actual = CommonOptions.getInstance().getOptions(new LocalFactory()).stream().map(MethodOption::getName).collect(Collectors.toList());
 		final List<String> expected = Stream.of("outputFormat").collect(Collectors.toList());
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void testOutputFormat() {
+	void testOutputFormat() {
 		final LocalFactory factory = new LocalFactory();
 		factory.setOutputFormat(SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));

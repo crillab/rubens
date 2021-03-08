@@ -24,7 +24,7 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,12 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CnfSolverExecutorTest {
+class CnfSolverExecutorTest {
 	
 	@Test
-	public void testCLIArgs() {
+	void testCLIArgs() {
 		final Path execPath = Paths.get("foo", "bar");
 		final CnfSolverExecutor<CnfInstance> executor = new CnfSolverExecutor<>(execPath);
 		final Map<String, Path> files = new HashMap<>();

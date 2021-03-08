@@ -24,34 +24,35 @@ package fr.cril.rubens.cnf.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 import fr.cril.rubens.cnf.core.NewVarTranslator;
 
-public class CnfTranslatorTest {
+class CnfTranslatorTest {
 	
 	private NewVarTranslator adapted;
 	
 	private CnfTranslatorAdapter<CnfInstance, CnfInstance> adapter;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.adapted = new NewVarTranslator();
 		this.adapter = new CnfTranslatorAdapter<>(this.adapted);
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		assertTrue(this.adapted.canBeAppliedTo(instance));
@@ -59,7 +60,7 @@ public class CnfTranslatorTest {
 	}
 	
 	@Test
-	public void testCannotBeApplied() {
+	void testCannotBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()),
 				Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.emptyList());
 		assertFalse(this.adapted.canBeAppliedTo(instance));
@@ -67,7 +68,7 @@ public class CnfTranslatorTest {
 	}
 	
 	@Test
-	public void testApply() {
+	void testApply() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstanceOfAdapted = this.adapted.translate(instance);
@@ -75,10 +76,11 @@ public class CnfTranslatorTest {
 		assertEquals(newInstanceOfAdapted, newInstanceOfAdapter);
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testIllegalAdapted() {
+	@Test
+	void testIllegalAdapted() {
 		final CnfTranslatorAdapter<CnfInstance, DummyCnfInstance> dummyAdapter = new CnfTranslatorAdapter<CnfInstance, DummyCnfInstance>(this.adapted);
-		dummyAdapter.translate(new DummyCnfInstance());
+		DummyCnfInstance cnf = new DummyCnfInstance();
+		assertThrows(IllegalArgumentException.class, () -> dummyAdapter.translate(cnf));
 	}
 	
 	private class DummyCnfInstance extends CnfInstance {

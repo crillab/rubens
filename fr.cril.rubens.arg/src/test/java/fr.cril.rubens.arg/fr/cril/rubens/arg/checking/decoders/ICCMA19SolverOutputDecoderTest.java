@@ -24,36 +24,37 @@ package fr.cril.rubens.arg.checking.decoders;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import fr.cril.rubens.arg.checking.decoders.ICCMA19SolverOutputDecoder;
-import fr.cril.rubens.arg.checking.decoders.SyntaxErrorException;
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class ICCMA19SolverOutputDecoderTest {
+class ICCMA19SolverOutputDecoderTest {
 	
 	private ICCMA19SolverOutputDecoder decoder;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.decoder = new ICCMA19SolverOutputDecoder();
 	}
 	
 	@Test
-	public void testEmptyExtensionSet() throws SyntaxErrorException {
+	void testEmptyExtensionSet() throws SyntaxErrorException {
 		final ExtensionSet actual = this.decoder.readExtensionSet(""
 				+ "[\n"
 				+ "  []\n"
@@ -62,12 +63,12 @@ public class ICCMA19SolverOutputDecoderTest {
 	}
 	
 	@Test
-	public void testAcceptanceTrue() {
+	void testAcceptanceTrue() {
 		assertTrue(this.decoder.isAcceptanceTrue("YES\n"));
 	}
 	
 	@Test
-	public void testD3AllEmpty() throws SyntaxErrorException {
+	void testD3AllEmpty() throws SyntaxErrorException {
 		final List<ExtensionSet> actual = this.decoder.readD3(""
 				+ "[\n"
 				+ "  []\n"
@@ -83,7 +84,7 @@ public class ICCMA19SolverOutputDecoderTest {
 	}
 	
 	@Test
-	public void testD3SingleArg() throws SyntaxErrorException {
+	void testD3SingleArg() throws SyntaxErrorException {
 		final List<ExtensionSet> actual = this.decoder.readD3(""
 				+ "[\n"
 				+ "  [a0]\n"
@@ -99,107 +100,62 @@ public class ICCMA19SolverOutputDecoderTest {
 		assertEquals(Stream.of(extSet, extSet, extSet).collect(Collectors.toList()), actual);
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testReadStrExtListOneLine() throws SyntaxErrorException {
-		this.decoder.readStrExtensionList("[[a0]]");
+	@ParameterizedTest
+	@ValueSource(strings = {"[[a0]]", "]\n]\n", "[\n[\n"})
+	void testReadStrExtListErr(final String arg) {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.readStrExtensionList(arg));
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testReadStrExtListNoOpeningBracket() throws SyntaxErrorException {
-		this.decoder.readStrExtensionList("]\n]\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testReadStrExtListNoClosingBracket() throws SyntaxErrorException {
-		this.decoder.readStrExtensionList("[\n[\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitExtSetUnexpectedClosingBracket() throws SyntaxErrorException {
-		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n]\n]\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitExtSetMissingClosingBracket() throws SyntaxErrorException {
-		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitExtSetUnexpectedArg() throws SyntaxErrorException {
-		this.decoder.splitExtensionSets("[\n[\n[a0]\n]\n]\na1\n");
+	@ParameterizedTest
+	@ValueSource(strings = {"[\n[\n[a0]\n]\n]\n]\n", "[\n[\n[a0]\n]\n", "[\n[\n[a0]\n]\n]\na1\n"})
+	void testSplitExtSetErr(final String arg) {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.splitExtensionSets(arg));
 	}
 	
 	@Test
-	public void testNormalizeresult() {
+	void testNormalizeresult() {
 		assertEquals("", this.decoder.normalizeResult(""));
 	}
 	
 	@Test
-	public void testDynAcceptanceStatuses() throws SyntaxErrorException {
+	void testDynAcceptanceStatuses() throws SyntaxErrorException {
 		final List<String> statuses = this.decoder.splitDynAcceptanceStatuses("[YES, NO]");
 		assertEquals(Stream.of("YES", "NO").collect(Collectors.toList()), statuses);
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testDynAcceptanceStatusesTooShort() throws SyntaxErrorException {
-		this.decoder.splitDynAcceptanceStatuses("[");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testDynAcceptanceStatusesNoOpeningBracket() throws SyntaxErrorException {
-		this.decoder.splitDynAcceptanceStatuses("]]");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testDynAcceptanceStatusesNoClosingBracket() throws SyntaxErrorException {
-		this.decoder.splitDynAcceptanceStatuses("[[");
+	@ParameterizedTest
+	@ValueSource(strings = {"[", "[[", "]]"})
+	void testDynAcceptanceStatusesErr(final String arg) {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.splitDynAcceptanceStatuses(arg));
 	}
 	
 	@Test
-	public void testSplitDynExtensions() throws SyntaxErrorException {
+	void testSplitDynExtensions() throws SyntaxErrorException {
 		final List<String> extensions = this.decoder.splitDynExtensions("[\n[a0]\n[a1]\n]\n");
 		assertEquals(Stream.of("[a0]", "[a1]").collect(Collectors.toList()), extensions);
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionsTooShort() throws SyntaxErrorException {
-		this.decoder.splitDynExtensions("[\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionsNoOpeningBracket() throws SyntaxErrorException {
-		this.decoder.splitDynExtensions("]\n]\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionsNoClosingBracket() throws SyntaxErrorException {
-		this.decoder.splitDynExtensions("[\n[\n");
+	@ParameterizedTest
+	@ValueSource(strings = {"[\n", "]\n]\\n", "[\n[\n"})
+	void testSplitDynExtensionsErr(final String arg) {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.splitDynExtensions(arg));
 	}
 	
 	@Test
-	public void testSplitDynExtensionSets() throws SyntaxErrorException {
+	void testSplitDynExtensionSets() throws SyntaxErrorException {
 		final List<String> extensions = this.decoder.splitDynExtensionSets("[\n[\n[a0]\n]\n[\n[a1]\n]\n]\n");
 		assertEquals(Stream.of("[\n[a0]\n]", "[\n[a1]\n]").collect(Collectors.toList()), extensions);
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionSetsTooShort() throws SyntaxErrorException {
-		this.decoder.splitDynExtensionSets("[\n");
+	@ParameterizedTest
+	@ValueSource(strings = {"[\n", "]\n]\n", "[\n[\n"})
+	void testSplitDynExtensionSetsErr(final String arg) {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.splitDynExtensionSets(arg));
 	}
 	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionSetsNoOpeningBracket() throws SyntaxErrorException {
-		this.decoder.splitDynExtensionSets("]\n]\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testSplitDynExtensionSetsNoClosingBracket() throws SyntaxErrorException {
-		this.decoder.splitDynExtensionSets("[\n[\n");
-	}
-	
-	@Test(expected=SyntaxErrorException.class)
-	public void testEmptyArgName() throws SyntaxErrorException {
-		this.decoder.readExtension("[a0,]");
+	@Test
+	void testEmptyArgNameErr() throws SyntaxErrorException {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.readExtension("[a0,]"));
 	}
 
 }

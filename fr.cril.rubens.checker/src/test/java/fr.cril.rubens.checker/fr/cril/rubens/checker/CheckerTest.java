@@ -24,8 +24,8 @@ package fr.cril.rubens.checker;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,34 +38,36 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import fr.cril.rubens.checker.utils.EchoCheckerFactory;
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 
-public class CheckerTest {
+class CheckerTest {
 	
-	private Path tmpDir;
+	private static Path tmpDir;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		CheckerFactoryReflector.getInstance().addClass("ECHO", EchoCheckerFactory.class);
-		this.tmpDir = Files.createTempDirectory("rubens-test-");
+		tmpDir = Files.createTempDirectory("rubens-test-");
 		EchoCheckerFactory.setAlwaysReturnFalse(false);
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
-		Files.list(this.tmpDir).forEach(arg0 -> {
+		Files.list(tmpDir).forEach(arg0 -> {
 			try {
 				Files.delete(arg0);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		Files.delete(this.tmpDir);
+		Files.delete(tmpDir);
 		CheckerFactoryReflector.getInstance().resetClasses();
 		EchoCheckerFactory.setAlwaysReturnFalse(false);
 	}
@@ -79,20 +81,20 @@ public class CheckerTest {
 	}
 	
 	@Test
-	public void testOk() throws IOException, InterruptedException {
+	void testOk() throws IOException, InterruptedException {
 		if(!checkCat()) {
 			System.out.println("no \"cat\" command; aborting test");
 			return;
 		}
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		checker.check();
 		assertEquals(7, checker.getCheckCount());
 		assertEquals(0, checker.getErrorCount());
 	}
 	
 	@Test
-	public void testWrongCLIOpts() {
-		final Checker checker = new Checker(new String[] {"-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+	void testWrongCLIOpts() {
+		final Checker checker = new Checker(new String[] {"-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		assertNotEquals(0, checker.getStatusCode());
 		checker.check();
 		assertEquals(0, checker.getCheckCount());
@@ -100,18 +102,18 @@ public class CheckerTest {
 	}
 	
 	@Test
-	public void testHasErrors() throws IOException {
-		Files.createFile(Paths.get(this.tmpDir.toAbsolutePath().toString(), "foo.txt"));
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+	void testHasErrors() throws IOException {
+		Files.createFile(Paths.get(tmpDir.toAbsolutePath().toString(), "foo.txt"));
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		EchoCheckerFactory.setAlwaysReturnFalse(true);
 		checker.check();
 		assertEquals(7, checker.getCheckCount());
 		assertEquals(7, checker.getErrorCount());
-		assertEquals(7, Files.list(this.tmpDir).count());
+		assertEquals(7, Files.list(tmpDir).count());
 	}
 	
 	@Test
-	public void testHasErrorsWithoutOutputDir() throws IOException {
+	void testHasErrorsWithoutOutputDir() throws IOException {
 		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-d", "3"});
 		EchoCheckerFactory.setAlwaysReturnFalse(true);
 		checker.check();
@@ -120,17 +122,17 @@ public class CheckerTest {
 	}
 	
 	@Test
-	public void testHasAFileNotToClean() throws IOException {
-		Files.createFile(Paths.get(this.tmpDir.toAbsolutePath().toString(), "foo.txt"));
-		Files.createFile(Paths.get(this.tmpDir.toAbsolutePath().toString(), "foo.bar"));
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+	void testHasAFileNotToClean() throws IOException {
+		Files.createFile(Paths.get(tmpDir.toAbsolutePath().toString(), "foo.txt"));
+		Files.createFile(Paths.get(tmpDir.toAbsolutePath().toString(), "foo.bar"));
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		EchoCheckerFactory.setAlwaysReturnFalse(true);
 		checker.check();
-		assertEquals(8, Files.list(this.tmpDir).count());
+		assertEquals(8, Files.list(tmpDir).count());
 	}
 	
 	@Test
-	public void testHasErrorsButNoOutputDir() throws IOException {
+	void testHasErrorsButNoOutputDir() throws IOException {
 		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-d", "3"});
 		EchoCheckerFactory.setAlwaysReturnFalse(true);
 		checker.check();
@@ -139,69 +141,50 @@ public class CheckerTest {
 	}
 	
 	@Test
-	public void testCannotReadOutputDir() throws IOException {
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+	void testCannotReadOutputDir() throws IOException {
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		EchoCheckerFactory.setAlwaysReturnFalse(true);
-		final Set<PosixFilePermission> oldPerms = Files.getPosixFilePermissions(this.tmpDir);
-		Files.setPosixFilePermissions(this.tmpDir, PosixFilePermissions.fromString("---------"));
+		final Set<PosixFilePermission> oldPerms = Files.getPosixFilePermissions(tmpDir);
+		Files.setPosixFilePermissions(tmpDir, PosixFilePermissions.fromString("---------"));
 		checker.check();
-		Files.setPosixFilePermissions(this.tmpDir, oldPerms);
+		Files.setPosixFilePermissions(tmpDir, oldPerms);
 		assertEquals(7, checker.getCheckCount());
 		assertEquals(7, checker.getErrorCount());
-		assertEquals(0, Files.list(this.tmpDir).count());
+		assertEquals(0, Files.list(tmpDir).count());
 	}
 	
 	@Test
-	public void testExceptionDuringExec() throws IOException, InterruptedException {
+	void testExceptionDuringExec() throws IOException, InterruptedException {
 		final Path path = Files.createTempFile("junit-rubens-", "", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", path.toAbsolutePath().toString(), "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3"});
+		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", path.toAbsolutePath().toString(), "-o", tmpDir.toAbsolutePath().toString(), "-d", "3"});
 		Files.delete(path);
 		checker.check();
 		assertNotEquals(0, checker.getCheckCount());
 		assertEquals(checker.getCheckCount(), checker.getErrorCount());
 	}
 	
-	@Test
-	public void testIgnAll() throws IOException, InterruptedException {
+	@ParameterizedTest
+	@CsvSource({
+		"ignAll=true, 0, 0, 7",
+		"foo=bar, 7, 0, 0",
+		"foobar, 7, 0, 0"
+	})
+	void testCounts(final String finalArg, final int checkCount, final int errCount, final int ignCount) throws IOException, InterruptedException {
 		if(!checkCat()) {
 			System.out.println("no \"cat\" command; aborting test");
 			return;
 		}
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3", "-c", "ignAll=true"});
+		String[] args = new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", tmpDir.toAbsolutePath().toString(), "-d", "3", "-c", "ignAll=true"};
+		args[args.length-1] = finalArg;
+		final Checker checker = new Checker(args);
 		checker.check();
-		assertEquals(0, checker.getCheckCount());
-		assertEquals(0, checker.getErrorCount());
-		assertEquals(7, checker.getIgnoredCount());
+		assertEquals(checkCount, checker.getCheckCount());
+		assertEquals(errCount, checker.getErrorCount());
+		assertEquals(ignCount, checker.getIgnoredCount());
 	}
 	
 	@Test
-	public void testUnknownOption1() throws IOException, InterruptedException {
-		if(!checkCat()) {
-			System.out.println("no \"cat\" command; aborting test");
-			return;
-		}
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3", "-c", "foo=bar"});
-		checker.check();
-		assertEquals(7, checker.getCheckCount());
-		assertEquals(0, checker.getErrorCount());
-		assertEquals(0, checker.getIgnoredCount());
-	}
-	
-	@Test
-	public void testUnknownOption2() throws IOException, InterruptedException {
-		if(!checkCat()) {
-			System.out.println("no \"cat\" command; aborting test");
-			return;
-		}
-		final Checker checker = new Checker(new String[] {"-m", "ECHO", "-e", "/bin/cat", "-o", this.tmpDir.toAbsolutePath().toString(), "-d", "3", "-c", "foobar"});
-		checker.check();
-		assertEquals(7, checker.getCheckCount());
-		assertEquals(0, checker.getErrorCount());
-		assertEquals(0, checker.getIgnoredCount());
-	}
-	
-	@Test
-	public void testHelp() throws IOException, InterruptedException {
+	void testHelp() throws IOException, InterruptedException {
 		final Checker checker = new Checker(new String[] {"-h"});
 		checker.check();
 		assertEquals(0, checker.getCheckCount());

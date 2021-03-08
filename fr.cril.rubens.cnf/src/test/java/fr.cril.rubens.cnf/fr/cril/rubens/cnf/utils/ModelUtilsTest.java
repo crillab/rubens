@@ -24,19 +24,19 @@ package fr.cril.rubens.cnf.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ModelUtilsTest {
+class ModelUtilsTest {
 	
 	@Test
-	public void testAddFreeVarsToModels() {
+	void testAddFreeVarsToModels() {
 		final List<List<Integer>> models = ModelUtils.addFreeVarsToModels(1, Collections.singletonList(Collections.singletonList(1)));
 		assertEquals(Stream.of(
 				Stream.of(1, -2).collect(Collectors.toList()),

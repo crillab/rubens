@@ -24,22 +24,22 @@ package fr.cril.rubens.cnf.ddnnf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class AbstractNodeTest {
+class AbstractNodeTest {
 	
 	private Node n1;
 	
 	private Node n2;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.n1 = new Node(Collections.emptyList());
 		final List<Map<Integer, Boolean>> models = Collections.singletonList(Collections.singletonMap(1, true));
@@ -47,7 +47,7 @@ public class AbstractNodeTest {
 	}
 	
 	@Test
-	public void testModels() {
+	void testModels() {
 		assertEquals(Collections.emptyList(), this.n1.models());
 		assertEquals(Collections.singletonList(Collections.singletonMap(1, true)), this.n2.models());
 	}

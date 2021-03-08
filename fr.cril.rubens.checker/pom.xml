@@ -24,7 +24,10 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>
-						@{argLine} --add-exports fr.cril.rubens.checker/fr.cril.rubens.checker.utils=fr.cril.rubens.core
+						@{argLine}
+						--add-exports fr.cril.rubens.checker/fr.cril.rubens.checker.utils=fr.cril.rubens.core
+						--add-opens fr.cril.rubens.checker/fr.cril.rubens.checker=ALL-UNNAMED
+						--add-opens fr.cril.rubens.checker/fr.cril.rubens.checker.utils=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
@@ -140,10 +143,15 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>	
 	</dependencies>
 
 </project>

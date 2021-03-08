@@ -1,10 +1,7 @@
 package fr.cril.rubens.checker.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*-
  * #%L
@@ -30,37 +27,40 @@ import org.junit.Test;
  * #L%
  */
 
-public class PathComparatorTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class PathComparatorTest {
 	
 	private PathComparator comp;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.comp = new PathComparator();
 	}
 	
 	@Test
-	public void testSame() {
+	void testSame() {
 		assertEquals(0, this.comp.compare("/foo/bar", "/foo/bar"));
 	}
 	
 	@Test
-	public void testDifferent1() {
+	void testDifferent1() {
 		assertTrue(this.comp.compare("/foo/1/bar", "/foo/2/bar") < 0);
 	}
 	
 	@Test
-	public void testDifferent2() {
+	void testDifferent2() {
 		assertTrue(this.comp.compare("/foo/2/bar", "/foo/1/bar") > 0);
 	}
 	
 	@Test
-	public void testLonger1() {
+	void testLonger1() {
 		assertTrue(this.comp.compare("/foo/bar", "/foo/bar/foobar") < 0);
 	}
 	
 	@Test
-	public void testLonger2() {
+	void testLonger2() {
 		assertTrue(this.comp.compare("/foo/bar/foobar", "/foo/bar") > 0);
 	}
 

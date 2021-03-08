@@ -24,31 +24,31 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
-public class ASatCheckerFactoryTest {
+class ASatCheckerFactoryTest {
 	
 	@Test
-	public void testIgnoreUnsat() {
+	void testIgnoreUnsat() {
 		final LocalFactory factory = new LocalFactory();
 		factory.getOptions().stream().filter(o -> o.getName().equals("ignoreUnsat")).findFirst().orElseThrow().apply("on");
 		assertTrue(factory.getIgnUnsat());
 	}
 	
 	@Test
-	public void testMultipleIgn() {
+	void testMultipleIgn() {
 		final LocalFactory factory = new LocalFactory();
 		assertFalse(factory.getIgnUnsat());
 		factory.ignoreUnsat(true);

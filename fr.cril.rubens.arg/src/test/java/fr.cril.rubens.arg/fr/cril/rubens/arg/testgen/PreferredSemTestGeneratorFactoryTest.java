@@ -24,26 +24,25 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
-import fr.cril.rubens.arg.testgen.NewAttackTranslator;
 import fr.cril.rubens.specs.InstanceTranslator;
 
-public class PreferredSemTestGeneratorFactoryTest {
+class PreferredSemTestGeneratorFactoryTest {
 	
 	@Test
-	public void testInitInstance() {
+	void testInitInstance() {
 		assertEquals(new ArgumentationFramework(), new PreferredSemTestGeneratorFactory().initInstance());
 	}
 	
 	@Test
-	public void testTranslators() {
+	void testTranslators() {
 		final List<InstanceTranslator<ArgumentationFramework>> translators = new PreferredSemTestGeneratorFactory().translators();
 		assertEquals(2, translators.size());
 		assertTrue(translators.stream().anyMatch(t -> t.getClass().equals(NewArgTranslator.class)));

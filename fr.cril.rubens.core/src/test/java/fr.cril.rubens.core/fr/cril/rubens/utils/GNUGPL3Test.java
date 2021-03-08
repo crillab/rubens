@@ -24,22 +24,22 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-public class GNUGPL3Test {
+class GNUGPL3Test {
 	
 	@Test
-	public void testWelcomeMessage() {
+	void testWelcomeMessage() {
 		final Logger logger = LoggerHelper.getInstance().getLogger();
 		assertNotNull(logger);
 		GNUGPL3.logWelcomeMessage(logger);
 	}
 	
 	@Test
-	public void testLicense() {
+	void testLicense() {
 		final Logger logger = LoggerHelper.getInstance().getLogger();
 		assertNotNull(logger);
 		GNUGPL3.logTermsAndConditions(logger);

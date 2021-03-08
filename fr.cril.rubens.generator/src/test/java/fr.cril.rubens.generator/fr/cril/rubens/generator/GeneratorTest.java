@@ -24,8 +24,8 @@ package fr.cril.rubens.generator;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,17 +37,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 
-public class GeneratorTest {
+class GeneratorTest {
 	
 	private static List<Path> tempFiles = new ArrayList<>();
 	
 	@Test
-	public void testNGeneratedCLIArgs() throws IOException {
+	void testNGeneratedCLIArgs() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
 		final Generator generator = new Generator(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
@@ -58,7 +58,7 @@ public class GeneratorTest {
 	}
 	
 	@Test
-	public void testNGeneratedProvidedParams() throws IOException {
+	void testNGeneratedProvidedParams() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
 		final GeneratorOptionsReader optionsReader = GeneratorOptionsReader.getInstance();
@@ -71,7 +71,7 @@ public class GeneratorTest {
 	}
 	
 	@Test
-	public void testCleaning() throws IOException {
+	void testCleaning() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
 		final GeneratorOptionsReader optionsReader1 = GeneratorOptionsReader.getInstance();
@@ -86,7 +86,7 @@ public class GeneratorTest {
 	}
 	
 	@Test
-	public void testIOException() throws IOException {
+	void testIOException() throws IOException {
 		final Path file = Files.createTempDirectory("junit-rubens-");
 		tempFiles.add(file);
 		final Generator generator = new Generator(new String[] {"-o", file.toString(), "-m", "CNF", "-d", "3"});
@@ -98,13 +98,13 @@ public class GeneratorTest {
 	}
 	
 	@Test
-	public void testWrongArgs() {
+	void testWrongArgs() {
 		final Generator generator = new Generator(new String[] {});
 		generator.generate();
 		assertNotEquals(0, generator.getStatusCode());
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() {
 		for(final Path p : tempFiles) {
 			try {

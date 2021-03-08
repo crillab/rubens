@@ -24,7 +24,8 @@ package fr.cril.rubens.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.core.TestGenerator;
 import fr.cril.rubens.reflection.ReflectorParam;
@@ -41,27 +42,29 @@ import fr.cril.rubens.specs.InstanceTranslator;
 import fr.cril.rubens.testutils.StringConcatGeneratorFactory;
 import fr.cril.rubens.testutils.StringInstance;
 
-public class WeightedTestGeneratorFactoryAdapterTest {
+class WeightedTestGeneratorFactoryAdapterTest {
 	
 	private StringConcatGeneratorFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.factory = new StringConcatGeneratorFactory();
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNegativeWeights() {
-		new WeightedStringConcatGeneratorFactory(this.factory, new int[] {-1, -1}).translators();
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNotEnoughMuchWeights() {
-		new WeightedStringConcatGeneratorFactory(this.factory, new int[] {1}).translators();
+	@Test()
+	void testNegativeWeights() {
+		WeightedStringConcatGeneratorFactory weightedFactory = new WeightedStringConcatGeneratorFactory(this.factory, new int[] {-1, -1});
+		assertThrows(IllegalArgumentException.class, () -> weightedFactory.translators());
 	}
 	
 	@Test
-	public void testJustOnes() {
+	void testNotEnoughMuchWeights() {
+		WeightedStringConcatGeneratorFactory weightedFactory = new WeightedStringConcatGeneratorFactory(this.factory, new int[] {1});
+		assertThrows(IllegalArgumentException.class, () -> weightedFactory.translators());
+	}
+	
+	@Test
+	void testJustOnes() {
 		final WeightedStringConcatGeneratorFactory adaptedFactory = new WeightedStringConcatGeneratorFactory(this.factory, new int[] {1, 0});
 		final List<InstanceTranslator<StringInstance>> effectiveTranslators = adaptedFactory.translators();
 		assertEquals(1, effectiveTranslators.size());

@@ -24,9 +24,9 @@ package fr.cril.rubens.options;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,13 +36,15 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.function.BiConsumer;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 
 import fr.cril.rubens.utils.LoggerHelper;
 
-public class AppOptionsTest {
+class AppOptionsTest {
 	
 	private static TestClass options;
 	
@@ -50,7 +52,7 @@ public class AppOptionsTest {
 	
 	private static boolean f2;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		options = new TestClass();
 		AppOptionsTest.f1 = false;
@@ -113,26 +115,26 @@ public class AppOptionsTest {
 	}
 	
 	@Test
-	public void testDepth() {
+	void testDepth() {
 		options.setMaxDepth("42");
 		assertEquals(42, options.getMaxDepth());
 		assertFalse(options.mustExit());
 	}
 	
 	@Test
-	public void testNegativeDepth() {
+	void testNegativeDepth() {
 		options.setMaxDepth("-1");
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testNaNDepth() {
+	void testNaNDepth() {
 		options.setMaxDepth("foo");
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testLoadOptions() {
+	void testLoadOptions() {
 		options.loadOptions(new String[] {"-o1"});
 		assertTrue(AppOptionsTest.f1);
 		assertFalse(AppOptionsTest.f2);
@@ -140,38 +142,38 @@ public class AppOptionsTest {
 	}
 	
 	@Test
-	public void testLoadOptionsParserErr() {
+	void testLoadOptionsParserErr() {
 		options.loadOptions(new String[] {"-o2"});
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testExitOption() {
+	void testExitOption() {
 		options.loadOptions(new String[] {"-o3"});
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testSetMustExit() {
+	void testSetMustExit() {
 		options.setMustExit(42);
 		assertTrue(options.mustExit());
 		assertEquals(42, options.exitStatus());
 	}
 	
 	@Test
-	public void testPrintHelp() {
+	void testPrintHelp() {
 		options.printHelpAndExit();
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testPrintLicence() {
+	void testPrintLicence() {
 		options.printLicenseAndExit();
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testReset() {
+	void testReset() {
 		final int d = options.getMaxDepth();
 		options.setMaxDepth(Integer.toString(d+1));
 		options.reset();
@@ -179,7 +181,7 @@ public class AppOptionsTest {
 	}
 	
 	@Test
-	public void testSetOutputDirectoryNew() throws IOException {
+	void testSetOutputDirectoryNew() throws IOException {
 		final Path dir0 = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
 		final Path dir = Paths.get(dir0.toAbsolutePath().toString(), "foo");
 		options.setOutputDirectory(dir.toAbsolutePath().toString());
@@ -190,7 +192,7 @@ public class AppOptionsTest {
 	}
 	
 	@Test
-	public void testSetOutputDirectoryExisting() throws IOException {
+	void testSetOutputDirectoryExisting() throws IOException {
 		final Path dir = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
 		options.setOutputDirectory(dir.toAbsolutePath().toString());
 		final File out = options.getOutputDirectory();
@@ -198,32 +200,17 @@ public class AppOptionsTest {
 		assertEquals(dir.toAbsolutePath().toString(), out.getAbsolutePath().toString());
 	}
 	
-	@Test
-	public void testSetOutputDirectoryExistingCannotRead() throws IOException {
-		final Path dir = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("-wx------")));
+	@ParameterizedTest
+	@ValueSource(strings = {"-wx------", "r-x------", "--x------"})
+	void testNotEnoughPermissionsForOutputDirectory(final String arg) throws IOException {
+		final Path dir = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString(arg)));
 		options.setOutputDirectory(dir.toAbsolutePath().toString());
 		Files.deleteIfExists(dir);
 		assertTrue(options.mustExit());
 	}
 	
 	@Test
-	public void testSetOutputDirectoryExistingCannotWrite() throws IOException {
-		final Path dir = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("r-x------")));
-		options.setOutputDirectory(dir.toAbsolutePath().toString());
-		Files.deleteIfExists(dir);
-		assertTrue(options.mustExit());
-	}
-	
-	@Test
-	public void testSetOutputDirectoryExistingCannotReadNorWrite() throws IOException {
-		final Path dir = Files.createTempDirectory("rubens-test-", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("--x------")));
-		options.setOutputDirectory(dir.toAbsolutePath().toString());
-		Files.deleteIfExists(dir);
-		assertTrue(options.mustExit());
-	}
-	
-	@Test
-	public void testSetOutputDirectoryExistingRegularFile() throws IOException {
+	void testSetOutputDirectoryExistingRegularFile() throws IOException {
 		final Path notADir = Files.createTempFile("rubens-test-", ".tmp", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
 		options.setOutputDirectory(notADir.toAbsolutePath().toString());
 		Files.deleteIfExists(notADir);
@@ -231,7 +218,7 @@ public class AppOptionsTest {
 	}
 	
 	@Test
-	public void testSetOutputDirectoryCannotCreate() throws IOException {
+	void testSetOutputDirectoryCannotCreate() throws IOException {
 		final Path dir = Paths.get("/foo/bar/foobar");
 		options.setOutputDirectory(dir.toAbsolutePath().toString());
 		Files.deleteIfExists(dir);

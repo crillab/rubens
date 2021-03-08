@@ -24,16 +24,16 @@ package fr.cril.rubens.reflection;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CheckerFactoryCollectionReflectorTest {
+class CheckerFactoryCollectionReflectorTest {
 	
 	@Test
-	public void testGetInstance() {
+	void testGetInstance() {
 		final CheckerFactoryCollectionReflector reflector = CheckerFactoryCollectionReflector.getInstance();
-		assertTrue(reflector == CheckerFactoryCollectionReflector.getInstance());
+		assertSame(reflector, CheckerFactoryCollectionReflector.getInstance());
 	}
 
 }

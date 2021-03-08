@@ -24,8 +24,8 @@ package fr.cril.rubens.checker;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -33,19 +33,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.Option;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ECheckerOptionTest {
+class ECheckerOptionTest {
 	
 	@Test
-	public void testOptionsNames() {
+	void testOptionsNames() {
 		final Set<String> genOptNames = Arrays.stream(ECheckerOption.values()).map(o -> o.getSpecs().getOpt()).collect(Collectors.toSet());
 		final Set<String> apacheOptNames = ECheckerOption.buildCliOptions().getOptions().stream().map(Option::getOpt).collect(Collectors.toSet());
 		assertEquals(apacheOptNames, genOptNames);
 	}
 	
 	@Test
-	public void testNoNullConsumer() {
+	void testNoNullConsumer() {
 		assertTrue(Arrays.stream(ECheckerOption.values()).map(ECheckerOption::getOptionConsumer).noneMatch(Objects::isNull));
 	}
 

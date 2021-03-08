@@ -24,17 +24,17 @@ package fr.cril.rubens.cnf.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LiteralUtilsTest {
+class LiteralUtilsTest {
 
 	@Test
-	public void testDimacsToInternal() {
+	void testDimacsToInternal() {
 		assertEquals(0, LiteralUtils.dimacsToInternal(1));
 		assertEquals(1, LiteralUtils.dimacsToInternal(-1));
 		assertEquals(2, LiteralUtils.dimacsToInternal(2));
@@ -42,7 +42,7 @@ public class LiteralUtilsTest {
 	}
 
 	@Test
-	public void testSelectRandomLiteral() {
+	void testSelectRandomLiteral() {
 		for(int i=0; i<10; ++i) {
 			assertEquals(1, LiteralUtils.selectRandomLiteral(Stream.of(0, 1, 0).collect(Collectors.toList())));
 		}
@@ -50,7 +50,7 @@ public class LiteralUtilsTest {
 	}
 	
 	@Test
-	public void testInternalToDimacs() {
+	void testInternalToDimacs() {
 		assertEquals(1, LiteralUtils.internalToDimacs(0));
 		assertEquals(-1, LiteralUtils.internalToDimacs(1));
 		assertEquals(2, LiteralUtils.internalToDimacs(2));

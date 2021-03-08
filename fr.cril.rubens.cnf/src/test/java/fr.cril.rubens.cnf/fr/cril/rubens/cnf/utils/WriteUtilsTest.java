@@ -24,7 +24,7 @@ package fr.cril.rubens.cnf.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -33,37 +33,37 @@ import java.io.OutputStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.CnfInstance;
 
-public class WriteUtilsTest {
+class WriteUtilsTest {
 	
 	private CnfInstance cnf;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		final List<List<Integer>> ll1 = Collections.singletonList(Collections.singletonList(1));
 		this.cnf = new CnfInstance(1, ll1, ll1);
 	}
 	
 	@Test
-	public void testWriteCnf() throws IOException {
+	void testWriteCnf() throws IOException {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		WriteUtils.writeCNF(this.cnf, out);
 		assertEquals("p cnf 1 1\n1 0\n", out.toString());
 	}
 	
 	@Test
-	public void testWriteModels() throws IOException {
+	void testWriteModels() throws IOException {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		WriteUtils.writeModels(this.cnf.models(), out);
 		assertEquals("1 0\n", out.toString());
 	}
 	
 	@Test
-	public void testWriteTuple() throws IOException {
+	void testWriteTuple() throws IOException {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		WriteUtils.writeTuple(new BufferedWriter(new OutputStreamWriter(out)), this.cnf.clauses().get(0));
 		assertEquals("1 0\n", out.toString());

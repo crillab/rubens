@@ -24,16 +24,16 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
@@ -41,10 +41,9 @@ import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.Attack;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
-import fr.cril.rubens.arg.testgen.NewArgTranslator;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class NewArgTranslatorTest {
+class NewArgTranslatorTest {
 	
 	private NewArgTranslator translator;
 	
@@ -54,7 +53,7 @@ public class NewArgTranslatorTest {
 
 	private Set<Set<Argument>> exts;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.translator = new NewArgTranslator(EExtensionSetComputer.COMPLETE_SEM);
@@ -67,13 +66,13 @@ public class NewArgTranslatorTest {
 	}
 	
 	@Test
-	public void testCanBeAppliedEmptyInstance() {
+	void testCanBeAppliedEmptyInstance() {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		assertTrue(this.translator.canBeAppliedTo(af));
 	}
 	
 	@Test
-	public void testTranslateEmptyInstance() {
+	void testTranslateEmptyInstance() {
 		final ArgumentationFramework af = new ArgumentationFramework();
 		final ArgumentationFramework newAf = this.translator.translate(af);
 		final Argument arg = Argument.getInstance("a0");
@@ -83,12 +82,12 @@ public class NewArgTranslatorTest {
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		assertTrue(this.translator.canBeAppliedTo(this.af));
 	}
 	
 	@Test
-	public void testTranslate() {
+	void testTranslate() {
 		final ArgumentationFramework newAf = this.translator.translate(this.af);
 		final Argument newArg = Argument.getInstance("a2");
 		assertEquals(Stream.of(Argument.getInstance("a0"), Argument.getInstance("a1"), newArg).collect(ArgumentSet.collector()), newAf.getArguments());

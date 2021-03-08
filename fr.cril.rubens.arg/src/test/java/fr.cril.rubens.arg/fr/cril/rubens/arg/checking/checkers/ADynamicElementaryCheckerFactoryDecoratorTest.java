@@ -24,15 +24,18 @@ package fr.cril.rubens.arg.checking.checkers;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import fr.cril.rubens.arg.checking.AFSolverExecutor;
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
@@ -47,11 +50,11 @@ import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
 import fr.cril.rubens.core.CheckResult;
 import fr.cril.rubens.reflection.ReflectorParam;
 
-public class ADynamicElementaryCheckerFactoryDecoratorTest {
+class ADynamicElementaryCheckerFactoryDecoratorTest {
 	
 	private DynamicArgumentationFramework af;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		final Argument arg = Argument.getInstance("a");
 		final ArgumentSet argSet = ArgumentSet.getInstance(Collections.singleton(arg));
@@ -66,39 +69,19 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	}
 	
 	@Test
-	public void testEECODSuccess() {
+	void testEECODSuccess() {
 		final EECODChecker checker = new EECODChecker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
 		checker.newTestGenerator();
 		assertEquals(CheckResult.SUCCESS, checker.checkSoftwareOutput(this.af, "[\n[\n[a]\n]\n[\n[]\n]\n[\n[a]\n]\n]\n"));
 	}
 	
-	@Test
-	public void testEECODSyntaxError() {
+	@ParameterizedTest
+	@ValueSource(strings = {"[\n[\n[a]\n]\n[\n[]\n]\n[\n[a]\n]\n", "[\n[\n[a]\n]\n[\n[]\n]\n]\n", "[\n[\n[]\n]\n[\n[]\n]\n[\n[a]\n]\n]\n", "[\n[\n[a]\n]\n[\n[]\n]\n[\n[]\n]\n]\n"})
+	void testEECODSyntaxError(final String arg) {
 		final EECODChecker checker = new EECODChecker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
-		assertFalse(checker.checkSoftwareOutput(this.af, "[\n[\n[a]\n]\n[\n[]\n]\n[\n[a]\n]\n").isSuccessful());
-	}
-	
-	@Test
-	public void testEECODWrongNumberOfResponses() {
-		final EECODChecker checker = new EECODChecker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
-		assertFalse(checker.checkSoftwareOutput(this.af, "[\n[\n[a]\n]\n[\n[]\n]\n]\n").isSuccessful());
-	}
-	
-	@Test
-	public void testEECODWrongInitResponse() {
-		final EECODChecker checker = new EECODChecker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
-		assertFalse(checker.checkSoftwareOutput(this.af, "[\n[\n[]\n]\n[\n[]\n]\n[\n[a]\n]\n]\n").isSuccessful());
-	}
-	
-	@Test
-	public void testEECODWrongDynResponse() {
-		final EECODChecker checker = new EECODChecker();
-		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
-		assertFalse(checker.checkSoftwareOutput(this.af, "[\n[\n[a]\n]\n[\n[]\n]\n[\n[]\n]\n]\n").isSuccessful());
+		assertFalse(checker.checkSoftwareOutput(this.af, arg).isSuccessful());
 	}
 	
 	@ReflectorParam(enabled=false)
@@ -111,7 +94,7 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	}
 	
 	@Test
-	public void testSECODSuccess() {
+	void testSECODSuccess() {
 		final SECODChecker checker = new SECODChecker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
 		assertEquals(CheckResult.SUCCESS, checker.checkSoftwareOutput(this.af, "[\n[a]\n[]\n[a]\n]\n"));
@@ -127,7 +110,7 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	}
 	
 	@Test
-	public void testDSCODSuccess() {
+	void testDSCODSuccess() {
 		final DSCODChecker checker = new DSCODChecker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
 		checker.newTestGenerator();
@@ -144,7 +127,7 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	}
 	
 	@Test
-	public void testDCCODSuccess() {
+	void testDCCODSuccess() {
 		final DCCODChecker checker = new DCCODChecker();
 		checker.setOutputFormat(SolverOutputDecoderFactory.ICCMA19.getDecoderInstance());
 		checker.newTestGenerator();
@@ -160,10 +143,10 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 		
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testUnknownProblem() {
+	@Test
+	void testUnknownProblem() {
 		final FooBarChecker checker = new FooBarChecker();
-		checker.checkSoftwareOutput(this.af, "");
+		assertThrows(IllegalArgumentException.class, () -> checker.checkSoftwareOutput(this.af, ""));
 	}
 	
 	@ReflectorParam(enabled=false)
@@ -176,12 +159,12 @@ public class ADynamicElementaryCheckerFactoryDecoratorTest {
 	}
 	
 	@Test
-	public void testNewExecutor() {
+	void testNewExecutor() {
 		assertTrue(new DCCODChecker().newExecutor(Paths.get("/foo/bar")) instanceof AFSolverExecutor);
 	}
 	
 	@Test
-	public void testOptions() {
+	void testOptions() {
 		assertEquals(1, new DCCODChecker().getOptions().size());
 	}
 

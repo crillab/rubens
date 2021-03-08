@@ -24,36 +24,37 @@ package fr.cril.rubens.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CheckResultTest {
+class CheckResultTest {
 	
 	@Test
-	public void testSuccessfulInstance() {
+	void testSuccessfulInstance() {
 		assertTrue(CheckResult.SUCCESS.isSuccessful());
 		assertEquals("SUCCESS", CheckResult.SUCCESS.getExplanation());
 	}
 	
 	@Test
-	public void testFailedInstance() {
+	void testFailedInstance() {
 		final CheckResult result = CheckResult.newError("foobar");
 		assertFalse(result.isSuccessful());
 		assertEquals("foobar", result.getExplanation());
 	}
 	
 	@Test
-	public void testAsException() {
+	void testAsException() {
 		final CheckResult result = CheckResult.newError("foobar");
 		assertEquals("foobar", result.asException().getErrorResult().getExplanation());
 	}
 	
-	@Test(expected=UnsupportedOperationException.class)
-	public void testSuccessAsException() {
-		CheckResult.SUCCESS.asException();
+	@Test
+	void testSuccessAsException() {
+		assertThrows(UnsupportedOperationException.class, () -> CheckResult.SUCCESS.asException());
 	}
 
 }

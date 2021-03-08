@@ -24,9 +24,11 @@ package fr.cril.rubens.cnf.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -34,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.cnf.core.ASatCheckerFactory;
 import fr.cril.rubens.cnf.core.CnfInstance;
@@ -43,20 +45,20 @@ import fr.cril.rubens.options.MethodOption;
 import fr.cril.rubens.specs.TestGeneratorFactory;
 import fr.cril.rubens.utils.ASoftwareExecutor;
 
-public class CommonOptionsTest {
+class CommonOptionsTest {
 	
 	@Test
-	public void testSingleton() {
-		assertTrue(CommonOptions.getInstance() == CommonOptions.getInstance());
+	void testSingleton() {
+		assertSame(CommonOptions.getInstance(), CommonOptions.getInstance());
 	}
 	
 	@Test
-	public void testGetOptions() {
+	void testGetOptions() {
 		assertEquals(1, CommonOptions.getInstance().getOptions(new LocalFactory()).size());
 	}
 	
 	@Test
-	public void testIgnUnsatTrue() {
+	void testIgnUnsatTrue() {
 		final LocalFactory factory = new LocalFactory();
 		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("ignoreUnsat").apply("on");
@@ -64,18 +66,19 @@ public class CommonOptionsTest {
 	}
 	
 	@Test
-	public void testIgnUnsatFalse() {
+	void testIgnUnsatFalse() {
 		final LocalFactory factory = new LocalFactory();
 		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
 		opts.get("ignoreUnsat").apply("off");
 		assertFalse(factory.getIgnUnsat());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testIgnUnsatWrongVal() {
+	@Test
+	void testIgnUnsatWrongVal() {
 		final LocalFactory factory = new LocalFactory();
 		final Map<String, MethodOption> opts = CommonOptions.getInstance().getOptions(factory).stream().collect(Collectors.toMap(MethodOption::getName, o -> o));
-		opts.get("ignoreUnsat").apply("foo");
+		MethodOption opt = opts.get("ignoreUnsat");
+		assertThrows(IllegalArgumentException.class, () -> opt.apply("foo"));
 	}
 	
 	private class LocalFactory extends ASatCheckerFactory<CnfInstance> {

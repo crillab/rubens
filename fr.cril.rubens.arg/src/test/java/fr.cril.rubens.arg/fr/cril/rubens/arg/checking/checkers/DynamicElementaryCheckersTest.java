@@ -26,14 +26,14 @@ package fr.cril.rubens.arg.checking.checkers;
 
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.reflection.CheckerFactoryReflector;
 
-public class DynamicElementaryCheckersTest {
+class DynamicElementaryCheckersTest {
 	
 	@Test
-	public void testAll() {
+	void testAll() {
 		Stream.of("DC", "DS", "EE", "SE").forEach(this::test);
 	}
 	

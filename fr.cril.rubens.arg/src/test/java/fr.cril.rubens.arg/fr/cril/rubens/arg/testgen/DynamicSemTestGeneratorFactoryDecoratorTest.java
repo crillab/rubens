@@ -24,44 +24,44 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.DynamicArgumentationFramework;
 import fr.cril.rubens.specs.InstanceTranslator;
 
 
-public class DynamicSemTestGeneratorFactoryDecoratorTest {
+class DynamicSemTestGeneratorFactoryDecoratorTest {
 	
 	private DynamicSemTestGeneratorFactoryDecorator decorator;
 	
 	private CompleteSemTestGeneratorFactory decorated;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.decorated = new CompleteSemTestGeneratorFactory();
 		this.decorator = new DynamicSemTestGeneratorFactoryDecorator(this.decorated, EExtensionSetComputer.COMPLETE_SEM);
 	}
 	
 	@Test
-	public void testInitInstance() {
+	void testInitInstance() {
 		assertEquals(this.decorated.initInstance(), this.decorator.initInstance().getInitInstance());
 	}
 	
 	@Test
-	public void testTranslators() {
+	void testTranslators() {
 		assertEquals(this.decorated.translators().size(), this.decorator.translators().size());
 	}
 	
 	@Test
-	public void testNoDyn() {
+	void testNoDyn() {
 		final CompleteSemTestGeneratorFactory decorated = new CompleteSemTestGeneratorFactory();
 		int index = -1;
 		final List<InstanceTranslator<ArgumentationFramework>> decoratedTranslators = decorated.translators();

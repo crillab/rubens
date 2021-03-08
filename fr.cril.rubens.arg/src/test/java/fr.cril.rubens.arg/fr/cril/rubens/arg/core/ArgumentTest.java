@@ -24,22 +24,24 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.utils.Forget;
 
-public class ArgumentTest {
+class ArgumentTest {
 	
 	private Argument a;
 	
 	private Argument b;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.a = Argument.getInstance("a");
@@ -47,35 +49,35 @@ public class ArgumentTest {
 	}
 	
 	@Test
-	public void testName() {
+	void testName() {
 		assertEquals("a", this.a.getName());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testNullName() {
-		Argument.getInstance(null);
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testEmptyName() {
-		Argument.getInstance("");
+	@Test
+	void testNullName() {
+		assertThrows(IllegalArgumentException.class, () -> Argument.getInstance(null));
 	}
 	
 	@Test
-	public void testSameInstance() {
-		assertTrue(this.a == Argument.getInstance("a"));
+	void testEmptyName() {
+		assertThrows(IllegalArgumentException.class, () -> Argument.getInstance(""));
 	}
 	
 	@Test
-	public void testEquals() {
-		assertTrue(this.a.equals(Argument.getInstance("a")));
-		assertFalse(this.b.equals(Argument.getInstance("a")));
+	void testSameInstance() {
+		assertSame(this.a, Argument.getInstance("a"));
 	}
 	
 	@Test
-	public void testHashCode() {
-		assertTrue(this.a.hashCode() == Argument.getInstance("a").hashCode());
-		assertFalse(this.b.hashCode() == Argument.getInstance("a").hashCode());
+	void testEquals() {
+		assertEquals(this.a, Argument.getInstance("a"));
+		assertNotEquals(this.b, Argument.getInstance("a"));
+	}
+	
+	@Test
+	void testHashCode() {
+		assertSame(this.a.hashCode(), Argument.getInstance("a").hashCode());
+		assertNotSame(this.b.hashCode(), Argument.getInstance("a").hashCode());
 	}
 
 }

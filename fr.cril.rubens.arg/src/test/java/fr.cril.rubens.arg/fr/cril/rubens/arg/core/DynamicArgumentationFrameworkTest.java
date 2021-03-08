@@ -24,9 +24,10 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,8 +36,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.DynamicArgumentationFramework.Translation;
 import fr.cril.rubens.arg.testgen.AttackRemovalTranslator;
@@ -44,13 +45,13 @@ import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
 import fr.cril.rubens.arg.testgen.NewAttackTranslator;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class DynamicArgumentationFrameworkTest {
+class DynamicArgumentationFrameworkTest {
 	
 	private DynamicArgumentationFramework dynAf;
 	private ArgumentationFramework af1;
 	private ArgumentationFramework af2;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		final Argument arg = Argument.getInstance("a");
@@ -68,7 +69,7 @@ public class DynamicArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testTranslations() {
+	void testTranslations() {
 		final List<Translation> translations = this.dynAf.getTranslations();
 		assertEquals(2, translations.size());
 		assertEquals(af1, translations.get(0).getArgumentationFramework());
@@ -79,14 +80,14 @@ public class DynamicArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testWriteDynamics() throws IOException {
+	void testWriteDynamics() throws IOException {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		this.dynAf.write(".apxm", os);
 		assertEquals("+att(a,a).\n-att(a,a).\n", new String(os.toByteArray()));
 	}
 	
 	@Test
-	public void testWriteExts() throws IOException {
+	void testWriteExts() throws IOException {
 		final List<Translation> translations = this.dynAf.getTranslations();
 		for(int i=0; i<translations.size(); ++i) {
 			final ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -97,23 +98,26 @@ public class DynamicArgumentationFrameworkTest {
 		}
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testUnexpectedExtension() throws IOException {
-		this.dynAf.write(".foo", new ByteArrayOutputStream());
-	}
-	
-	@Test(expected=UnsupportedOperationException.class)
-	public void testWriteExtensions() throws IOException {
-		this.dynAf.writeExtensions(new ByteArrayOutputStream());
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testWrongExtIndex() throws IOException {
-		this.dynAf.write(".exts.foo", new ByteArrayOutputStream());
+	@Test
+	void testUnexpectedExtension() throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		assertThrows(IllegalArgumentException.class, () -> this.dynAf.write(".foo", baos));
 	}
 	
 	@Test
-	public void testWriteInstance() throws IOException {
+	void testWriteExtensions() throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		assertThrows(UnsupportedOperationException.class, () -> this.dynAf.writeExtensions(baos));
+	}
+	
+	@Test
+	void testWrongExtIndex() throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		assertThrows(IllegalArgumentException.class, () -> this.dynAf.write(".exts.foo", baos));
+	}
+	
+	@Test
+	void testWriteInstance() throws IOException {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		this.dynAf.write(".apx", os);
 		final ByteArrayOutputStream os2 = new ByteArrayOutputStream();
@@ -122,7 +126,7 @@ public class DynamicArgumentationFrameworkTest {
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals("[[a], [], +att(a,a).,-att(a,a)., [[a]], [[]], [[a]]]", this.dynAf.toString());
 	}
 

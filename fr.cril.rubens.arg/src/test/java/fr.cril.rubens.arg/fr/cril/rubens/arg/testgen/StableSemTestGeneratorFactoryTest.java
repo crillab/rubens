@@ -24,31 +24,30 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ExtensionSet;
-import fr.cril.rubens.arg.testgen.NewAttackTranslator;
 import fr.cril.rubens.specs.InstanceTranslator;
 
-public class StableSemTestGeneratorFactoryTest {
+class StableSemTestGeneratorFactoryTest {
 	
 	@Test
-	public void testInitInstance() {
+	void testInitInstance() {
 		assertEquals(new ArgumentationFramework(), new StableSemTestGeneratorFactory().initInstance());
 	}
 	
 	@Test
-	public void testTranslators() {
+	void testTranslators() {
 		final List<InstanceTranslator<ArgumentationFramework>> translators = new StableSemTestGeneratorFactory().translators();
 		assertEquals(2, translators.size());
 		assertTrue(translators.stream().anyMatch(t -> t.getClass().equals(NewArgTranslator.class)));
@@ -57,7 +56,7 @@ public class StableSemTestGeneratorFactoryTest {
 	}
 	
 	@Test
-	public void testAddNewArgOnNoExtAF() {
+	void testAddNewArgOnNoExtAF() {
 		ArgumentationFramework af = new ArgumentationFramework();
 		assertEquals(Stream.of(ArgumentSet.getInstance(Collections.emptySet())).collect(ExtensionSet.collector()), af.getExtensions());
 		final NewArgTranslator newArgTranslator = new NewArgTranslator(EExtensionSetComputer.STABLE_SEM);

@@ -24,8 +24,8 @@ package fr.cril.rubens.arg.checking;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.AArgumentationFrameworkGraph;
 import fr.cril.rubens.arg.core.Argument;
@@ -45,10 +45,10 @@ import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.DynamicArgumentationFramework;
 import fr.cril.rubens.arg.core.ExtensionSet;
 
-public class AFSolverExecutorTest {
+class AFSolverExecutorTest {
 	
 	@Test
-	public void testNoDynNoArg() {
+	void testNoDynNoArg() {
 		final TestingExecutor executor = new TestingExecutor("SE-CO", false);
 		final List<String> args = executor.getCliArgs();
 		assertFalse(args.contains("-m"));
@@ -56,7 +56,7 @@ public class AFSolverExecutorTest {
 	}
 	
 	@Test
-	public void testNoDynArg() {
+	void testNoDynArg() {
 		final TestingExecutor executor = new TestingExecutor("DC-CO", false);
 		final List<String> args = executor.getCliArgs();
 		assertFalse(args.contains("-m"));
@@ -64,7 +64,7 @@ public class AFSolverExecutorTest {
 	}
 	
 	@Test
-	public void testDynNoArg() {
+	void testDynNoArg() {
 		final TestingExecutor executor = new TestingExecutor("SE-CO-D", true);
 		final List<String> args = executor.getCliArgs();
 		assertTrue(args.contains("-m"));
@@ -72,14 +72,14 @@ public class AFSolverExecutorTest {
 	}
 	
 	@Test
-	public void testDynArg() {
+	void testDynArg() {
 		final TestingExecutor executor = new TestingExecutor("DC-CO-D", true);
 		final List<String> args = executor.getCliArgs();
 		assertTrue(args.contains("-m"));
 		assertTrue(args.contains("-a"));
 	}
 	
-	public class TestingExecutor extends AFSolverExecutor<AArgumentationFrameworkGraph> {
+	class TestingExecutor extends AFSolverExecutor<AArgumentationFrameworkGraph> {
 		
 		private Map<String, Path> instances = new HashMap<>();
 

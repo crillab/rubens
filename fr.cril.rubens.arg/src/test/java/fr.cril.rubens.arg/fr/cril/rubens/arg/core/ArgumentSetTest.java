@@ -24,10 +24,13 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Set;
@@ -35,10 +38,10 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ArgumentSetTest {
+class ArgumentSetTest {
 	
 	private Argument a1;
 	
@@ -48,7 +51,7 @@ public class ArgumentSetTest {
 
 	private ArgumentSet set2;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.a1 = Argument.getInstance("a1");
 		this.set1 = ArgumentSet.getInstance(Collections.singleton(this.a1));
@@ -57,97 +60,97 @@ public class ArgumentSetTest {
 	}
 	
 	@Test
-	public void testGetInstance() {
-		assertTrue(ArgumentSet.getInstance(Collections.singleton(this.a1)) == this.set1);
-		assertFalse(ArgumentSet.getInstance(Collections.singleton(this.a1)) == this.set2);
+	void testGetInstance() {
+		assertSame(ArgumentSet.getInstance(Collections.singleton(this.a1)), this.set1);
+		assertNotSame(ArgumentSet.getInstance(Collections.singleton(this.a1)), this.set2);
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		assertEquals(this.set1, ArgumentSet.getInstance(Collections.singleton(this.a1)));
 		assertNotEquals(this.set2, ArgumentSet.getInstance(Collections.singleton(this.a1)));
 	}
 	
 	@Test
-	public void testHashcode() {
+	void testHashcode() {
 		assertEquals(this.set1.hashCode(), ArgumentSet.getInstance(Collections.singleton(this.a1)).hashCode());
 		assertNotEquals(this.set2.hashCode(), ArgumentSet.getInstance(Collections.singleton(this.a1)).hashCode());
 	}
 	
 	@Test
-	public void testStream() {
+	void testStream() {
 		assertEquals(Collections.singleton(this.a1), this.set1.stream().collect(Collectors.toSet()));
 	}
 	
 	@Test
-	public void testContains() {
+	void testContains() {
 		assertTrue(this.set1.contains(this.a1));
 		assertFalse(this.set1.contains(this.a2));
 	}
 	
 	@Test
-	public void testSize() {
+	void testSize() {
 		assertEquals(0, ArgumentSet.getInstance(Collections.emptySet()).size());
 		assertEquals(1, this.set1.size());
 	}
 	
 	@Test
-	public void testCollector() {
+	void testCollector() {
 		assertEquals(this.set1, this.set1.stream().collect(ArgumentSet.collector()));
 		assertEquals(ArgumentSet.getInstance(Stream.of(this.a1, this.a2).collect(Collectors.toSet())), Stream.of(this.a1, this.a2).parallel().collect(ArgumentSet.collector()));
 	}
 	
 	@Test
-	public void testCollectorCombiner() {
+	void testCollectorCombiner() {
 		final BinaryOperator<Set<Argument>> combiner = ArgumentSet.collector().combiner();
 		assertEquals(Stream.of(this.a1, this.a2).collect(Collectors.toSet()), combiner.apply(Stream.of(this.a1).collect(Collectors.toSet()), Stream.of(this.a2).collect(Collectors.toSet())));
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals(Collections.singleton(this.a1).toString(), this.set1.toString());
 	}
 	
 	@Test
-	public void testSupersetOfEmpty() {
+	void testSupersetOfEmpty() {
 		assertTrue(this.set1.isSupersetOf(ArgumentSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testSupersetOfNonEmpty() {
+	void testSupersetOfNonEmpty() {
 		assertTrue(Stream.of(this.a1, this.a2).collect(ArgumentSet.collector()).isSupersetOf(ArgumentSet.getInstance(Collections.emptySet())));
 	}
 	
 	@Test
-	public void testNotSupersetOfSubset() {
+	void testNotSupersetOfSubset() {
 		assertFalse(this.set1.isSupersetOf(Stream.of(this.a1, this.a2).collect(ArgumentSet.collector())));
 	}
 	
 	@Test
-	public void testEmptyIsNotSuperset() {
+	void testEmptyIsNotSuperset() {
 		assertFalse(ArgumentSet.getInstance(Collections.emptySet()).isSupersetOf(this.set1));
 	}
 	
 	@Test
-	public void testIsNotSupersetOfIdentity() {
+	void testIsNotSupersetOfIdentity() {
 		assertFalse(this.set1.isSupersetOf(this.set1));
 	}
 	
 	@Test
-	public void testIsNotSupersetSameArity() {
+	void testIsNotSupersetSameArity() {
 		assertFalse(this.set1.isSupersetOf(this.set2));
 	}
 	
 	@Test
-	public void testIsNotSupersetAtAll() {
+	void testIsNotSupersetAtAll() {
 		final Argument a3 = Argument.getInstance("a3");
 		final ArgumentSet set13 = Stream.of(this.a1, a3).collect(ArgumentSet.collector());
 		assertFalse(this.set2.isSupersetOf(set13));
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testSupersetOfNull() {
-		this.set1.isSupersetOf(null);
+	@Test
+	void testSupersetOfNull() {
+		assertThrows(IllegalArgumentException.class, () -> this.set1.isSupersetOf(null));
 	}
 
 }

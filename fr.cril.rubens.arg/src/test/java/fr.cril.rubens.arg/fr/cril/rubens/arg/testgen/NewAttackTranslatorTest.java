@@ -24,15 +24,16 @@ package fr.cril.rubens.arg.testgen;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
@@ -40,11 +41,9 @@ import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.Attack;
 import fr.cril.rubens.arg.core.AttackSet;
 import fr.cril.rubens.arg.core.ExtensionSet;
-import fr.cril.rubens.arg.testgen.EExtensionSetComputer;
-import fr.cril.rubens.arg.testgen.NewAttackTranslator;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class NewAttackTranslatorTest {
+class NewAttackTranslatorTest {
 	
 	private NewAttackTranslator translator;
 	
@@ -56,7 +55,7 @@ public class NewAttackTranslatorTest {
 	
 	private ArgumentationFramework afArg1Att11;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 		this.arg1 = Argument.getInstance("a1");
@@ -68,44 +67,45 @@ public class NewAttackTranslatorTest {
 	}
 	
 	@Test
-	public void testCanBeAppliedEmptyInstance() {
+	void testCanBeAppliedEmptyInstance() {
 		assertFalse(this.translator.canBeAppliedTo(new ArgumentationFramework()));
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		assertTrue(this.translator.canBeAppliedTo(afArg1));
 	}
 	
 	@Test
-	public void testCannotBeAppliedNoAutoAttacks() {
+	void testCannotBeAppliedNoAutoAttacks() {
 		this.translator.setAutoAttacksAllowed(false);
 		assertFalse(this.translator.canBeAppliedTo(afArg1));
 	}
 	
 	@Test
-	public void testCannotBeApplied() {
+	void testCannotBeApplied() {
 		assertFalse(this.translator.canBeAppliedTo(this.afArg1Att11));
 	}
 	
-	@Test(expected=IllegalStateException.class)
-	public void testTranslateWhenCannotBeApplied() {
-		this.translator.translate(this.afArg1Att11);
-	}
-	
-	@Test(expected=IllegalStateException.class)
-	public void testTranslateEmptyAf() {
-		this.translator.translate(new ArgumentationFramework());
+	@Test
+	void testTranslateWhenCannotBeApplied() {
+		assertThrows(IllegalStateException.class, () -> this.translator.translate(this.afArg1Att11));
 	}
 	
 	@Test
-	public void testNewAtt() {
+	void testTranslateEmptyAf() {
+		final ArgumentationFramework af = new ArgumentationFramework();
+		assertThrows(IllegalStateException.class, () -> this.translator.translate(af));
+	}
+	
+	@Test
+	void testNewAtt() {
 		ArgumentationFramework actual = this.translator.translate(this.afArg1);
 		assertEquals(this.afArg1Att11, actual);
 	}
 	
 	@Test
-	public void testAddAllAttacks() {
+	void testAddAllAttacks() {
 		final Argument a1 = Argument.getInstance("a1");
 		final Argument a2 = Argument.getInstance("a2");
 		final ArgumentationFramework af = new ArgumentationFramework(Stream.of(a1, a2).collect(ArgumentSet.collector()), AttackSet.getInstance(Collections.emptySet()), ExtensionSet.getInstance(Collections.emptySet()));
@@ -118,7 +118,7 @@ public class NewAttackTranslatorTest {
 	}
 	
 	@Test
-	public void testAddAllAttacksNoAutoAttacks() {
+	void testAddAllAttacksNoAutoAttacks() {
 		this.translator.setAutoAttacksAllowed(false);
 		final Argument a1 = Argument.getInstance("a1");
 		final Argument a2 = Argument.getInstance("a2");
@@ -132,7 +132,7 @@ public class NewAttackTranslatorTest {
 	}
 	
 	@Test
-	public void testGetExtensionComputer() {
+	void testGetExtensionComputer() {
 		assertEquals(EExtensionSetComputer.COMPLETE_SEM, this.translator.getExtensionSetComputer());
 	}
 

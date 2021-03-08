@@ -24,25 +24,26 @@ package fr.cril.rubens.arg.checking.decoders;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SolverOutputDecoderFactoryTest {
+class SolverOutputDecoderFactoryTest {
 	
 	@Test
-	public void testGetICCMA17ByName() {
+	void testGetICCMA17ByName() {
 		assertEquals(ICCMA17SolverOutputDecoder.class, SolverOutputDecoderFactory.getInstanceByName("ICCMA17").getDecoderInstance().getClass());
 	}
 	
 	@Test
-	public void testGetICCMA19ByName() {
+	void testGetICCMA19ByName() {
 		assertEquals(ICCMA19SolverOutputDecoder.class, SolverOutputDecoderFactory.getInstanceByName("ICCMA19").getDecoderInstance().getClass());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testGetByWrongName() {
-		SolverOutputDecoderFactory.getInstanceByName("Foo");
+	@Test
+	void testGetByWrongName() {
+		assertThrows(IllegalArgumentException.class, () -> SolverOutputDecoderFactory.getInstanceByName("Foo"));
 	}
 
 }

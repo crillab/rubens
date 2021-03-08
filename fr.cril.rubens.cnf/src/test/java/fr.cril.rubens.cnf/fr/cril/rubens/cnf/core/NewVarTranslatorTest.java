@@ -24,43 +24,43 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class NewVarTranslatorTest {
+class NewVarTranslatorTest {
 	
 	private NewVarTranslator translator;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.translator = new NewVarTranslator();
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		assertTrue(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testCannotBeApplied() {
+	void testCannotBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()),
 				Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.emptyList());
 		assertFalse(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testApply() {
+	void testApply() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstance = this.translator.translate(instance);

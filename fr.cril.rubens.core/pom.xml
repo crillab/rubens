@@ -24,7 +24,12 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>
-						@{argLine} --add-opens java.base/java.lang=fr.cril.rubens.core
+						@{argLine}
+						--add-opens java.base/java.lang=fr.cril.rubens.core
+						--add-opens fr.cril.rubens.core/fr.cril.rubens.core=ALL-UNNAMED
+						--add-opens fr.cril.rubens.core/fr.cril.rubens.options=ALL-UNNAMED
+						--add-opens fr.cril.rubens.core/fr.cril.rubens.reflection=ALL-UNNAMED
+						--add-opens fr.cril.rubens.core/fr.cril.rubens.utils=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>
@@ -92,8 +97,13 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

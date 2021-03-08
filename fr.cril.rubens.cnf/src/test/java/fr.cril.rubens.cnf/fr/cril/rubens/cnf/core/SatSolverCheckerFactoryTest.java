@@ -24,9 +24,9 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,148 +34,69 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import fr.cril.rubens.core.CheckResult;
 
-public class SatSolverCheckerFactoryTest {
+class SatSolverCheckerFactoryTest {
 	
 	private SatSolverCheckerFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.factory = new SatSolverCheckerFactory();
 	}
 	
 	@Test
-	public void testNewGenerator() {
+	void testNewGenerator() {
 		assertTrue(this.factory.newTestGenerator() instanceof CnfTestGeneratorFactory);
 	}
 	
 	@Test
-	public void testNewExecutor() {
+	void testNewExecutor() {
 		final Path path = Paths.get("foo", "bar");
 		assertTrue(this.factory.newExecutor(path) instanceof CnfSolverExecutor);
 	}
 	
 	@Test
-	public void testUnsat() {
+	void testUnsat() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Collections.emptyList());
-		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns UNSATISFIABLE\n"));
+		assertEquals(CheckResult.SUCCESS, this.factory.checkSoftwareOutput(instance, "c this is a comment\ns UNSATISFIABLE\n"));
 	}
 	
 	@Test
-	public void testSat() {
+	void testSat() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertSuccess(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 1 0\n"));
+		assertEquals(CheckResult.SUCCESS, this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 1 0\n"));
 	}
 	
-	@Test
-	public void testMultipleStatusLine() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\ns UNSATISFIABLE\ns UNSATISFIABLE\n"));
-	}
-	
-	@Test
-	public void testNoStatusLine() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptyList());
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\n"));
-	}
-	
-	@Test
-	public void testMisplacedStatusLine() {
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"c this is a comment\ns UNSATISFIABLE\ns UNSATISFIABLE\n",
+			"c this is a comment\n",
+			"c this is a comment\nv 1 0\nSATISFIABLE\n",
+			"c this is a comment\nthis is unexpected\ns UNSATISFIABLE\n",
+			"c this is a comment\ns\n",
+			"c this is a comment\ns1\n",
+			"c this is a comment\ns FOO\n",
+			"c this is a comment\ns SATISFIABLE\n",
+			"c this is a comment\ns SATISFIABLE\nv -1 0\n",
+			"c this is a comment\ns SATISFIABLE\nv 1\n",
+			"c this is a comment\ns SATISFIABLE\nv 0 1\n",
+			"c this is a comment\ns SATISFIABLE\nv 0\nv 1 0\n",
+			"c this is a comment\ns SATISFIABLE\nv\nv 1\n",
+			"c this is a comment\ns SATISFIABLE\nvv\nv 1\n",
+			"c this is a comment\ns SATISFIABLE\nv v 1\n",
+			"c this is a comment\ns UNSATISFIABLE\nv -1 0\n",
+			"c this is a comment\ns UNSATISFIABLE\n"
+	})
+	void testIncorrectOutput(final String arg) {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\nv 1 0\nSATISFIABLE\n"));
-	}
-	
-	@Test
-	public void testUnexpectedLine() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\nthis is unexpected\ns UNSATISFIABLE\n"));
-	}
-	
-	@Test
-	public void testUnexpectedStatusLine0() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\ns\n"));
-	}
-	
-	@Test
-	public void testUnexpectedStatusLine1() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\ns1\n"));
-	}
-	
-	@Test
-	public void testUnexpectedStatusLine2() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\ns FOO\n"));
-	}
-	
-	@Test
-	public void testSatButNoValues() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\n"));
-	}
-	
-	@Test
-	public void testWrongModel() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv -1 0\n"));
-	}
-	
-	@Test
-	public void testNoFinalZero() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 1\n"));
-	}
-	
-	@Test
-	public void testZeroInTheMiddle() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 0 1\n"));
-	}
-	
-	@Test
-	public void testZeroIsNotFinal() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv 0\nv 1 0\n"));
-	}
-	
-	@Test
-	public void testSingleV() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv\nv 1\n"));
-	}
-	
-	@Test
-	public void testVNotFollowedBySpace() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nvv\nv 1\n"));
-	}
-	
-	@Test
-	public void testWrongLiteral() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()), Collections.singletonList(Collections.singletonList(1)));
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns SATISFIABLE\nv v 1\n"));
-	}
-	
-	@Test
-	public void testUnsatButValues() {
-		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
-				Collections.emptyList());
-		assertError(this.factory.checkSoftwareOutput(instance, "c this is a comment\ns UNSATISFIABLE\nv -1 0\n"));
-	}
-	
-	@Test
-	public void testWrongUnsat() {
-		assertError(this.factory.checkSoftwareOutput(new CnfInstance(), "c this is a comment\ns UNSATISFIABLE\n"));
-	}
-
-	private void assertSuccess(final CheckResult result) {
-		assertEquals(CheckResult.SUCCESS, result);
-	}
-	
-	private void assertError(final CheckResult result) {
-		assertNotEquals(CheckResult.SUCCESS, result);
+		assertNotEquals(CheckResult.SUCCESS, this.factory.checkSoftwareOutput(instance, arg));
 	}
 
 }

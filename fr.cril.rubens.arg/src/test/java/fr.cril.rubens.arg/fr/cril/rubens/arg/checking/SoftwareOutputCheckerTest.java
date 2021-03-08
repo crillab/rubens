@@ -24,16 +24,18 @@ package fr.cril.rubens.arg.checking;
  * #L%
  */
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import fr.cril.rubens.arg.checking.decoders.SolverOutputDecoderFactory;
 import fr.cril.rubens.arg.core.Argument;
@@ -44,9 +46,9 @@ import fr.cril.rubens.arg.core.ExtensionSet;
 import fr.cril.rubens.arg.utils.Forget;
 import fr.cril.rubens.core.CheckResult;
 
-public class SoftwareOutputCheckerTest {
+class SoftwareOutputCheckerTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
@@ -59,90 +61,90 @@ public class SoftwareOutputCheckerTest {
 	
 	
 	@Test
-	public void testEmptyEE() {
+	void testEmptyEE() {
 		assertSuccess(SoftwareOutputChecker.EE.check(toAF(), "[]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSingleEE() {
+	void testSingleEE() {
 		assertSuccess(SoftwareOutputChecker.EE.check(toAF(new String[]{}), "[[]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testDualEE() {
+	void testDualEE() {
 		assertSuccess(SoftwareOutputChecker.EE.check(toAF(new String[]{}, new String[]{"a"}), "[[],[a]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseEE() {
+	void testFalseEE() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(new String[]{}, new String[]{"a"}), "[[],[b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testWrongValEE() {
+	void testWrongValEE() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(new String[]{}, new String[]{"a"}), "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testEmptySE() {
+	void testEmptySE() {
 		assertSuccess(SoftwareOutputChecker.SE.check(toAF(), "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testNoOnNonEmptySE() {
+	void testNoOnNonEmptySE() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a"}), "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSingleArgSE() {
+	void testSingleArgSE() {
 		assertSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a"}), "[a]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testDualArgSE() {
+	void testDualArgSE() {
 		assertSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a", "b"}), "[a,b]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseSE() {
+	void testFalseSE() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a"}), "[b]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testWrongValSE() {
+	void testWrongValSE() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(new String[]{}, new String[]{"a", "b"}), "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testYesDC() {
+	void testYesDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertSuccess(SoftwareOutputChecker.DC.check(af, "YES", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testNoDC() {
+	void testNoDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("c"));
 		assertSuccess(SoftwareOutputChecker.DC.check(af, "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseYesDC() {
+	void testFalseYesDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("c"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "YES", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseNoDC() {
+	void testFalseNoDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testWrongValDC() {
+	void testWrongValDC() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertNotSuccess(SoftwareOutputChecker.DC.check(af, "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
@@ -151,35 +153,35 @@ public class SoftwareOutputCheckerTest {
 	}
 	
 	@Test
-	public void testYesDS() {
+	void testYesDS() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertSuccess(SoftwareOutputChecker.DS.check(af, "YES", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testNoDS() {
+	void testNoDS() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertSuccess(SoftwareOutputChecker.DS.check(af, "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseYesDS() {
+	void testFalseYesDS() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("b"));
 		assertNotSuccess(SoftwareOutputChecker.DS.check(af, "YES", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testFalseNoDS() {
+	void testFalseNoDS() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertNotSuccess(SoftwareOutputChecker.DS.check(af, "NO", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testWrongValDS() {
+	void testWrongValDS() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		af.setArgUnderDecision(Argument.getInstance("a"));
 		assertNotSuccess(SoftwareOutputChecker.DS.check(af, "foo", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
@@ -188,101 +190,90 @@ public class SoftwareOutputCheckerTest {
 	}
 	
 	@Test
-	public void testSE3args() {
+	void testSE3args() {
 		final ArgumentationFramework af = toAF(new String[]{"a0", "a1", "a2"});
 		assertSuccess(SoftwareOutputChecker.SE.check(af, "[a1,a2,a0]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testEE1ext3args() {
+	void testEE1ext3args() {
 		final ArgumentationFramework af = toAF(new String[]{"a0", "a1", "a2"});
 		assertSuccess(SoftwareOutputChecker.EE.check(af, "[[a1,a2,a0]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEELessThan2Chars() {
+	void testSyntaxErrorEELessThan2Chars() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "f", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEENoOpeningBracket() {
+	void testSyntaxErrorEENoOpeningBracket() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEENoClosingBracket() {
+	void testSyntaxErrorEENoClosingBracket() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEENoComma() {
+	void testSyntaxErrorEENoComma() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[a][b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEEUnexpectedOpeningBracket() {
+	void testSyntaxErrorEEUnexpectedOpeningBracket() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[[a]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEEUnexpectedClosingBracket() {
+	void testSyntaxErrorEEUnexpectedClosingBracket() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[][a]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorEENoFinalClosingBracket() {
+	void testSyntaxErrorEENoFinalClosingBracket() {
 		assertNotSuccess(SoftwareOutputChecker.EE.check(toAF(), "[[a]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorSELessThan2Chars() {
+	void testSyntaxErrorSELessThan2Chars() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "f", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorSENoOpeningBracket() {
+	void testSyntaxErrorSENoOpeningBracket() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorSENoClosingBracket() {
+	void testSyntaxErrorSENoClosingBracket() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "[[", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testSyntaxErrorSENotALetterOrDigit() {
+	void testSyntaxErrorSENotALetterOrDigit() {
 		assertNotSuccess(SoftwareOutputChecker.SE.check(toAF(), "[#]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	@Test
-	public void testTranslationHistoryInError() {
+	void testTranslationHistoryInError() {
 		final CheckResult noHistory = SoftwareOutputChecker.EE.check(toAF(new String[]{}, new String[]{"a"}), "[[],[b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		final CheckResult withHistory = SoftwareOutputChecker.EE.check(new ArgumentationFramework(), "[[],[b]]", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance());
 		assertTrue(noHistory.getExplanation().length() < withHistory.getExplanation().length());
 	}
 	
 	@Test
-	public void testCE() {
+	void testCE() {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
 		assertSuccess(SoftwareOutputChecker.CE.check(af, "2", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
-	@Test
-	public void testCEWrongNum() {
+	@ParameterizedTest
+	@ValueSource(strings = {"1", "abc", "2.0"})
+	void testCEErrors(final String arg) {
 		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
-		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "1", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
-	}
-	
-	@Test
-	public void testCENaN() {
-		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
-		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "abc", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
-	}
-	
-	@Test
-	public void testCEFloat() {
-		final ArgumentationFramework af = toAF(new String[]{"a"}, new String[]{"a", "b"});
-		assertNotSuccess(SoftwareOutputChecker.CE.check(af, "2.0", SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
+		assertNotSuccess(SoftwareOutputChecker.CE.check(af, arg, SolverOutputDecoderFactory.ICCMA17.getDecoderInstance()));
 	}
 	
 	private void assertSuccess(final CheckResult result) {

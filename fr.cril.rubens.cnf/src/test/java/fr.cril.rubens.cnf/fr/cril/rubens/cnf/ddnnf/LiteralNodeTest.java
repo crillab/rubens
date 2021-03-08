@@ -24,28 +24,28 @@ package fr.cril.rubens.cnf.ddnnf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class LiteralNodeTest {
+class LiteralNodeTest {
 	
 	@Test
-	public void testPositiveLiteral() {
+	void testPositiveLiteral() {
 		assertEquals(Collections.singletonList(Collections.singletonMap(1, true)), new LiteralNode(1).models());
 	}
 	
 	@Test
-	public void testNegativeLiteral() {
+	void testNegativeLiteral() {
 		assertEquals(Collections.singletonList(Collections.singletonMap(1, false)), new LiteralNode(-1).models());
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		EqualsVerifier.forClass(LiteralNode.class).withIgnoredFields("models").verify();
 	}
 

@@ -24,28 +24,28 @@ package fr.cril.rubens.cnf.ddnnf;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class FalseNodeTest {
+class FalseNodeTest {
 	
 	@Test
-	public void testModels() {
+	void testModels() {
 		assertEquals(Collections.emptyList(), FalseNode.getInstance().models());
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		assertEquals(FalseNode.getInstance(), FalseNode.getInstance());
 		assertNotEquals(TrueNode.getInstance(), FalseNode.getInstance());
 	}
 	
 	@Test
-	public void testHashCode() {
+	void testHashCode() {
 		assertEquals(Integer.MIN_VALUE, FalseNode.getInstance().hashCode());
 	}
 

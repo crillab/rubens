@@ -24,38 +24,38 @@ package fr.cril.rubens.options;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class OptionSpecsTest {
+class OptionSpecsTest {
 	
 	private OptionSpecs specs;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.specs = new OptionSpecs("opt", "longOpt", true, "description");
 	}
 	
 	@Test
-	public void testOpt() {
+	void testOpt() {
 		assertEquals("opt", this.specs.getOpt());
 	}
 	
 	@Test
-	public void testLongOpt() {
+	void testLongOpt() {
 		assertEquals("longOpt", this.specs.getLongOpt());
 	}
 	
 	@Test
-	public void testHasArg() {
+	void testHasArg() {
 		assertTrue(this.specs.hasArg());
 	}
 	
 	@Test
-	public void testDescription() {
+	void testDescription() {
 		assertEquals("description", this.specs.getDescription());
 	}
 

@@ -62,9 +62,14 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.13.1</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.7.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>5.7.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -215,13 +220,13 @@
 					</executions>
 				</plugin>
 				<plugin>
-                                	<groupId>org.apache.maven.plugins</groupId>
-	                                <artifactId>maven-release-plugin</artifactId>
-	                                <version>3.0.0-M1</version>
-	                                <configuration>
-	                                        <releaseProfiles>env-prod</releaseProfiles>
-	                                </configuration>
-	                        </plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-release-plugin</artifactId>
+	                <version>3.0.0-M1</version>
+	                <configuration>
+	                	<releaseProfiles>env-prod</releaseProfiles>
+	                </configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

@@ -24,19 +24,19 @@ package fr.cril.rubens.arg.checking.checkers;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ICCMACheckersTest {
+class ICCMACheckersTest {
 	
 	@Test
-	public void test17() {
+	void test17() {
 		assertEquals(29, new ICCMA2017Checker().getNames().size());
 	}
 	
 	@Test
-	public void test19() {
+	void test19() {
 		assertEquals(44, new ICCMA2019Checker().getNames().size());
 	}
 

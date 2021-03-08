@@ -24,32 +24,32 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation.ArgumentFrameworkAttackTranslation;
 import fr.cril.rubens.arg.utils.Forget;
 
-public class ArgumentationFrameworkTranslationTest {
+class ArgumentationFrameworkTranslationTest {
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Forget.all();
 	}
 
 	@Test
-	public void testAttackRemoval() {
+	void testAttackRemoval() {
 		final ArgumentFrameworkAttackTranslation translation = ArgumentFrameworkAttackTranslation.attackRemoval(Attack.getInstance(Argument.getInstance("a"), Argument.getInstance("b")));
 		assertEquals("-att(a,b).", translation.getDescription());
 		assertFalse(translation.isNewAttack());
 	}
 	
 	@Test
-	public void testNewAttack() {
+	void testNewAttack() {
 		final ArgumentFrameworkAttackTranslation translation = ArgumentFrameworkAttackTranslation.newAttack(Attack.getInstance(Argument.getInstance("a"), Argument.getInstance("b")));
 		assertEquals("+att(a,b).", translation.getDescription());
 		assertTrue(translation.isNewAttack());

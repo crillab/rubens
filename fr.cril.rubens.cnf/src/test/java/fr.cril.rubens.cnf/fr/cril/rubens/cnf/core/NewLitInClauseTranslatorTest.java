@@ -24,7 +24,7 @@ package fr.cril.rubens.cnf.core;
  * #L%
  */
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,40 +32,40 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class NewLitInClauseTranslatorTest {
+class NewLitInClauseTranslatorTest {
 	
 	private NewLitInClauseTranslator translator;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.translator = new NewLitInClauseTranslator();
 	}
 	
 	@Test
-	public void testCanBeApplied() {
+	void testCanBeApplied() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		assertTrue(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testCannotBeAppliedNoClauses() {
+	void testCannotBeAppliedNoClauses() {
 		final CnfInstance instance = new CnfInstance(1, new ArrayList<>(), new ArrayList<>());
 		assertFalse(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testCannotBeAppliedFullClauses() {
+	void testCannotBeAppliedFullClauses() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1, -1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Collections.emptyList());
 		assertFalse(this.translator.canBeAppliedTo(instance));
 	}
 	
 	@Test
-	public void testApply() {
+	void testApply() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstance = this.translator.translate(instance);
@@ -75,7 +75,7 @@ public class NewLitInClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testApplyFreeVars() {
+	void testApplyFreeVars() {
 		final CnfInstance instance = new CnfInstance(2, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(new int[]{1, -2}, new int[]{1, 2})
 				.map(m -> Arrays.stream(m).boxed().collect(Collectors.toList())).collect(Collectors.toList()));
@@ -87,7 +87,7 @@ public class NewLitInClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testApplyFreeVars2() {
+	void testApplyFreeVars2() {
 		for(int i=0; i<8; ++i) {
 			final CnfInstance instance = new CnfInstance(3, Stream.of(Stream.of(1).collect(Collectors.toList())).collect(Collectors.toList()),
 					Stream.of(new int[]{1, -2, -3}, new int[]{1, -2, 3}, new int[]{1, 2, -3}, new int[]{1, 2, 3})
@@ -101,7 +101,7 @@ public class NewLitInClauseTranslatorTest {
 	}
 	
 	@Test
-	public void testApplyFullClause() {
+	void testApplyFullClause() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(-1, 1).collect(Collectors.toList()), Stream.of(-1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(new int[]{-1}).map(m -> Arrays.stream(m).boxed().collect(Collectors.toList())).collect(Collectors.toList()));
 		final CnfInstance newInstance = this.translator.translate(instance);
@@ -111,11 +111,11 @@ public class NewLitInClauseTranslatorTest {
 		assertEquals(2, newInstance.models().size());
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void applyFullClauses() {
+	@Test
+	void applyFullClauses() {
 		final CnfInstance instance = new CnfInstance(1, Stream.of(Stream.of(-1, 1).collect(Collectors.toList())).collect(Collectors.toList()),
 				Stream.of(new int[]{-1}, new int[]{1}).map(m -> Arrays.stream(m).boxed().collect(Collectors.toList())).collect(Collectors.toList()));
-		this.translator.translate(instance);
+		assertThrows(IllegalArgumentException.class, () -> this.translator.translate(instance));
 	}
 
 }

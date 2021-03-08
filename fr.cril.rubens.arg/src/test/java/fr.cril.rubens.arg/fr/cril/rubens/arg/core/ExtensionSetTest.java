@@ -24,10 +24,12 @@ package fr.cril.rubens.arg.core;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Set;
@@ -35,10 +37,10 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ExtensionSetTest {
+class ExtensionSetTest {
 	
 	private ArgumentSet set1;
 	
@@ -48,7 +50,7 @@ public class ExtensionSetTest {
 
 	private ExtensionSet extset2;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		final Argument arg1 = Argument.getInstance("a1");
 		final Argument arg2 = Argument.getInstance("a2");
@@ -59,54 +61,54 @@ public class ExtensionSetTest {
 	}
 	
 	@Test
-	public void testGetInstance() {
-		assertTrue(ExtensionSet.getInstance(Collections.singleton(this.set1)) == this.extset1);
-		assertFalse(ExtensionSet.getInstance(Collections.singleton(this.set1)) == this.extset2);
+	void testGetInstance() {
+		assertSame(ExtensionSet.getInstance(Collections.singleton(this.set1)), this.extset1);
+		assertNotSame(ExtensionSet.getInstance(Collections.singleton(this.set1)), this.extset2);
 	}
 	
 	@Test
-	public void testEquals() {
+	void testEquals() {
 		assertEquals(this.extset1, ExtensionSet.getInstance(Collections.singleton(this.set1)));
 		assertNotEquals(this.extset2, ExtensionSet.getInstance(Collections.singleton(this.set1)));
 	}
 	
 	@Test
-	public void testHashcode() {
+	void testHashcode() {
 		assertEquals(this.extset1.hashCode(), ExtensionSet.getInstance(Collections.singleton(this.set1)).hashCode());
 		assertNotEquals(this.extset2.hashCode(), ExtensionSet.getInstance(Collections.singleton(this.set1)).hashCode());
 	}
 	
 	@Test
-	public void testStream() {
+	void testStream() {
 		assertEquals(Collections.singleton(this.set1), this.extset1.stream().collect(Collectors.toSet()));
 	}
 	
 	@Test
-	public void testContains() {
+	void testContains() {
 		assertTrue(this.extset1.contains(this.set1));
 		assertFalse(this.extset1.contains(this.set2));
 	}
 	
 	@Test
-	public void testSize() {
+	void testSize() {
 		assertEquals(0, ArgumentSet.getInstance(Collections.emptySet()).size());
 		assertEquals(1, this.extset1.size());
 	}
 	
 	@Test
-	public void testCollector() {
+	void testCollector() {
 		assertEquals(this.extset1, this.extset1.stream().collect(ExtensionSet.collector()));
 		assertEquals(ExtensionSet.getInstance(Stream.of(this.set1, this.set2).collect(Collectors.toSet())), Stream.of(this.set1, this.set2).parallel().collect(ExtensionSet.collector()));
 	}
 	
 	@Test
-	public void testCollectorCombiner() {
+	void testCollectorCombiner() {
 		final BinaryOperator<Set<ArgumentSet>> combiner = ExtensionSet.collector().combiner();
 		assertEquals(Stream.of(this.set1, this.set2).collect(Collectors.toSet()), combiner.apply(Stream.of(this.set1).collect(Collectors.toSet()), Stream.of(this.set2).collect(Collectors.toSet())));
 	}
 	
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals(Collections.singleton(this.set1).toString(), this.extset1.toString());
 	}
 
