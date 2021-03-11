@@ -60,6 +60,8 @@ import fr.cril.rubens.utils.LoggerHelper;
  */
 public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 	
+	private static final String MANDATORY_OPTIONS_TO_STRING = "-m method -e execLocation [other options]";
+
 	private static CheckerOptionsReader instance = null; 
 	
 	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
@@ -105,7 +107,7 @@ public class CheckerOptionsReader extends AppOptions<CheckerOptionsReader> {
 	}
 	
 	protected String mandatoryOptionsToString() {
-		return "-m method -e execLocation [other options]";
+		return MANDATORY_OPTIONS_TO_STRING;
 	}
 
 	/**

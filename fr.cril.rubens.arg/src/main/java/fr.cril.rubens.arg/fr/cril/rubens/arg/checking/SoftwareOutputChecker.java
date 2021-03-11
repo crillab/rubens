@@ -89,9 +89,9 @@ public enum SoftwareOutputChecker {
 	
 	private static CheckResult checkCE(final ArgumentationFramework expected, final String result, final ISolverOutputDecoder outputDecoder) {
 		try {
-			final int extCount = Integer.parseInt(result.trim());
+			final int extCount = outputDecoder.readExtensionCount(result);
 			return expected.getExtensions().size() == extCount ? CheckResult.SUCCESS : newError(expected, "got "+result.trim()+"; expected "+expected.getExtensions().size());
-		} catch (final NumberFormatException e) {
+		} catch (final SyntaxErrorException e) {
 			return newError(expected, e.getMessage());
 		}
 	}

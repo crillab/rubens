@@ -122,6 +122,15 @@ public abstract class AbstractICCMASolverOutputDecoder implements ISolverOutputD
 		return result;
 	}
 	
+	@Override
+	public int readExtensionCount(final String solverOutput) throws SyntaxErrorException {
+		try {
+			return Integer.parseInt(solverOutput.trim());
+		} catch(final NumberFormatException e) {
+			throw new SyntaxErrorException("syntax error: \""+solverOutput+"\" is not a valid extension count");
+		}
+	}
+	
 	/**
 	 * Throws the provided exception is the provided test succeeds.
 	 * 

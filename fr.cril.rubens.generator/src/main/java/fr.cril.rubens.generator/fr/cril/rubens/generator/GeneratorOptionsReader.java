@@ -49,6 +49,8 @@ import fr.cril.rubens.utils.LoggerHelper;
  */
 public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	
+	private static final String MANDATORY_OPTIONS_TO_STRING = "-m method -o outputDirectory [other options]";
+
 	private static GeneratorOptionsReader instance = null; 
 	
 	private static final Logger LOGGER = LoggerHelper.getInstance().getLogger();
@@ -92,7 +94,7 @@ public class GeneratorOptionsReader extends AppOptions<GeneratorOptionsReader> {
 	}
 	
 	protected String mandatoryOptionsToString() {
-		return "-m method -o outputDirectory [other options]";
+		return MANDATORY_OPTIONS_TO_STRING;
 	}
 
 	/**

@@ -91,5 +91,15 @@ class ICCMA17SolverOutputDecoderTest {
 		final List<String> extensions = this.decoder.splitDynExtensionSets("[[a0]],[[a1]]");
 		assertEquals(Stream.of("[[a0]]", "[[a1]]").collect(Collectors.toList()), extensions);
 	}
+	
+	@Test
+	void testReadExtensionCountOk() throws SyntaxErrorException {
+		assertEquals(1, this.decoder.readExtensionCount("  1 "));
+	}
+	
+	@Test
+	void testReadExtensionCountNotOk() {
+		assertThrows(SyntaxErrorException.class, () -> this.decoder.readExtensionCount("a"));
+	}
 
 }

@@ -102,6 +102,15 @@ public interface ISolverOutputDecoder {
 	ExtensionSet readExtensionSet(final String solverOutput) throws SyntaxErrorException;
 	
 	/**
+	 * Decodes a solver output corresponding to an extension count.
+	 * 
+	 * @param solverOutput the solver output
+	 * @return the extension count
+	 * @throws SyntaxErrorException iff the output contains syntax error while considering it contains an extension count
+	 */
+	int readExtensionCount(final String solverOutput) throws SyntaxErrorException;
+	
+	/**
 	 * Reads the solver output of the D3 problem.
 	 * 
 	 * The result in returned as a list of three elements, corresponding to the grounded, stable and preferred extension sets.
