@@ -1,5 +1,8 @@
 package fr.cril.rubens.arg.testgen;
 
+import java.util.Collections;
+import java.util.List;
+
 /*-
  * #%L
  * RUBENS
@@ -25,7 +28,9 @@ package fr.cril.rubens.arg.testgen;
  */
 
 import java.util.Random;
+import java.util.stream.Collectors;
 
+import fr.cril.rubens.arg.core.Argument;
 import fr.cril.rubens.arg.core.ArgumentSet;
 import fr.cril.rubens.arg.core.ArgumentationFramework;
 import fr.cril.rubens.arg.core.ArgumentationFrameworkTranslation.ArgumentFrameworkAttackTranslation;
@@ -78,7 +83,11 @@ public class AttackRemovalTranslator implements InstanceTranslator<Argumentation
 		final AttackSet newAttacks = af.getAttacks().stream().filter(a -> !a.equals(attack)).collect(AttackSet.collector());
 		final ArgumentSet arguments = af.getArguments();
 		final ExtensionSet newExtensions = this.extensionSetComputer.compute(arguments, newAttacks);
-		return new ArgumentationFramework(arguments, newAttacks, newExtensions, af, ArgumentFrameworkAttackTranslation.attackRemoval(attack));
+		final ArgumentationFramework newAf = new ArgumentationFramework(arguments, newAttacks, newExtensions, af, ArgumentFrameworkAttackTranslation.attackRemoval(attack));
+		final List<Argument> argsList = af.getArguments().stream().collect(Collectors.toList());
+		Collections.shuffle(argsList);
+		newAf.setArgUnderDecision(argsList.get(0));
+		return newAf;
 	}
 	
 	/**

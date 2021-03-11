@@ -59,6 +59,9 @@ public class DynamicArgumentationFramework extends AArgumentationFrameworkGraph 
 	 */
 	public DynamicArgumentationFramework(final ArgumentationFramework initInstance) {
 		super(initInstance.getArguments(), initInstance.getAttacks(), initInstance.getTranslationHistory());
+		if(initInstance.getArgUnderDecision() != null) {
+			this.setArgUnderDecision(initInstance.getArgUnderDecision());
+		}
 		this.initInstance = initInstance;
 	}
 	

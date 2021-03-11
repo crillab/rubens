@@ -55,8 +55,10 @@ class DynamicArgumentationFrameworkTest {
 	public void setUp() {
 		Forget.all();
 		final Argument arg = Argument.getInstance("a");
-		this.dynAf = new DynamicArgumentationFramework(new ArgumentationFramework(ArgumentSet.getInstance(Collections.singleton(arg)), AttackSet.getInstance(Collections.emptySet()),
-				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.singleton(arg))))));
+		final ArgumentationFramework af = new ArgumentationFramework(ArgumentSet.getInstance(Collections.singleton(arg)), AttackSet.getInstance(Collections.emptySet()),
+				ExtensionSet.getInstance(Collections.singleton(ArgumentSet.getInstance(Collections.singleton(arg)))));
+		af.setArgUnderDecision(arg);
+		this.dynAf = new DynamicArgumentationFramework(af);
 		final NewAttackTranslator t1 = new NewAttackTranslator(EExtensionSetComputer.COMPLETE_SEM);
 		final ArgumentationFramework initInstance = this.dynAf.getInitInstance();
 		final Attack att1 = t1.selectNewAttack(initInstance);
@@ -128,6 +130,14 @@ class DynamicArgumentationFrameworkTest {
 	@Test
 	void testToString() {
 		assertEquals("[[a], [], +att(a,a).,-att(a,a)., [[a]], [[]], [[a]]]", this.dynAf.toString());
+	}
+	
+	@Test
+	void testArgsUnderDecision() {
+		final Argument arg = Argument.getInstance("a");
+		assertEquals(arg, this.dynAf.getArgUnderDecision());
+		assertEquals(arg, this.af1.getArgUnderDecision());
+		assertEquals(arg, this.af2.getArgUnderDecision());
 	}
 
 }
